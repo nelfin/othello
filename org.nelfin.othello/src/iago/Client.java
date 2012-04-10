@@ -59,6 +59,7 @@ public class Client {
         // And, we're off!
         Client client = new Client(player, host, port);
         if (!client.connect()) {
+            System.err.println("[client] unable to establish a connection, exiting");
             System.exit(1);
         }
         client.runForever();
