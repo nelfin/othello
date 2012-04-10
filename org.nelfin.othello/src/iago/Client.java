@@ -13,7 +13,7 @@ public class Client {
     
     private static final String DEFAULT_HOST = "localhost";
     private static final int DEFAULT_PORT = 3130;
-    private static final String NAME = "Iago";
+    private static final String NAME = "Jafar";
     
     private String host;
     private int port;
