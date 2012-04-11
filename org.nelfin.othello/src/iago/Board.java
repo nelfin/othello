@@ -44,6 +44,18 @@ public class Board {
             }
             return 2;
         }
+
+        public static Player fromInteger(int readInt) {
+            switch (readInt) {
+            case 0:
+                return WHITE;
+            case 1:
+                return BLACK;
+            case 2:
+                return NONE;
+            }
+            return null;
+        }
     }
     
     private BoardState[][] board;
@@ -58,8 +70,9 @@ public class Board {
         }
     }
     
-    public void processMessage(byte[] boardArray) {
+    public void processMessage(ServerMessage m) {
         // TODO should this be less coupled?
+        byte[] boardArray = m.getBoardArray();
         for (int i = 0; i < BOARD_SIZE; i++) {
             for (int j = 0; j < BOARD_SIZE; j++) {
                 this.board[i][j] = getState(boardArray, i, j);

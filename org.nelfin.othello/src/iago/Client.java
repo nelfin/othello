@@ -23,23 +23,7 @@ public class Client {
     private DataOutputStream out;
     private DataInputStream in;
     
-    private enum Status {
-        GIVE_MOVE, NO_MOVE, GAME_END, ABORT;
-        
-        private static Status fromInteger(int s) {
-            switch (s) {
-            case 0:
-                return GIVE_MOVE;
-            case 1:
-                return NO_MOVE;
-            case 2:
-                return GAME_END;
-            case 3:
-                return ABORT;
-            }
-            return null;
-        }
-    }
+    private ServerMessage serverMessage;
     
     /**
      * @param args
@@ -121,8 +105,8 @@ public class Client {
     private void runForever() {
         while (true) {
             // receive
-            if (!receiveServerMessage()) {
-                System.err.println("[client] server terminated unexpectedly");
+            if (!processServerMessage()) {
+                System.err.println("[client] shutting down");
                 return;
             }
             // handle
@@ -130,32 +114,38 @@ public class Client {
         }
     }
 
-    private boolean receiveServerMessage() {
-        Status status;
-        long timeRemaining;
-        int opponentX, opponentY;
-        int winner;
-        byte[] boardArray = new byte[Board.BOARD_SIZE*Board.BOARD_SIZE];
-        
+    private boolean processServerMessage() {
         try {
-            status = Status.fromInteger(this.in.readInt());
-            timeRemaining = this.in.readInt();
-            opponentX = this.in.readInt();
-            opponentY = this.in.readInt();
-            winner = this.in.readInt();
-            if (this.in.read(boardArray) != Board.BOARD_SIZE*Board.BOARD_SIZE) {
-                System.err.println("[client] failed to receive board, message fragmented?");
-            }
+            serverMessage.receive(in);
         } catch (IOException e) {
-            // TODO Proper exception handling
-            System.err.println("[client] error receiving server message");
+            System.err.println("[client] error in receiving server message");
             return false;
         }
         
-        System.out.printf("%s %d (%d, %d) %d\n",
-                status.toString(), timeRemaining, opponentX, opponentY, winner);
+        if (serverMessage.gameAborted()) {
+            System.err.println("[client] server aborted game");
+            return false;
+        }
         
-        this.board.processMessage(boardArray);
+        if (serverMessage.gameHasEnded()) {
+            Board.Player winner = serverMessage.getWinner();
+            // TODO check if NONE is returned for draw
+            if (winner == Board.Player.NONE) {
+                // A draw
+                System.out.println("[client] Game was a draw");
+            } else if (winner == this.player) {
+                System.out.println("[cilent] We won :)");
+            } else {
+                System.out.println("[client] We lost :(");
+            }
+            return false;
+        }
+        
+        if (serverMessage.cantMakeMove()) {
+            // TODO send (-1, -1)
+        }
+        
+        board.processMessage(serverMessage);
         
         return true;
     }
@@ -165,5 +155,6 @@ public class Client {
         this.host = host;
         this.port = port;
         this.board = new Board();
+        this.serverMessage = new ServerMessage();
     }
 }
