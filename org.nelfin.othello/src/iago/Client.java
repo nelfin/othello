@@ -129,7 +129,6 @@ public class Client {
         
         if (serverMessage.gameHasEnded()) {
             Board.Player winner = serverMessage.getWinner();
-            // TODO check if NONE is returned for draw
             if (winner == Board.Player.NONE) {
                 // A draw
                 System.out.println("[client] Game was a draw");

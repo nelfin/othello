@@ -27,7 +27,7 @@ public class ServerMessage {
     private Status status;
     private long timeRemaining;
     private Point opponentMove;
-    private Board.Player winner;
+    private int winner;
     private byte[] boardArray;
     
     public ServerMessage() {
@@ -45,7 +45,7 @@ public class ServerMessage {
         int y = pipe.readInt();
         this.opponentMove = new Point(x, y);
         
-        this.winner = Board.Player.fromInteger(pipe.readInt());
+        this.winner = pipe.readInt();
         
         if (pipe.read(boardArray) != Board.BOARD_SIZE*Board.BOARD_SIZE) {
             throw new IOException();
@@ -65,7 +65,17 @@ public class ServerMessage {
     }
 
     public Board.Player getWinner() {
-        return this.winner;
+        // Communications messages use inconsistent values
+        // side == 0 <-> white
+        // but
+        // winner == 1 <-> white
+        switch (this.winner){
+        case 1:
+            return Board.Player.WHITE;
+        case 2:
+            return Board.Player.BLACK;
+        }
+        return Board.Player.NONE;
     }
     
     public byte[] getBoardArray() {
