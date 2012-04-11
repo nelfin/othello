@@ -1,10 +1,9 @@
 package iago;
 
-import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
+import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.net.Socket;
 import java.net.UnknownHostException;
 
@@ -18,9 +17,29 @@ public class Client {
     private String host;
     private int port;
     private Board.Player player;
+    private Board board;
+    
     private Socket socket;
     private DataOutputStream out;
-    private BufferedReader in;
+    private DataInputStream in;
+    
+    private enum Status {
+        GIVE_MOVE, NO_MOVE, GAME_END, ABORT;
+        
+        private static Status fromInteger(int s) {
+            switch (s) {
+            case 0:
+                return GIVE_MOVE;
+            case 1:
+                return NO_MOVE;
+            case 2:
+                return GAME_END;
+            case 3:
+                return ABORT;
+            }
+            return null;
+        }
+    }
     
     /**
      * @param args
@@ -69,8 +88,7 @@ public class Client {
         try {
             this.socket = new Socket(this.host, this.port);
             this.out = new DataOutputStream(this.socket.getOutputStream());
-            this.in = new BufferedReader(new InputStreamReader(
-                    this.socket.getInputStream()));
+            this.in = new DataInputStream(this.socket.getInputStream());
         } catch (UnknownHostException e) {
             System.err.println("[client] unknown host: " + this.host);
             return false;
@@ -101,10 +119,45 @@ public class Client {
     }
 
     private void runForever() {
-        // TODO Auto-generated method stub
-        
+        while (true) {
+            // receive
+            if (!receiveServerMessage()) {
+                System.err.println("[client] server terminated unexpectedly");
+                return;
+            }
+            // handle
+            // send
+        }
     }
 
+    private boolean receiveServerMessage() {
+        Status status;
+        long timeRemaining;
+        int opponentX, opponentY;
+        int winner;
+        byte[] boardArray = new byte[Board.BOARD_SIZE*Board.BOARD_SIZE];
+        
+        try {
+            status = Status.fromInteger(this.in.readInt());
+            timeRemaining = this.in.readInt();
+            opponentX = this.in.readInt();
+            opponentY = this.in.readInt();
+            winner = this.in.readInt();
+            if (this.in.read(boardArray) != Board.BOARD_SIZE*Board.BOARD_SIZE) {
+                System.err.println("[client] failed to receive board, message fragmented?");
+            }
+        } catch (IOException e) {
+            // TODO Proper exception handling
+            System.err.println("[client] error receiving server message");
+            return false;
+        }
+        
+        System.out.printf("%s %d (%d, %d) %d\n",
+                status.toString(), timeRemaining, opponentX, opponentY, winner);
+        
+        this.board.processMessage(boardArray);
+        
+        return true;
     }
 
     public Client(Board.Player player, String host, int port) {
