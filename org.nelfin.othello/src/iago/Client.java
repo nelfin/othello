@@ -105,34 +105,12 @@ public class Client {
         
     }
 
+    }
+
     public Client(Board.Player player, String host, int port) {
-        this.setPlayer(player);
-        this.setHost(host);
-        this.setPort(port);
-    }
-
-    public void setPlayer(Board.Player player) {
         this.player = player;
-    }
-
-    public Board.Player getPlayer() {
-        return player;
-    }
-
-    public void setPort(int port) {
-        this.port = port;
-    }
-
-    public int getPort() {
-        return port;
-    }
-
-    public void setHost(String host) {
         this.host = host;
+        this.port = port;
+        this.board = new Board();
     }
-
-    public String getHost() {
-        return host;
-    }
-    
 }
