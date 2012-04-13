@@ -24,6 +24,7 @@ public class Client {
     private DataInputStream in;
     
     private ServerMessage serverMessage;
+    private ClientMessage clientMessage;
     
     /**
      * @param args
@@ -70,19 +71,19 @@ public class Client {
 
     private boolean connect() {
         try {
-            this.socket = new Socket(this.host, this.port);
-            this.out = new DataOutputStream(this.socket.getOutputStream());
-            this.in = new DataInputStream(this.socket.getInputStream());
+            socket = new Socket(host, port);
+            out = new DataOutputStream(socket.getOutputStream());
+            in = new DataInputStream(socket.getInputStream());
         } catch (UnknownHostException e) {
-            System.err.println("[client] unknown host: " + this.host);
+            System.err.println("[client] unknown host: " + host);
             return false;
         } catch (IOException e) {
             System.err.println("[client] error creating socket");
             return false;
         }
         try {
-            this.out.write(connectMessage());
-            this.out.flush();
+            out.write(connectMessage());
+            out.flush();
         } catch (IOException e) {
             System.err.println("[client] could not connect to server");
             return false;
@@ -94,7 +95,7 @@ public class Client {
         ByteArrayOutputStream buffer = new ByteArrayOutputStream();
         DataOutputStream w = new DataOutputStream(buffer);
         
-        w.writeInt(this.player.toInteger());
+        w.writeInt(player.toInteger());
         w.writeInt(NAME.length());
         w.write(NAME.getBytes());
         w.flush();
@@ -114,6 +115,12 @@ public class Client {
         }
     }
 
+    /**
+     * Receive and delegate next server message
+     * 
+     * @return continue
+     * Whether or not execution should continue after this round 
+     */
     private boolean processServerMessage() {
         try {
             serverMessage.receive(in);
@@ -132,7 +139,7 @@ public class Client {
             if (winner == Board.Player.NONE) {
                 // A draw
                 System.out.println("[client] Game was a draw");
-            } else if (winner == this.player) {
+            } else if (winner == player) {
                 System.out.println("[cilent] We won :)");
             } else {
                 System.out.println("[client] We lost :(");
@@ -141,7 +148,13 @@ public class Client {
         }
         
         if (serverMessage.cantMakeMove()) {
-            // TODO send (-1, -1)
+            clientMessage.setMove(-1, -1);
+            try {
+                clientMessage.send(out);
+            } catch (IOException e) {
+                System.err.println("[client] unable to send move to server");
+                return false;
+            }
         }
         
         board.processMessage(serverMessage);
@@ -155,5 +168,6 @@ public class Client {
         this.port = port;
         this.board = new Board();
         this.serverMessage = new ServerMessage();
+        this.clientMessage = new ClientMessage();
     }
 }
