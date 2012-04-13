@@ -1,5 +1,7 @@
 package iago;
 
+import iago.Player.PlayerType;
+
 import java.awt.Point;
 import java.io.DataInputStream;
 import java.io.IOException;
@@ -64,18 +66,18 @@ public class ServerMessage {
         return (this.status == Status.NO_MOVE);
     }
 
-    public Board.Player getWinner() {
+    public PlayerType getWinner() {
         // Communications messages use inconsistent values
         // side == 0 <-> white
         // but
         // winner == 1 <-> white
         switch (this.winner){
         case 1:
-            return Board.Player.WHITE;
+            return PlayerType.WHITE;
         case 2:
-            return Board.Player.BLACK;
+            return PlayerType.BLACK;
         }
-        return Board.Player.NONE;
+        return PlayerType.NONE;
     }
     
     public byte[] getBoardArray() {

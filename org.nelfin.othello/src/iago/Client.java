@@ -1,5 +1,7 @@
 package iago;
 
+import iago.Player.PlayerType;
+
 import java.io.ByteArrayOutputStream;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
@@ -16,7 +18,7 @@ public class Client {
     
     private String host;
     private int port;
-    private Board.Player player;
+    private PlayerType player;
     private Board board;
     
     private Socket socket;
@@ -37,14 +39,14 @@ public class Client {
             System.exit(1);
         }
         
-        Board.Player player = Board.Player.NONE;
+        PlayerType player = PlayerType.NONE;
         String host = DEFAULT_HOST;
         int port = DEFAULT_PORT;
         
         if (args[0].startsWith("white")) {
-            player = Board.Player.WHITE;
+            player = PlayerType.WHITE;
         } else if (args[0].startsWith("black")) {
-            player = Board.Player.BLACK;
+            player = PlayerType.BLACK;
         } else {
             System.err.println("[client] invalid value for player");
             System.exit(1);
@@ -152,8 +154,8 @@ public class Client {
         }
         
         if (serverMessage.gameHasEnded()) {
-            Board.Player winner = serverMessage.getWinner();
-            if (winner == Board.Player.NONE) {
+            PlayerType winner = serverMessage.getWinner();
+            if (winner == PlayerType.NONE) {
                 // A draw
                 System.out.println("[client] Game was a draw");
             } else if (winner == player) {
@@ -179,7 +181,7 @@ public class Client {
         return true;
     }
 
-    public Client(Board.Player player, String host, int port) {
+    public Client(PlayerType player, String host, int port) {
         this.player = player;
         this.host = host;
         this.port = port;
