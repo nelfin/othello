@@ -116,7 +116,13 @@ public class Client {
             }
             // game status should be GIVE_MOVE at this point
             playNextMove();
-            sendMove();
+            System.out.println("[client] computer player chose " + nextMove.toString());
+            try {
+                sendMove();
+            } catch (IOException e) {
+                System.err.println("[client] error sending move, shutting down");
+                return;
+            }
         }
     }
 
@@ -124,14 +130,9 @@ public class Client {
         nextMove = computerPlayer.chooseMove(board);
     }
 
-    private void sendMove() {
+    private void sendMove() throws IOException {
         clientMessage.setMove(nextMove);
-        try {
-            clientMessage.send(out);
-        } catch (IOException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
+        clientMessage.send(out);
     }
 
     /**
@@ -188,6 +189,6 @@ public class Client {
         this.board = new Board();
         this.serverMessage = new ServerMessage();
         this.clientMessage = new ClientMessage();
-        this.computerPlayer = new RandomPlayer();
+        this.computerPlayer = new SimplePlayer(player);
     }
 }
