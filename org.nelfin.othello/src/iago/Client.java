@@ -186,5 +186,6 @@ public class Client {
         this.board = new Board();
         this.serverMessage = new ServerMessage();
         this.clientMessage = new ClientMessage();
+        this.computerPlayer = new RandomPlayer();
     }
 }
