@@ -25,6 +25,8 @@ public class Client {
     
     private ServerMessage serverMessage;
     private ClientMessage clientMessage;
+    private Player computerPlayer;
+    private Move nextMove;
     
     /**
      * @param args
@@ -110,8 +112,23 @@ public class Client {
                 System.err.println("[client] shutting down");
                 return;
             }
-            // handle
-            // send
+            // game status should be GIVE_MOVE at this point
+            playNextMove();
+            sendMove();
+        }
+    }
+
+    private void playNextMove() {
+        nextMove = computerPlayer.chooseMove(board);
+    }
+
+    private void sendMove() {
+        clientMessage.setMove(nextMove);
+        try {
+            clientMessage.send(out);
+        } catch (IOException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
         }
     }
 

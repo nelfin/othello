@@ -1,24 +1,27 @@
 package iago;
 
-import java.awt.Point;
 import java.io.ByteArrayOutputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 
 public class ClientMessage {
 
-    private Point move;
+    private Move move;
     
     public ClientMessage() {
         this(-1, -1);
     }
     
     public ClientMessage(int x, int y) {
-        this.move = new Point(x, y);
+        this.move = new Move(x, y);
     }
     
     public void setMove(int x, int y) {
         this.move.setLocation(x, y);
+    }
+    
+    public void setMove(Move nextMove) {
+        this.move = nextMove;
     }
     
     public void send(DataOutputStream pipe) throws IOException {
@@ -36,4 +39,5 @@ public class ClientMessage {
         
         pipe.write(buffer.toByteArray());
     }
+
 }
