@@ -189,6 +189,6 @@ public class Client {
         this.board = new Board();
         this.serverMessage = new ServerMessage();
         this.clientMessage = new ClientMessage();
-        this.computerPlayer = new SimplePlayer(player);
+        this.computerPlayer = new GreedyPlayer(player);
     }
 }
