@@ -49,7 +49,7 @@ public class Board {
         
         for (int i = 0; i < BOARD_SIZE; i++) {
             for (int j = 0; j < BOARD_SIZE; j++) {
-                this.board[i][j] = BoardState.EMPTY; 
+                set(i, j, BoardState.EMPTY); 
             }
         }
     }
@@ -59,7 +59,7 @@ public class Board {
         byte[] boardArray = m.getBoardArray();
         for (int i = 0; i < BOARD_SIZE; i++) {
             for (int j = 0; j < BOARD_SIZE; j++) {
-                this.board[i][j] = getState(boardArray, i, j);
+                set(i, j, getState(boardArray, i, j));
             }
         }
     }
@@ -70,7 +70,7 @@ public class Board {
         for (int x = 0; x < BOARD_SIZE; x++) {
             System.out.printf("%d ", x);
             for (int y = 0; y < BOARD_SIZE; y++) {
-                BoardState b = board[y][x];
+                BoardState b = get(x, y);
                 if (b == BoardState.BLOCKED) {
                     System.out.print("* ");
                 } else if (b == BoardState.WHITE) {
@@ -104,12 +104,12 @@ public class Board {
     
     private boolean validLocation(int x, int y) {
         return ((x >= 0) && (x < BOARD_SIZE) && (y >= 0) && (y < BOARD_SIZE) &&
-                (board[y][x] != BoardState.BLOCKED)); 
+                (get(x, y) != BoardState.BLOCKED)); 
         
     }
     
     private int makeMove(int x, int y, PlayerType player, boolean commit) {
-        if (!validLocation(x, y) || board[y][x] != BoardState.EMPTY) {
+        if (!validLocation(x, y) || get(x, y) != BoardState.EMPTY) {
             return 0;
         }
         int numFlipped = 0;
@@ -132,12 +132,12 @@ public class Board {
         x += dx;
         y += dy;
         int opponentPieces = 0;
-        while (validLocation(x, y) && board[y][x] == opponent) {
+        while (validLocation(x, y) && get(x, y) == opponent) {
             ++opponentPieces;
             x += dx;
             y += dy;
         }
-        if (!validLocation(x, y) || opponentPieces == 0 || board[y][x] != current) {
+        if (!validLocation(x, y) || opponentPieces == 0 || get(x, y) != current) {
             // Hit the edge of the board, or a blocked square
             return 0;
         }
@@ -170,5 +170,31 @@ public class Board {
     
     private BoardState getState(byte[] boardArray, int x, int y) {
         return BoardState.fromByte(boardArray[x*BOARD_SIZE + y]);
+    }
+    
+    /**
+     * Returns the board state corresponding to the coordinates (x,y).
+     * 
+     * Because it was becoming confusing as to the implementation details
+     * of the board.
+     * 
+     * @param x
+     * @param y
+     * @return boardState
+     */
+    public BoardState get(int x, int y) {
+        return this.board[y][x];
+    }
+    
+    /**
+     * Set a tile on the board.
+     * 
+     * Not externally visible.
+     * @param x
+     * @param y
+     * @param b value to set
+     */
+    private void set(int x, int y, BoardState b) {
+        this.board[y][x] = b;
     }
 }
