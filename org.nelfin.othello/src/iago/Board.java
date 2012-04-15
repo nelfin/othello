@@ -47,9 +47,9 @@ public class Board {
         this.board = new BoardState[BOARD_SIZE][BOARD_SIZE];
         this.movesPlayed = 0;
         
-        for (int i = 0; i < BOARD_SIZE; i++) {
-            for (int j = 0; j < BOARD_SIZE; j++) {
-                set(i, j, BoardState.EMPTY); 
+        for (int x = 0; x < BOARD_SIZE; x++) {
+            for (int y = 0; y < BOARD_SIZE; y++) {
+                set(x, y, BoardState.EMPTY); 
             }
         }
     }
@@ -57,9 +57,9 @@ public class Board {
     public void processMessage(ServerMessage m) {
         // TODO should this be less coupled?
         byte[] boardArray = m.getBoardArray();
-        for (int i = 0; i < BOARD_SIZE; i++) {
-            for (int j = 0; j < BOARD_SIZE; j++) {
-                set(i, j, getState(boardArray, i, j));
+        for (int x = 0; x < BOARD_SIZE; x++) {
+            for (int y = 0; y < BOARD_SIZE; y++) {
+                set(x, y, getState(boardArray, x, y));
             }
         }
     }
@@ -169,7 +169,7 @@ public class Board {
     }
     
     private BoardState getState(byte[] boardArray, int x, int y) {
-        return BoardState.fromByte(boardArray[x*BOARD_SIZE + y]);
+        return BoardState.fromByte(boardArray[y*BOARD_SIZE + x]);
     }
     
     /**
