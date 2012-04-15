@@ -54,6 +54,19 @@ public class Board {
         }
     }
     
+    public Board(Board board2) {
+        this.board = new BoardState[BOARD_SIZE][BOARD_SIZE];
+        this.movesPlayed = board2.movesPlayed;
+        for (int x = 0; x < BOARD_SIZE; x++) {
+            for (int y = 0; y < BOARD_SIZE; y++) {
+                set(x, y, board2.get(x, y)); 
+            }
+        }
+        for (BoardState b : BoardState.values()) {
+            this.cellCount.put(b, board2.cellCount.get(b));
+        }
+    }
+    
     public void processMessage(ServerMessage m) {
         // TODO should this be less coupled?
         byte[] boardArray = m.getBoardArray();
