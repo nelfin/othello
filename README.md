@@ -8,7 +8,7 @@ agent will compete in a tournament against others completing the same project.
 Contributors
 ------------
 
-* Andrew Haigh
-* Tim Cosgrove
-* Joshua Nelson
+* [Andrew Haigh](https://github.com/nelfin)
+* [Tim Cosgrove](https://github.com/CapnP)
+* [Joshua Nelson](https://github.com/cyberdash)
 
