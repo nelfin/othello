@@ -9,7 +9,11 @@ public class ClientMessage {
     private Move move;
     
     public ClientMessage() {
-        this(-1, -1);
+        this(Move.NO_MOVE);
+    }
+    
+    public ClientMessage(Move m) {
+        this.move = m;
     }
     
     public ClientMessage(int x, int y) {

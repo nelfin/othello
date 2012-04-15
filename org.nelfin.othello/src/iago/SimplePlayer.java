@@ -9,7 +9,7 @@ public class SimplePlayer extends AbstractPlayer {
     public Move chooseMove(Board board) {
         Set<Move> legalMoves = board.validMoves(getColour());
         if (legalMoves.size() == 0) {
-            return new Move(-1, -1);
+            return Move.NO_MOVE;
         } else {
             return legalMoves.iterator().next();
         }

@@ -168,7 +168,7 @@ public class Client {
         }
         
         if (serverMessage.cantMakeMove()) {
-            clientMessage.setMove(-1, -1);
+            clientMessage.setMove(Move.NO_MOVE);
             try {
                 clientMessage.send(out);
             } catch (IOException e) {
