@@ -5,7 +5,7 @@ import java.util.Set;
 
 public class AlphaBetaPlayer extends AbstractPlayer {
     
-    public static final int DEFAULT_DEPTH = 5;
+    public static final int DEFAULT_DEPTH = 2;
     
     private int searchDepth;
     
@@ -15,13 +15,21 @@ public class AlphaBetaPlayer extends AbstractPlayer {
         if (legalMoves.size() == 0) {
             return Move.NO_MOVE;
         }
-        PlayerType opponent = getColour().getOpponent();
+        
+        PlayerType player = getColour();
+        PlayerType opponent = player.getOpponent();
         int bestScore = Integer.MIN_VALUE;
         Move bestMove = null;
+        
         for (Move m : legalMoves) {
-            int score = minimax(board, opponent, Integer.MIN_VALUE,
-                    Integer.MAX_VALUE, getSearchDepth()-1);
-            if (score > bestScore) {
+            Board move = board.apply(m, player);
+            // XXX this was returning the wrong valued score, so we were 
+            // deliberately losing... ???
+            // FIXME this needs parity flipping for odd searchDepth
+            int score = minimax(move, opponent,
+                    Integer.MIN_VALUE, Integer.MAX_VALUE, getSearchDepth()-1);
+            // FIXED wasn't picking a move under a guaranteed loss
+            if ((score > bestScore) || (bestScore == Integer.MIN_VALUE)) {
                 bestScore = score;
                 bestMove = m;
             }
@@ -35,10 +43,12 @@ public class AlphaBetaPlayer extends AbstractPlayer {
             int depth) {
         if (depth <= 0) {
             // TODO remaining moves...
-            return board.scoreBoard(player);
+            return board.scoreBoard();
         }
+        
         PlayerType nextPlayer = player.getOpponent();
         Set<Move> successors = board.validMoves(player);
+        
         if (player == getColour()) {
             for (Move m : successors) {
                 int v = minimax(board.apply(m, player), nextPlayer,

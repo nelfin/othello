@@ -2,6 +2,7 @@ package iago;
 
 import iago.Player.PlayerType;
 
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
@@ -46,39 +47,64 @@ public class Board {
     public Board() {
         this.board = new BoardState[BOARD_SIZE][BOARD_SIZE];
         this.movesPlayed = 0;
+        this.cellCount = new HashMap<BoardState, Integer>();
         
         for (int x = 0; x < BOARD_SIZE; x++) {
             for (int y = 0; y < BOARD_SIZE; y++) {
                 set(x, y, BoardState.EMPTY); 
             }
         }
+        this.cellCount.put(BoardState.BLACK, 0);
+        this.cellCount.put(BoardState.WHITE, 0);
     }
     
     public Board(Board board2) {
         this.board = new BoardState[BOARD_SIZE][BOARD_SIZE];
         this.movesPlayed = board2.movesPlayed;
+        this.cellCount = new HashMap<BoardState, Integer>();
         for (int x = 0; x < BOARD_SIZE; x++) {
             for (int y = 0; y < BOARD_SIZE; y++) {
                 set(x, y, board2.get(x, y)); 
             }
         }
-//        for (BoardState b : BoardState.values()) {
-//            this.cellCount.put(b, board2.cellCount.get(b));
-//        }
+        this.cellCount.put(BoardState.BLACK, board2.cellCount.get(BoardState.BLACK));
+        this.cellCount.put(BoardState.WHITE, board2.cellCount.get(BoardState.WHITE));
     }
     
     public void processMessage(ServerMessage m) {
         // TODO should this be less coupled?
         byte[] boardArray = m.getBoardArray();
+        int blackCount = 0;
+        int whiteCount = 0;
         for (int x = 0; x < BOARD_SIZE; x++) {
             for (int y = 0; y < BOARD_SIZE; y++) {
-                set(x, y, getState(boardArray, x, y));
+                BoardState b = getState(boardArray, x, y);
+                if (b == BoardState.BLACK) {
+                    blackCount++;
+                } else if (b == BoardState.WHITE) {
+                    whiteCount++;
+                }
+                set(x, y, b);
             }
         }
+        setCellCount(BoardState.BLACK, blackCount);
+        setCellCount(BoardState.WHITE, whiteCount);
+    }
+    
+    private void setCellCount(BoardState b, int count) {
+        this.cellCount.put(b, count);
+    }
+    
+    private void addCellCount(BoardState b, int count) {
+        this.cellCount.put(b, count + this.cellCount.get(b));
+    }
+    
+    private void subtractCellCount(BoardState b, int count) {
+        this.cellCount.put(b, this.cellCount.get(b) - count);
     }
     
     @SuppressWarnings("unused")
-    private void visualise() {
+    public void visualise() {
         System.out.println("  0 1 2 3 4 5 6 7 8 9");
         for (int x = 0; x < BOARD_SIZE; x++) {
             System.out.printf("%d ", x);
@@ -160,8 +186,15 @@ public class Board {
         }
         
         if (commit) {
-            // TODO Apply move
+            for (int i = 0; i <= opponentPieces+1; i++) {
+                set(x, y, current);
+                x -= dx;
+                y -= dy;
+            }
+            subtractCellCount(opponent, opponentPieces);
+            addCellCount(current, opponentPieces+1);
         }
+        
         return opponentPieces;
     }
     
@@ -171,7 +204,6 @@ public class Board {
         } else if (b == BoardState.EMPTY) {
             return BOARD_SIZE*BOARD_SIZE - BLOCKED_NUM - movesPlayed;
         } else {
-            // TODO update board cellCount values
             return cellCount.get(b);
         }
     }
@@ -205,17 +237,22 @@ public class Board {
     private void set(int x, int y, BoardState b) {
         this.board[y][x] = b;
     }
-
-    public int scoreBoard(PlayerType player) {
-        return 1;
-//        return (getCellCount(BoardState.asBoardState(player)) -
-//                getCellCount(BoardState.asBoardState(player.getOpponent())));
+    
+    // FIXME this was dependent upon player, but values seemed to be
+    // inverted
+    public int scoreBoard() {
+        return (getCellCount(BoardState.WHITE) -
+                getCellCount(BoardState.BLACK));
     }
     
     public Board apply(Move m, PlayerType player) {
         Board result = new Board(this);
         result.makeMove(m.x, m.y, player, true);
         return result;
+    }
+    
+    public int movesRemaining() {
+        return BOARD_SIZE*BOARD_SIZE - BLOCKED_NUM - this.movesPlayed;
     }
     
 }
