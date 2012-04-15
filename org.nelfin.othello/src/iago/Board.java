@@ -62,9 +62,9 @@ public class Board {
                 set(x, y, board2.get(x, y)); 
             }
         }
-        for (BoardState b : BoardState.values()) {
-            this.cellCount.put(b, board2.cellCount.get(b));
-        }
+//        for (BoardState b : BoardState.values()) {
+//            this.cellCount.put(b, board2.cellCount.get(b));
+//        }
     }
     
     public void processMessage(ServerMessage m) {
@@ -207,7 +207,15 @@ public class Board {
     }
 
     public int scoreBoard(PlayerType player) {
-        return (getCellCount(BoardState.asBoardState(player)) -
-                getCellCount(BoardState.asBoardState(player.getOpponent())));
+        return 1;
+//        return (getCellCount(BoardState.asBoardState(player)) -
+//                getCellCount(BoardState.asBoardState(player.getOpponent())));
     }
+    
+    public Board apply(Move m, PlayerType player) {
+        Board result = new Board(this);
+        result.makeMove(m.x, m.y, player, true);
+        return result;
+    }
+    
 }
