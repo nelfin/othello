@@ -131,7 +131,7 @@ public class Board {
     private int flipPieces(int x, int y, int dx, int dy, PlayerType player,
             boolean commit) {
         BoardState current = BoardState.asBoardState(player);
-        BoardState opponent = getOpponent(current);
+        BoardState opponent = BoardState.asBoardState(player.getOpponent());
         
         x += dx;
         y += dy;
@@ -150,16 +150,6 @@ public class Board {
             // TODO Apply move
         }
         return opponentPieces;
-    }
-    
-    private BoardState getOpponent(BoardState aBoardState) {
-        if (aBoardState == BoardState.WHITE) {
-            return BoardState.BLACK;
-        } else if (aBoardState == BoardState.BLACK) {
-            return BoardState.WHITE;
-        } else {
-            return null;
-        }
     }
     
     private int getCellCount(BoardState b) {
