@@ -36,6 +36,26 @@ public interface Player {
             }
             return null;
         }
+        
+        public static PlayerType getOpponent(PlayerType p) {
+            switch (p) {
+            case WHITE:
+                return BLACK;
+            case BLACK:
+                return WHITE;
+            }
+            return NONE;
+        }
+        
+        public PlayerType getOpponent() {
+            switch (this) {
+            case WHITE:
+                return BLACK;
+            case BLACK:
+                return WHITE;
+            }
+            return NONE;
+        }
     }
     
     public abstract Move chooseMove(Board board);
