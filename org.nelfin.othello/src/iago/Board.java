@@ -168,6 +168,7 @@ public class Board {
         } else if (b == BoardState.EMPTY) {
             return BOARD_SIZE*BOARD_SIZE - BLOCKED_NUM - movesPlayed;
         } else {
+            // TODO update board cellCount values
             return cellCount.get(b);
         }
     }
@@ -200,5 +201,10 @@ public class Board {
      */
     private void set(int x, int y, BoardState b) {
         this.board[y][x] = b;
+    }
+
+    public int scoreBoard(PlayerType player) {
+        return (getCellCount(BoardState.asBoardState(player)) -
+                getCellCount(BoardState.asBoardState(player.getOpponent())));
     }
 }
