@@ -108,6 +108,10 @@ public class Board {
         
     }
     
+    public int scoreMove(Move m, PlayerType player) {
+        return makeMove(m.x, m.y, player, false);
+    }
+    
     private int makeMove(int x, int y, PlayerType player, boolean commit) {
         if (!validLocation(x, y) || get(x, y) != BoardState.EMPTY) {
             return 0;
