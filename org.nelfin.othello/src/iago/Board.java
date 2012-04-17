@@ -240,9 +240,9 @@ public class Board {
     
     // FIXME this was dependent upon player, but values seemed to be
     // inverted
-    public int scoreBoard() {
-        return (getCellCount(BoardState.WHITE) -
-                getCellCount(BoardState.BLACK));
+    public int scoreBoard(PlayerType player) {
+        return (getCellCount(BoardState.asBoardState(player)) -
+                getCellCount(BoardState.asBoardState(player.getOpponent())));
     }
     
     public Board apply(Move m, PlayerType player) {

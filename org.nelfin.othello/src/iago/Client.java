@@ -168,6 +168,7 @@ public class Client {
         }
         
         if (serverMessage.cantMakeMove()) {
+            System.err.println("[client] server announced that we have no move");
             clientMessage.setMove(Move.NO_MOVE);
             try {
                 clientMessage.send(out);
@@ -189,6 +190,6 @@ public class Client {
         this.board = new Board();
         this.serverMessage = new ServerMessage();
         this.clientMessage = new ClientMessage();
-        this.computerPlayer = new GreedyPlayer(player);
+        this.computerPlayer = new NegamaxPlayer(player);
     }
 }
