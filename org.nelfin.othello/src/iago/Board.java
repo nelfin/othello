@@ -87,6 +87,7 @@ public class Board {
                 set(x, y, b);
             }
         }
+        this.movesPlayed = blackCount + whiteCount;
         setCellCount(BoardState.BLACK, blackCount);
         setCellCount(BoardState.WHITE, whiteCount);
     }
@@ -164,6 +165,9 @@ public class Board {
                 numFlipped += flipPieces(x, y, dx, dy, player, commit);
             }
         }
+        if (commit) {
+            this.movesPlayed++;
+        }
         return numFlipped;
     }
     
@@ -240,9 +244,17 @@ public class Board {
     
     // FIXME this was dependent upon player, but values seemed to be
     // inverted
-    public int scoreBoard() {
+    public int scoreBoardObjectively() {
         return (getCellCount(BoardState.WHITE) -
                 getCellCount(BoardState.BLACK));
+    }
+    
+    public int scoreBoard(PlayerType player) {
+        if (player == PlayerType.WHITE) {
+            return scoreBoardObjectively();
+        } else {
+            return -scoreBoardObjectively();
+        }
     }
     
     public Board apply(Move m, PlayerType player) {

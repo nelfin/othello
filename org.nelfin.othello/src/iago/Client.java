@@ -10,7 +10,7 @@ import java.net.Socket;
 import java.net.UnknownHostException;
 
 
-public class Client {
+public class Client implements Runnable {
     
     private static final String DEFAULT_HOST = "localhost";
     private static final int DEFAULT_PORT = 3130;
@@ -65,12 +65,22 @@ public class Client {
         }
         
         // And, we're off!
-        Client client = new Client(player, host, port);
-        if (!client.connect()) {
+        Client gClient = new Client(player, host, port);
+        Client mClient = new Client(player.getOpponent(),
+                host, port, new MinimaxPlayer(player.getOpponent()));
+        if (!gClient.connect()) {
             System.err.println("[client] unable to establish a connection, exiting");
             System.exit(1);
         }
-        client.runForever();
+        if (!mClient.connect()) {
+            System.err.println("[client] unable to establish a connection, exiting");
+            System.exit(1);
+        }
+        
+        Thread t1 = new Thread(gClient);
+        Thread t2 = new Thread(mClient);
+        t1.start();
+        t2.start();
     }
 
     private boolean connect() {
@@ -98,10 +108,11 @@ public class Client {
     private byte[] connectMessage() throws IOException {
         ByteArrayOutputStream buffer = new ByteArrayOutputStream();
         DataOutputStream w = new DataOutputStream(buffer);
+        String name = NAME + " - " + this.player.toString();
         
         w.writeInt(player.toInteger());
-        w.writeInt(NAME.length());
-        w.write(NAME.getBytes());
+        w.writeInt(name.length());
+        w.write(name.getBytes());
         w.flush();
         
         return buffer.toByteArray();
@@ -181,14 +192,23 @@ public class Client {
         
         return true;
     }
-
+    
     public Client(PlayerType player, String host, int port) {
+        this(player, host, port, new GreedyPlayer(player));
+    }
+    
+    public Client(PlayerType player, String host, int port, Player ai) {
         this.player = player;
         this.host = host;
         this.port = port;
         this.board = new Board();
         this.serverMessage = new ServerMessage();
         this.clientMessage = new ClientMessage();
-        this.computerPlayer = new GreedyPlayer(player);
+        this.computerPlayer = ai;
+    }
+
+    @Override
+    public void run() {
+        this.runForever();
     }
 }

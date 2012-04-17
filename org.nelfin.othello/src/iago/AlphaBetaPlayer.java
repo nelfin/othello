@@ -43,7 +43,7 @@ public class AlphaBetaPlayer extends AbstractPlayer {
             int depth) {
         if (depth <= 0) {
             // TODO remaining moves...
-            return board.scoreBoard();
+            return board.scoreBoardObjectively();
         }
         
         PlayerType nextPlayer = player.getOpponent();
