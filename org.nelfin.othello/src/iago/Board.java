@@ -104,12 +104,11 @@ public class Board {
         this.cellCount.put(b, this.cellCount.get(b) - count);
     }
     
-    @SuppressWarnings("unused")
     public void visualise() {
         System.out.println("  0 1 2 3 4 5 6 7 8 9");
-        for (int x = 0; x < BOARD_SIZE; x++) {
-            System.out.printf("%d ", x);
-            for (int y = 0; y < BOARD_SIZE; y++) {
+        for (int y = 0; y < BOARD_SIZE; y++) {
+            System.out.printf("%d ", y);
+            for (int x = 0; x < BOARD_SIZE; x++) {
                 BoardState b = get(x, y);
                 if (b == BoardState.BLOCKED) {
                     System.out.print("* ");
