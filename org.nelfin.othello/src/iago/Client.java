@@ -6,6 +6,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
+import java.io.PrintStream;
 import java.net.Socket;
 import java.net.UnknownHostException;
 
@@ -67,7 +68,7 @@ public class Client implements Runnable {
         // And, we're off!
         Client gClient = new Client(player, host, port);
         Client mClient = new Client(player.getOpponent(),
-                host, port, new MinimaxPlayer(player.getOpponent()));
+                host, port);
         if (!gClient.connect()) {
             System.err.println("[client] unable to establish a connection, exiting");
             System.exit(1);
@@ -89,17 +90,17 @@ public class Client implements Runnable {
             out = new DataOutputStream(socket.getOutputStream());
             in = new DataInputStream(socket.getInputStream());
         } catch (UnknownHostException e) {
-            System.err.println("[client] unknown host: " + host);
+            report(System.err, "unknown host: " + host);
             return false;
         } catch (IOException e) {
-            System.err.println("[client] error creating socket");
+            report(System.err, "error creating socket");
             return false;
         }
         try {
             out.write(connectMessage());
             out.flush();
         } catch (IOException e) {
-            System.err.println("[client] could not connect to server");
+            report(System.err, "could not connect to server");
             return false;
         }
         return true;
@@ -122,16 +123,16 @@ public class Client implements Runnable {
         while (true) {
             // receive
             if (!processServerMessage()) {
-                System.err.println("[client] shutting down");
+                report(System.err, "shutting down");
                 return;
             }
             // game status should be GIVE_MOVE at this point
             playNextMove();
-            System.out.println("[client] computer player chose " + nextMove.toString());
+            report("computer player chose " + nextMove.toString());
             try {
                 sendMove();
             } catch (IOException e) {
-                System.err.println("[client] error sending move, shutting down");
+                report(System.err, "error sending move, shutting down");
                 return;
             }
         }
@@ -156,12 +157,12 @@ public class Client implements Runnable {
         try {
             serverMessage.receive(in);
         } catch (IOException e) {
-            System.err.println("[client] error in receiving server message");
+            report(System.err, "error in receiving server message");
             return false;
         }
         
         if (serverMessage.gameAborted()) {
-            System.err.println("[client] server aborted game");
+            report(System.err, "server aborted game");
             return false;
         }
         
@@ -169,11 +170,11 @@ public class Client implements Runnable {
             PlayerType winner = serverMessage.getWinner();
             if (winner == PlayerType.NONE) {
                 // A draw
-                System.out.println("[client] Game was a draw");
+                report("Game was a draw");
             } else if (winner == player) {
-                System.out.println("[cilent] We won :)");
+                report("We won :)");
             } else {
-                System.out.println("[client] We lost :(");
+                report("We lost :(");
             }
             return false;
         }
@@ -183,7 +184,7 @@ public class Client implements Runnable {
             try {
                 clientMessage.send(out);
             } catch (IOException e) {
-                System.err.println("[client] unable to send move to server");
+                report(System.err, "unable to send move to server");
                 return false;
             }
         }
@@ -207,6 +208,13 @@ public class Client implements Runnable {
         this.computerPlayer = ai;
     }
 
+    private void report(String message) {
+        report(System.out, message);
+    }
+    private void report(PrintStream f, String message) {
+        f.println("["+this.player.toString()+"] " + message);
+    }
+    
     @Override
     public void run() {
         this.runForever();
