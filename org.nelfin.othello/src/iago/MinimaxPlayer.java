@@ -5,50 +5,32 @@ import java.util.Set;
 
 public class MinimaxPlayer extends AbstractPlayer {
     
-    public static final int DEFAULT_DEPTH = 5;
+    public static final int DEFAULT_DEPTH = 4;
     private static final int INF = 65535;
     private static final PlayerType MAX_PLAYER = PlayerType.WHITE;
     
     private int searchDepth;
+    private Move bestMove;
+    private boolean isMaxPlayer;
     
     @Override
     public Move chooseMove(Board board) {
-        Set<Move> legalMoves = board.validMoves(getColour());
-        if (legalMoves.size() == 0) {
+        this.bestMove = null;
+        
+        minimax(board, getColour(), getSearchDepth());
+        
+        if (this.bestMove == null) {
+            // This shouldn't happen...
+            System.out.println("[minimax] We didn't pick a move!");
+            board.visualise();
+            Set<Move> legalMoves = board.validMoves(getColour());
+            for (Move m : legalMoves) {
+                System.out.println("[minimax] " + m.toString());
+            }
             return Move.NO_MOVE;
         }
         
-        PlayerType player = getColour();
-        PlayerType opponent = player.getOpponent();
-        Move bestMove = null;
-        int bestScore;
-        
-        if (player == MAX_PLAYER) {
-            bestScore = -(INF+1);
-        } else {
-            bestScore = INF+1;
-        }
-        
-        for (Move m : legalMoves) {
-            Board move = board.apply(m, player);
-            // deliberately losing... ???
-            int score = minimax(move, opponent, getSearchDepth()-1);
-            // FIXED wasn't picking a move under a guaranteed loss
-            if (player == MAX_PLAYER) {
-                if (score > bestScore) {
-                    bestScore = score;
-                    bestMove = m;
-                }
-            } else {
-                if (score < bestScore) {
-                    bestScore = score;
-                    bestMove = m;
-                }
-            }
-        }
-        
-        assert (null != bestMove);
-        return bestMove;
+        return this.bestMove;
     }
     
     private int minimax(Board board, PlayerType player, int depth) {
@@ -59,23 +41,36 @@ public class MinimaxPlayer extends AbstractPlayer {
         PlayerType nextPlayer = player.getOpponent();
         Set<Move> successors = board.validMoves(player);
         int alpha;
+        Move lBestMove = null;
         
         if (player == MAX_PLAYER) {
-            alpha = INF; 
+            alpha = -INF; 
         } else {
-            alpha = -INF;
+            alpha = INF;
         }
         
         for (Move m : successors) {
             int v = minimax(board.apply(m, player), nextPlayer,
                     depth-1);
             if (player == MAX_PLAYER) {
-                alpha = Math.max(alpha, v);
+                if (v > alpha || alpha == -INF) {
+                    alpha = v;
+                    if (isMaxPlayer) {
+                        lBestMove = m;
+                    }
+                }
             } else {
-                alpha = Math.min(alpha, v);
+                if (v < alpha || alpha == INF) {
+                    alpha = v;
+                    if (!isMaxPlayer) {
+                        lBestMove= m;
+                    }
+                }
             }
         }
         
+        //System.err.println("[minimax] picking best move in depth " + depth);
+        this.bestMove = lBestMove;
         return alpha;
     }
 
@@ -86,6 +81,7 @@ public class MinimaxPlayer extends AbstractPlayer {
     public MinimaxPlayer(PlayerType colour, int depth) {
         super(colour);
         this.searchDepth = depth;
+        this.isMaxPlayer = (colour == MAX_PLAYER); 
     }
     
     public void setSearchDepth(int searchDepth) {
