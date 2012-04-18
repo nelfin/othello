@@ -67,7 +67,7 @@ public class Client implements Runnable {
         }
         
         // And, we're off!
-        Client mClient = new Client(player, host, port, new AlphaBetaPlayer(player));
+        Client mClient = new Client(player, host, port, new NegamaxPlayer(player));
         if (!mClient.connect()) {
             System.err.println("[client] unable to establish a connection, exiting");
             System.exit(1);
