@@ -20,15 +20,7 @@ public class AlphaBetaPlayer extends AbstractPlayer {
         minimax(board, getColour(), -INF, INF, getSearchDepth());
         
         if (this.bestMove == null) {
-            // This shouldn't happen...
-            Set<Move> legalMoves = board.validMoves(getColour());
-            board.visualise();
-            System.out.println("[minimax] We didn't pick a move from the " +
-                    legalMoves.size() + " available!");
-            for (Move m : legalMoves) {
-                System.out.println("[minimax] " + m.toString());
-            }
-            return Move.NO_MOVE;
+            return pickGreedyMove(board);
         }
         
         return this.bestMove;
@@ -46,14 +38,14 @@ public class AlphaBetaPlayer extends AbstractPlayer {
         
         if (player == MAX_PLAYER) {
             for (Move m : successors) {
-                int v = minimax(board.apply(m, nextPlayer), nextPlayer,
+                int v = minimax(board.apply(m, player), nextPlayer,
                                 alpha, beta, depth-1);
-                if (v >= alpha) {
+                if (v > alpha) {
                     alpha = v;
                     if (isMaxPlayer) {
                         lBestMove = m;
                     }
-                    if (beta <= alpha) {
+                    if (alpha >= beta) {
                         break;
                     }
                 }
@@ -61,9 +53,9 @@ public class AlphaBetaPlayer extends AbstractPlayer {
             }
         } else {
             for (Move m : successors) {
-                int v = minimax(board.apply(m, nextPlayer), nextPlayer,
+                int v = minimax(board.apply(m, player), nextPlayer,
                                 alpha, beta, depth-1);
-                if (v <= beta) {
+                if (v < beta) {
                     beta = v;
                     if (!isMaxPlayer) {
                         lBestMove = m;
@@ -76,7 +68,6 @@ public class AlphaBetaPlayer extends AbstractPlayer {
             }
         }
         
-        //System.err.println("[minimax] picking best move in depth " + depth);
         this.bestMove = lBestMove;
         if (player == MAX_PLAYER) {
             return alpha;
@@ -84,7 +75,22 @@ public class AlphaBetaPlayer extends AbstractPlayer {
             return beta;
         }
     }
-
+    
+    private Move pickGreedyMove(Board board) {
+        Set<Move> legalMoves = board.validMoves(getColour());
+        Move bestMove = Move.NO_MOVE;
+        int maxScore = -INF;
+        
+        for (Move m : legalMoves) {
+            int score = board.scoreMove(m, getColour());
+            if (score > maxScore) {
+                maxScore = score;
+                bestMove = m;
+            }
+        }
+        
+        return bestMove;
+    }
     public AlphaBetaPlayer(PlayerType colour) {
         this(colour, DEFAULT_DEPTH);
     }
