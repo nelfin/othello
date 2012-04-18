@@ -18,7 +18,7 @@ public class NegamaxPlayer extends AbstractPlayer {
         this.bestMove = null;
         
         int v = negamax(board, getColour(), 1, -INF, INF, getSearchDepth());
-        System.out.println("[negamax] returned value of "+v);
+        
         if (this.bestMove == null) {
             return pickGreedyMove(board);
         }
@@ -34,7 +34,7 @@ public class NegamaxPlayer extends AbstractPlayer {
         
         PlayerType nextPlayer = player.getOpponent();
         Set<Move> successors = board.validMoves(player);
-//        Move lBestMove = null;
+        Move lBestMove = null;
         
         if (successors.size() == 0) {
             return -negamax(board, nextPlayer, -colour, -beta, -alpha, depth-1);
@@ -44,52 +44,23 @@ public class NegamaxPlayer extends AbstractPlayer {
             int v = -negamax(board.apply(m, player), nextPlayer,
                     -colour, -beta, -alpha, depth-1);
             if (v >= beta) {
+                if (player == getColour()) {
+                    this.bestMove = m;
+                }
                 return v;
-            } else {
+            }
+            if (v > alpha) {
                 alpha = v;
+                if (player == getColour()) {
+                    lBestMove = m;
+                }
             }
         }
         
+        if (lBestMove != null) {
+            this.bestMove = lBestMove;
+        }
         return alpha;
-        
-//        if (player == MAX_PLAYER) {
-//            for (Move m : successors) {
-//                int v = minimax(board.apply(m, player), nextPlayer,
-//                                alpha, beta, depth-1);
-//                if (v > alpha) {
-//                    alpha = v;
-//                    if (isMaxPlayer) {
-//                        lBestMove = m;
-//                    }
-//                    if (alpha >= beta) {
-//                        break;
-//                    }
-//                }
-//                
-//            }
-//        } else {
-//            for (Move m : successors) {
-//                int v = minimax(board.apply(m, player), nextPlayer,
-//                                alpha, beta, depth-1);
-//                if (v < beta) {
-//                    beta = v;
-//                    if (!isMaxPlayer) {
-//                        lBestMove = m;
-//                    }
-//                    if (beta <= alpha) {
-//                        break;
-//                    }
-//                }
-//                
-//            }
-//        }
-//        
-//        this.bestMove = lBestMove;
-//        if (player == MAX_PLAYER) {
-//            return alpha;
-//        } else {
-//            return beta;
-//        }
     }
     
     private Move pickGreedyMove(Board board) {
