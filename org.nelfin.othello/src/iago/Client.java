@@ -67,22 +67,12 @@ public class Client implements Runnable {
         }
         
         // And, we're off!
-        Client gClient = new Client(player, host, port);
-        Client mClient = new Client(player.getOpponent(),
-                host, port, new AlphaBetaPlayer(player.getOpponent()));
-        if (!gClient.connect()) {
-            System.err.println("[client] unable to establish a connection, exiting");
-            System.exit(1);
-        }
+        Client mClient = new Client(player, host, port, new AlphaBetaPlayer(player));
         if (!mClient.connect()) {
             System.err.println("[client] unable to establish a connection, exiting");
             System.exit(1);
         }
-        
-        Thread t1 = new Thread(gClient);
-        Thread t2 = new Thread(mClient);
-        t1.start();
-        t2.start();
+        mClient.run();
     }
 
     private boolean connect() {
