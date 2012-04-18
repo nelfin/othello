@@ -7,17 +7,15 @@ public class NegamaxPlayer extends AbstractPlayer {
     
     public static final int DEFAULT_DEPTH = 6;
     private static final int INF = 65535;
-    private static final PlayerType MAX_PLAYER = PlayerType.WHITE;
     
     private int searchDepth;
     private Move bestMove;
-    private boolean isMaxPlayer;
     
     @Override
     public Move chooseMove(Board board) {
         this.bestMove = null;
         
-        int v = negamax(board, getColour(), 1, -INF, INF, getSearchDepth());
+        negamax(board, getColour(), 1, -INF, INF, getSearchDepth());
         
         if (this.bestMove == null) {
             return pickGreedyMove(board);
@@ -84,8 +82,7 @@ public class NegamaxPlayer extends AbstractPlayer {
     
     public NegamaxPlayer(PlayerType colour, int depth) {
         super(colour);
-        this.searchDepth = depth;
-        this.isMaxPlayer = (colour == MAX_PLAYER); 
+        this.searchDepth = depth; 
     }
     
     public void setSearchDepth(int searchDepth) {
