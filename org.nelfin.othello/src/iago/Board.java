@@ -244,8 +244,17 @@ public class Board {
     // FIXME this was dependent upon player, but values seemed to be
     // inverted
     public int scoreBoardObjectively() {
-        return (getCellCount(BoardState.WHITE) -
-                getCellCount(BoardState.BLACK));
+        int score = (getCellCount(BoardState.WHITE) -
+                     getCellCount(BoardState.BLACK));
+        // Preference victories
+        if (movesRemaining() == 0) {
+            if (score > 0) {
+                score += BOARD_SIZE*BOARD_SIZE + 1;
+            } else {
+                score -= BOARD_SIZE*BOARD_SIZE + 1;
+            }
+        }
+        return score;
     }
     
     public int scoreBoard(PlayerType player) {
