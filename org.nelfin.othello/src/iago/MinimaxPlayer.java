@@ -5,7 +5,7 @@ import java.util.Set;
 
 public class MinimaxPlayer extends AbstractPlayer {
     
-    public static final int DEFAULT_DEPTH = 4;
+    public static final int DEFAULT_DEPTH = 6;
     private static final int INF = 65535;
     private static final PlayerType MAX_PLAYER = PlayerType.WHITE;
     
