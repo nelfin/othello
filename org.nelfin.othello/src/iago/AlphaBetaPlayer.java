@@ -36,6 +36,13 @@ public class AlphaBetaPlayer extends AbstractPlayer {
         Set<Move> successors = board.validMoves(player);
         Move lBestMove = null;
         
+        // Play a no-op if current player must pass
+        if (successors.size() == 0) {
+            // ~~XXX Should depth be decremented here or not?~~
+            // Turns out there's a chance of stack-overflow error
+            // Infinite looooooooop..... ooop...
+            return minimax(board, nextPlayer, alpha, beta, depth-1);
+        }
         if (player == MAX_PLAYER) {
             for (Move m : successors) {
                 int v = minimax(board.apply(m, player), nextPlayer,
