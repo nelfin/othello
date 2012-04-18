@@ -20,6 +20,7 @@ public class Client implements Runnable {
     private String host;
     private int port;
     private PlayerType player;
+    private boolean canMove;
     private Board board;
     
     private Socket socket;
@@ -126,8 +127,12 @@ public class Client implements Runnable {
                 report(System.err, "shutting down");
                 return;
             }
-            // game status should be GIVE_MOVE at this point
-            playNextMove();
+            // game status should be GIVE_MOVE or NO_MOVE at this point
+            if (canMove) {
+                playNextMove();
+            } else {
+                nextMove = Move.NO_MOVE;
+            }
             report("computer player chose " + nextMove.toString());
             try {
                 sendMove();
@@ -179,15 +184,7 @@ public class Client implements Runnable {
             return false;
         }
         
-        if (serverMessage.cantMakeMove()) {
-            clientMessage.setMove(Move.NO_MOVE);
-            try {
-                clientMessage.send(out);
-            } catch (IOException e) {
-                report(System.err, "unable to send move to server");
-                return false;
-            }
-        }
+        canMove = !serverMessage.cantMakeMove();
         
         board.processMessage(serverMessage);
         
@@ -202,6 +199,7 @@ public class Client implements Runnable {
         this.player = player;
         this.host = host;
         this.port = port;
+        this.canMove = true;
         this.board = new Board();
         this.serverMessage = new ServerMessage();
         this.clientMessage = new ClientMessage();
