@@ -5,63 +5,108 @@ import java.util.Set;
 
 public class NegamaxPlayer extends AbstractPlayer {
     
-    public static final int DEFAULT_DEPTH = 2;
+    public static final int DEFAULT_DEPTH = 6;
+    private static final int INF = 65535;
+    private static final PlayerType MAX_PLAYER = PlayerType.WHITE;
     
     private int searchDepth;
+    private Move bestMove;
+    private boolean isMaxPlayer;
     
     @Override
     public Move chooseMove(Board board) {
-        Set<Move> legalMoves = board.validMoves(getColour());
-        if (legalMoves.size() == 0) {
-            return Move.NO_MOVE;
+        this.bestMove = null;
+        
+        int v = negamax(board, getColour(), 1, -INF, INF, getSearchDepth());
+        System.out.println("[negamax] returned value of "+v);
+        if (this.bestMove == null) {
+            return pickGreedyMove(board);
         }
         
-        // Note: top-level should always be called with getColour()
-        Move bestMove = negamax(board, getColour(), getSearchDepth(),
-                Integer.MIN_VALUE, Integer.MAX_VALUE, 1);
-        
-        assert (null != bestMove);
-        return bestMove;
+        return this.bestMove;
     }
     
-    private Move negamax(Board board, PlayerType player, int depth,
-            int alpha, int beta, int colour) {
+    private int negamax(Board board, PlayerType player,
+            int colour, int alpha, int beta, int depth) {
+        if ((depth <= 0) || (board.movesRemaining() == 0)) {
+            return colour * board.scoreBoard(player);
+        }
         
         PlayerType nextPlayer = player.getOpponent();
         Set<Move> successors = board.validMoves(player);
-        Move alphaMove = Move.NO_MOVE;
+//        Move lBestMove = null;
         
-        if (depth == 0) {
-            // XXX should this be getColour() or player?
-            return new Move (0, 0, colour * board.scoreBoard(getColour()));
-        }
-        
-        // Current player must pass, play a no-op
         if (successors.size() == 0) {
-            Move junk = negamax(board, nextPlayer, depth-1, -beta, -alpha, -colour);
-            junk.invert();
-            return junk;
+            return -negamax(board, nextPlayer, -colour, -beta, -alpha, depth-1);
         }
-        // Situation as usual
+        
         for (Move m : successors) {
-            Move junk = negamax(board.apply(m, player), nextPlayer,
-                    depth-1, -beta, -alpha, -colour);
-            junk.invert();
-            int v = junk.score;
-            // using a fail-soft cut-off
+            int v = -negamax(board.apply(m, player), nextPlayer,
+                    -colour, -beta, -alpha, depth-1);
             if (v >= beta) {
-                m.score = v;
-                return m;
-            }
-            if (v >= alpha) {
-                m.score = v;
-                alphaMove = m;
+                return v;
+            } else {
                 alpha = v;
             }
         }
-        return alphaMove;
+        
+        return alpha;
+        
+//        if (player == MAX_PLAYER) {
+//            for (Move m : successors) {
+//                int v = minimax(board.apply(m, player), nextPlayer,
+//                                alpha, beta, depth-1);
+//                if (v > alpha) {
+//                    alpha = v;
+//                    if (isMaxPlayer) {
+//                        lBestMove = m;
+//                    }
+//                    if (alpha >= beta) {
+//                        break;
+//                    }
+//                }
+//                
+//            }
+//        } else {
+//            for (Move m : successors) {
+//                int v = minimax(board.apply(m, player), nextPlayer,
+//                                alpha, beta, depth-1);
+//                if (v < beta) {
+//                    beta = v;
+//                    if (!isMaxPlayer) {
+//                        lBestMove = m;
+//                    }
+//                    if (beta <= alpha) {
+//                        break;
+//                    }
+//                }
+//                
+//            }
+//        }
+//        
+//        this.bestMove = lBestMove;
+//        if (player == MAX_PLAYER) {
+//            return alpha;
+//        } else {
+//            return beta;
+//        }
     }
-
+    
+    private Move pickGreedyMove(Board board) {
+        Set<Move> legalMoves = board.validMoves(getColour());
+        Move bestMove = Move.NO_MOVE;
+        int maxScore = -INF;
+        
+        for (Move m : legalMoves) {
+            int score = board.scoreMove(m, getColour());
+            if (score > maxScore) {
+                maxScore = score;
+                bestMove = m;
+            }
+        }
+        
+        return bestMove;
+    }
     public NegamaxPlayer(PlayerType colour) {
         this(colour, DEFAULT_DEPTH);
     }
@@ -69,6 +114,7 @@ public class NegamaxPlayer extends AbstractPlayer {
     public NegamaxPlayer(PlayerType colour, int depth) {
         super(colour);
         this.searchDepth = depth;
+        this.isMaxPlayer = (colour == MAX_PLAYER); 
     }
     
     public void setSearchDepth(int searchDepth) {
