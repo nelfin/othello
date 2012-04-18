@@ -6,11 +6,12 @@ import java.io.ByteArrayOutputStream;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
+import java.io.PrintStream;
 import java.net.Socket;
 import java.net.UnknownHostException;
 
 
-public class Client {
+public class Client implements Runnable {
     
     private static final String DEFAULT_HOST = "localhost";
     private static final int DEFAULT_PORT = 3130;
@@ -19,6 +20,7 @@ public class Client {
     private String host;
     private int port;
     private PlayerType player;
+    private boolean canMove;
     private Board board;
     
     private Socket socket;
@@ -65,12 +67,12 @@ public class Client {
         }
         
         // And, we're off!
-        Client client = new Client(player, host, port);
-        if (!client.connect()) {
+        Client mClient = new Client(player, host, port, new AlphaBetaPlayer(player));
+        if (!mClient.connect()) {
             System.err.println("[client] unable to establish a connection, exiting");
             System.exit(1);
         }
-        client.runForever();
+        mClient.run();
     }
 
     private boolean connect() {
@@ -79,17 +81,17 @@ public class Client {
             out = new DataOutputStream(socket.getOutputStream());
             in = new DataInputStream(socket.getInputStream());
         } catch (UnknownHostException e) {
-            System.err.println("[client] unknown host: " + host);
+            report(System.err, "unknown host: " + host);
             return false;
         } catch (IOException e) {
-            System.err.println("[client] error creating socket");
+            report(System.err, "error creating socket");
             return false;
         }
         try {
             out.write(connectMessage());
             out.flush();
         } catch (IOException e) {
-            System.err.println("[client] could not connect to server");
+            report(System.err, "could not connect to server");
             return false;
         }
         return true;
@@ -98,10 +100,11 @@ public class Client {
     private byte[] connectMessage() throws IOException {
         ByteArrayOutputStream buffer = new ByteArrayOutputStream();
         DataOutputStream w = new DataOutputStream(buffer);
+        String name = NAME + " - " + this.player.toString();
         
         w.writeInt(player.toInteger());
-        w.writeInt(NAME.length());
-        w.write(NAME.getBytes());
+        w.writeInt(name.length());
+        w.write(name.getBytes());
         w.flush();
         
         return buffer.toByteArray();
@@ -111,16 +114,20 @@ public class Client {
         while (true) {
             // receive
             if (!processServerMessage()) {
-                System.err.println("[client] shutting down");
+                report(System.err, "shutting down");
                 return;
             }
-            // game status should be GIVE_MOVE at this point
-            playNextMove();
-            System.out.println("[client] computer player chose " + nextMove.toString());
+            // game status should be GIVE_MOVE or NO_MOVE at this point
+            if (canMove) {
+                playNextMove();
+            } else {
+                nextMove = Move.NO_MOVE;
+            }
+            report("computer player chose " + nextMove.toString());
             try {
                 sendMove();
             } catch (IOException e) {
-                System.err.println("[client] error sending move, shutting down");
+                report(System.err, "error sending move, shutting down");
                 return;
             }
         }
@@ -145,12 +152,12 @@ public class Client {
         try {
             serverMessage.receive(in);
         } catch (IOException e) {
-            System.err.println("[client] error in receiving server message");
+            report(System.err, "error in receiving server message");
             return false;
         }
         
         if (serverMessage.gameAborted()) {
-            System.err.println("[client] server aborted game");
+            report(System.err, "server aborted game");
             return false;
         }
         
@@ -158,38 +165,46 @@ public class Client {
             PlayerType winner = serverMessage.getWinner();
             if (winner == PlayerType.NONE) {
                 // A draw
-                System.out.println("[client] Game was a draw");
+                report("Game was a draw");
             } else if (winner == player) {
-                System.out.println("[cilent] We won :)");
+                report("We won :)");
             } else {
-                System.out.println("[client] We lost :(");
+                report("We lost :(");
             }
             return false;
         }
         
-        if (serverMessage.cantMakeMove()) {
-            System.err.println("[client] server announced that we have no move");
-            clientMessage.setMove(Move.NO_MOVE);
-            try {
-                clientMessage.send(out);
-            } catch (IOException e) {
-                System.err.println("[client] unable to send move to server");
-                return false;
-            }
-        }
+        canMove = !serverMessage.cantMakeMove();
         
         board.processMessage(serverMessage);
         
         return true;
     }
-
+    
     public Client(PlayerType player, String host, int port) {
+        this(player, host, port, new GreedyPlayer(player));
+    }
+    
+    public Client(PlayerType player, String host, int port, Player ai) {
         this.player = player;
         this.host = host;
         this.port = port;
+        this.canMove = true;
         this.board = new Board();
         this.serverMessage = new ServerMessage();
         this.clientMessage = new ClientMessage();
-        this.computerPlayer = new NegamaxPlayer(player);
+        this.computerPlayer = ai;
+    }
+
+    private void report(String message) {
+        report(System.out, message);
+    }
+    private void report(PrintStream f, String message) {
+        f.println("["+this.player.toString()+"] " + message);
+    }
+    
+    @Override
+    public void run() {
+        this.runForever();
     }
 }
