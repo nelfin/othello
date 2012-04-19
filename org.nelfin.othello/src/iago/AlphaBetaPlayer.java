@@ -45,7 +45,7 @@ public class AlphaBetaPlayer extends AbstractPlayer {
         }
         if (player == MAX_PLAYER) {
             for (Move m : successors) {
-                int v = minimax(board.apply(m, player), nextPlayer,
+                int v = minimax(board.apply(m, player, false), nextPlayer,
                                 alpha, beta, depth-1);
                 if (v > alpha) {
                     alpha = v;
@@ -60,7 +60,7 @@ public class AlphaBetaPlayer extends AbstractPlayer {
             }
         } else {
             for (Move m : successors) {
-                int v = minimax(board.apply(m, player), nextPlayer,
+                int v = minimax(board.apply(m, player, false), nextPlayer,
                                 alpha, beta, depth-1);
                 if (v < beta) {
                     beta = v;

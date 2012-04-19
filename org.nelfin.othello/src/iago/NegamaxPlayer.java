@@ -39,7 +39,7 @@ public class NegamaxPlayer extends AbstractPlayer {
         }
         
         for (Move m : successors) {
-            int v = -negamax(board.apply(m, player), nextPlayer,
+            int v = -negamax(board.apply(m, player, false), nextPlayer,
                     -colour, -beta, -alpha, depth-1);
             if (v >= beta) {
                 if (player == getColour()) {

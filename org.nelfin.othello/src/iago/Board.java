@@ -265,10 +265,16 @@ public class Board {
         }
     }
     
-    public Board apply(Move m, PlayerType player) {
-        Board result = new Board(this);
-        result.makeMove(m.x, m.y, player, true);
-        return result;
+    public Board apply(Move m, PlayerType player, boolean destructive) {
+        if (destructive) {
+            this.makeMove(m.x, m.y, player, true);
+            // Does this make sense/do what I think it does?
+            return this;
+        } else {
+            Board result = new Board(this);
+            result.makeMove(m.x, m.y, player, true);
+            return result;
+        }
     }
     
     public int movesRemaining() {
