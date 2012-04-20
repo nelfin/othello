@@ -30,6 +30,20 @@ public class Board {
             return null;
         }
         
+        private static BoardState fromChar(char c) {
+            switch (c) {
+            case '.':
+                return EMPTY;
+            case 'w':
+                return WHITE;
+            case 'b':
+                return BLACK;
+            case '*':
+                return BLOCKED;
+            }
+            return null;
+        }
+        
         private static BoardState asBoardState(PlayerType p) {
             switch (p) {
             case WHITE:
@@ -93,9 +107,32 @@ public class Board {
         }
     }
     
-    public void processMessage(ServerMessage m) {
-        // TODO should this be less coupled?
-        byte[] boardArray = m.getBoardArray();
+    public Board(String representation) {
+        this.board = new BoardState[BOARD_SIZE][BOARD_SIZE];
+        this.cellCount = new HashMap<BoardState, Integer>();
+        processChars(representation.toCharArray());
+    }
+    
+    private void processChars(char[] boardRepr) {
+        int blackCount = 0;
+        int whiteCount = 0;
+        for (int x = 0; x < BOARD_SIZE; x++) {
+            for (int y = 0; y < BOARD_SIZE; y++) {
+                BoardState b = getState(boardRepr, x, y);
+                if (b == BoardState.BLACK) {
+                    blackCount++;
+                } else if (b == BoardState.WHITE) {
+                    whiteCount++;
+                }
+                set(x, y, b);
+            }
+        }
+        this.movesPlayed = blackCount + whiteCount;
+        setCellCount(BoardState.BLACK, blackCount);
+        setCellCount(BoardState.WHITE, whiteCount);
+    }
+    
+    private void processBytes(byte[] boardArray) {
         int blackCount = 0;
         int whiteCount = 0;
         for (int x = 0; x < BOARD_SIZE; x++) {
@@ -112,6 +149,11 @@ public class Board {
         this.movesPlayed = blackCount + whiteCount;
         setCellCount(BoardState.BLACK, blackCount);
         setCellCount(BoardState.WHITE, whiteCount);
+    }
+    
+    public void processMessage(ServerMessage m) {
+        byte[] boardArray = m.getBoardArray();
+        processBytes(boardArray);
     }
     
     private void setCellCount(BoardState b, int count) {
@@ -235,6 +277,10 @@ public class Board {
     
     private BoardState getState(byte[] boardArray, int x, int y) {
         return BoardState.fromByte(boardArray[y*BOARD_SIZE + x]);
+    }
+    
+    private BoardState getState(char[] boardArray, int x, int y) {
+        return BoardState.fromChar(boardArray[y*BOARD_SIZE + x]);
     }
     
     /**
