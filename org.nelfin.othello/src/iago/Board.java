@@ -12,7 +12,8 @@ public class Board {
     public static final int BOARD_SIZE = 10;
     private static final int BLOCKED_NUM = 4;
     
-    private enum BoardState {
+    //This was made public for the JUnit testing
+    public enum BoardState {
         EMPTY, WHITE, BLACK, BLOCKED;
         
         private static BoardState fromByte(byte b) {
@@ -69,6 +70,27 @@ public class Board {
         }
         this.cellCount.put(BoardState.BLACK, board2.cellCount.get(BoardState.BLACK));
         this.cellCount.put(BoardState.WHITE, board2.cellCount.get(BoardState.WHITE));
+    }
+    
+    //For use in creating JUnit tests and test scenarios
+    //The Junit tests needed a way to make potentially impossible to reach board scenarios to test
+    public Board(BoardState[][] boardData, int movesPlayed) {
+        this.board = new BoardState[BOARD_SIZE][BOARD_SIZE];
+    	this.movesPlayed = movesPlayed;
+    	this.cellCount = new HashMap<BoardState, Integer>();
+    	this.cellCount.put(BoardState.BLACK, 0);
+        this.cellCount.put(BoardState.WHITE, 0);
+
+    	for (int x = 0; x < BOARD_SIZE; x++) {
+            for (int y = 0; y < BOARD_SIZE; y++) {
+            	BoardState thisCell = boardData[x][y];
+                set(x, y, thisCell);
+                if(thisCell != BoardState.EMPTY && thisCell != BoardState.BLOCKED)
+                {
+                	cellCount.put(thisCell, cellCount.get(thisCell)+1);
+                }
+            }
+        }
     }
     
     public void processMessage(ServerMessage m) {
@@ -274,5 +296,6 @@ public class Board {
     public int movesRemaining() {
         return BOARD_SIZE*BOARD_SIZE - BLOCKED_NUM - this.movesPlayed;
     }
+    
     
 }
