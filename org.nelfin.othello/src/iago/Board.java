@@ -207,12 +207,10 @@ public class Board {
                 numFlipped += flipPieces(x, y, dx, dy, player, commit);
             }
         }
-        if (commit) {
-        	if(numFlipped > 0) //if we didn't pass
-        	{
-        		addCellCount(BoardState.asBoardState(player),1); //We need to add the extra count for the stone placed
-        	}
-        	this.movesPlayed++;
+        if (commit && numFlipped > 0) {
+            addCellCount(BoardState.asBoardState(player),1); //We need to add the extra count for the stone placed
+            // This can't be increased if numFlipped == 0, it was not a valid move
+            this.movesPlayed++;
         }
         return numFlipped;
     }
