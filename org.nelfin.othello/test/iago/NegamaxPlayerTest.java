@@ -1,7 +1,11 @@
 package iago;
 
-public class NegamaxPlayerTest extends PlayerTest {
+public class NegamaxPlayerTest extends SmartPlayerTest {
 	protected void setUp() {
-		p = new NegamaxPlayer(Player.PlayerType.WHITE, NegamaxPlayer.DEFAULT_DEPTH);
+		smartWhitePlayer = new NegamaxPlayer(Player.PlayerType.WHITE, 8);
+		smartBlackPlayer = new NegamaxPlayer(Player.PlayerType.BLACK, 8);
+		greedyPlayer = new NegamaxPlayer(Player.PlayerType.WHITE, 1);
     }
+	
+	
 }

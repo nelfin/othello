@@ -5,7 +5,8 @@ import junit.framework.TestCase;
 import org.junit.Test;
 
 public abstract class PlayerTest extends TestCase{
-	protected Player p;
+	protected Player greedyPlayer;
+	
 	@Test
 	public void testChooseMoveFlipLine() {
 		char[][] testBoardData = DebugFunctions.makeSolidBoardCharArray('.');
@@ -14,7 +15,7 @@ public abstract class PlayerTest extends TestCase{
 		testBoardData[0][2] = 'b';
 		Board testBoard = new Board(DebugFunctions.charArrayToBoardString(testBoardData));
 
-		assertEquals(p.chooseMove(testBoard), new Move(0,3));
+		assertEquals(greedyPlayer.chooseMove(testBoard), new Move(0,3));
 	}
 	@Test
 	public void testOnlyAvailableMove() {
@@ -26,8 +27,10 @@ public abstract class PlayerTest extends TestCase{
 		testBoardData[correctMove.x-2][correctMove.y] = 'w';
 
 		Board testBoard = new Board(DebugFunctions.charArrayToBoardString(testBoardData));
-		assertEquals(p.chooseMove(testBoard), correctMove);
+		assertEquals(greedyPlayer.chooseMove(testBoard), correctMove);
 	}
+	
+
 	
 
 
