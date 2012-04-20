@@ -15,13 +15,13 @@ public class BoardTest {
 
 	@Test
 	public void testValidMoves() {
-		Board.BoardState[][] testBoardData = DebugFunctions.makeSolidBoardStateArray(Board.BoardState.EMPTY);
-		testBoardData[0][0] = Board.BoardState.BLACK;
-		testBoardData[0][1] = Board.BoardState.WHITE;
-		testBoardData[1][0] = Board.BoardState.WHITE;
-		testBoardData[1][1] = Board.BoardState.WHITE;
-		testBoardData[4][4] = Board.BoardState.BLACK;
-		Board testBoard = new Board(testBoardData,5);
+		char[][] testBoardData = DebugFunctions;
+		testBoardData[0][0] = 'b';
+		testBoardData[0][1] = 'w';
+		testBoardData[1][0] = 'w';
+		testBoardData[1][1] = 'w';
+		testBoardData[4][4] = 'b';
+		Board testBoard = new Board(testBoardData.toString());
 		Set<Move> possibleMoves = testBoard.validMoves(PlayerType.BLACK);
 		assertEquals(possibleMoves.size(),3);
 		
