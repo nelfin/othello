@@ -6,6 +6,8 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+import java.util.SortedSet;
+import java.util.TreeSet;
 
 public class Board {
     
@@ -168,6 +170,19 @@ public class Board {
     
     public Set<Move> validMoves(PlayerType player) {
         Set<Move> moves = new HashSet<Move>();
+        for (int y = 0; y < BOARD_SIZE; y++) {
+            for (int x = 0; x < BOARD_SIZE; x++) {
+                if (validMove(x, y, player)) {
+                    moves.add(new Move(x, y));
+                }
+            }
+        }
+        return moves;
+    }
+    
+    public SortedSet<Move> validMovesSorted(PlayerType player) {
+        MoveComparator comp = new MoveComparator(this, player);
+        SortedSet<Move> moves = new TreeSet<Move>(comp);
         for (int y = 0; y < BOARD_SIZE; y++) {
             for (int x = 0; x < BOARD_SIZE; x++) {
                 if (validMove(x, y, player)) {
