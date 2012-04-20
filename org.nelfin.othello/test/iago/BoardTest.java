@@ -15,13 +15,16 @@ public class BoardTest {
 
 	@Test
 	public void testValidMoves() {
-		Board.BoardState[][] testBoardData = DebugFunctions.makeSolidBoardStateArray(Board.BoardState.EMPTY);
-		testBoardData[0][0] = Board.BoardState.BLACK;
-		testBoardData[0][1] = Board.BoardState.WHITE;
-		testBoardData[1][0] = Board.BoardState.WHITE;
-		testBoardData[1][1] = Board.BoardState.WHITE;
-		testBoardData[4][4] = Board.BoardState.BLACK;
-		Board testBoard = new Board(testBoardData,5);
+	    Board testBoard = new Board("bw........" +
+	                                "ww........" +
+	                                ".........." +
+	                                ".........." +
+	                                "....b....." +
+	                                ".........." +
+	                                ".........." +
+	                                ".........." +
+	                                ".........." +
+	                                "..........");
 		Set<Move> possibleMoves = testBoard.validMoves(PlayerType.BLACK);
 		assertEquals(possibleMoves.size(),3);
 		
@@ -34,26 +37,19 @@ public class BoardTest {
 
 	@Test
 	public void testScoreMove() {
-		Board.BoardState[][] testBoardData = DebugFunctions.makeSolidBoardStateArray(Board.BoardState.EMPTY);
-		testBoardData[0][0] = Board.BoardState.BLACK;
-		testBoardData[0][1] = Board.BoardState.WHITE;
-		testBoardData[0][2] = Board.BoardState.BLACK;
-		testBoardData[0][3] = Board.BoardState.WHITE;
-		testBoardData[0][4] = Board.BoardState.WHITE;
-		testBoardData[1][3] = Board.BoardState.WHITE;
-		testBoardData[1][3] = Board.BoardState.BLACK;
-		Board testBoard = new Board(testBoardData,7);
+	    Board testBoard = new Board("b........." +
+	                                "w........." +
+	                                "b........." +
+	                                "wb........" +
+	                                "w........." +
+	                                ".........." +
+	                                ".........." +
+	                                ".........." +
+	                                ".........." +
+	                                "..........");
 		assertEquals(testBoard.scoreMove(new Move(0,5), PlayerType.BLACK),2);
 		assertEquals(testBoard.scoreMove(new Move(2,3), PlayerType.WHITE),1);
 	}
-
-	@Test
-	public void testGet() {
-		Board testBoard = new Board();
-		assertEquals(testBoard.get(0,0),Board.BoardState.EMPTY);
-		
-	}
-
 
 	@Test
 	public void testScoreBoard() {
@@ -79,12 +75,16 @@ public class BoardTest {
 
 	@Test
 	public void testApply() {
-		Board.BoardState[][] testBoardData = DebugFunctions.makeSolidBoardStateArray(Board.BoardState.EMPTY);
-		testBoardData[4][5] = Board.BoardState.WHITE;
-		testBoardData[5][4] = Board.BoardState.WHITE;
-		testBoardData[4][4] = Board.BoardState.BLACK;
-		testBoardData[5][5] = Board.BoardState.BLACK;
-		Board testBoard = new Board(testBoardData,0);
+	    Board testBoard = new Board(".........." +
+	                                ".........." +
+	                                ".........." +
+	                                ".........." +
+	                                "....bw...." +
+	                                "....wb...." +
+	                                ".........." +
+	                                ".........." +
+	                                ".........." +
+	                                "..........");
 		Board sameBoard = testBoard.apply(new Move(0,0), PlayerType.BLACK, false);
 		for(int x = 0; x < Board.BOARD_SIZE; x++)
 		{
