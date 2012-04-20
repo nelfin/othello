@@ -28,7 +28,7 @@ public class AlphaBetaPlayer extends AbstractPlayer {
     
     private int minimax(Board board, PlayerType player,
             int alpha, int beta, int depth) {
-        if ((depth <= 0) || (board.movesRemaining() == 0)) {
+        if ((depth <= 0) || board.isVictory()) {
             return board.scoreBoardObjectively();
         }
         

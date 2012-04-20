@@ -247,8 +247,8 @@ public class Board {
         int score = (getCellCount(BoardState.WHITE) -
                      getCellCount(BoardState.BLACK));
         // Preference victories
-        if (movesRemaining() == 0) {
-            if (score > 0) {
+        if (isVictory()) {
+            if (score > 0 || getCellCount(BoardState.BLACK) == 0) {
                 score += BOARD_SIZE*BOARD_SIZE + 1;
             } else {
                 score -= BOARD_SIZE*BOARD_SIZE + 1;
@@ -275,4 +275,9 @@ public class Board {
         return BOARD_SIZE*BOARD_SIZE - BLOCKED_NUM - this.movesPlayed;
     }
     
+    public boolean isVictory() {
+        return ((movesRemaining() == 0) ||
+                (getCellCount(BoardState.BLACK) == 0) ||
+                (getCellCount(BoardState.WHITE) == 0));
+    }
 }

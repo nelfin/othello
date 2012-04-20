@@ -26,7 +26,7 @@ public class NegamaxPlayer extends AbstractPlayer {
     
     private int negamax(Board board, PlayerType player,
             int colour, int alpha, int beta, int depth) {
-        if ((depth <= 0) || (board.movesRemaining() == 0)) {
+        if ((depth <= 0) || board.isVictory()) {
             return colour * board.scoreBoard(player);
         }
         
