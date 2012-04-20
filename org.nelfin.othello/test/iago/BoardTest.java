@@ -15,13 +15,13 @@ public class BoardTest {
 
 	@Test
 	public void testValidMoves() {
-		char[][] testBoardData = DebugFunctions;
+		char[][] testBoardData = DebugFunctions.makeSolidBoardCharArray('.');
 		testBoardData[0][0] = 'b';
 		testBoardData[0][1] = 'w';
 		testBoardData[1][0] = 'w';
 		testBoardData[1][1] = 'w';
 		testBoardData[4][4] = 'b';
-		Board testBoard = new Board(testBoardData.toString());
+		Board testBoard = new Board(DebugFunctions.charArrayToBoardString(testBoardData));
 		Set<Move> possibleMoves = testBoard.validMoves(PlayerType.BLACK);
 		assertEquals(possibleMoves.size(),3);
 		
@@ -34,30 +34,23 @@ public class BoardTest {
 
 	@Test
 	public void testScoreMove() {
-		Board.BoardState[][] testBoardData = DebugFunctions.makeSolidBoardStateArray(Board.BoardState.EMPTY);
-		testBoardData[0][0] = Board.BoardState.BLACK;
-		testBoardData[0][1] = Board.BoardState.WHITE;
-		testBoardData[0][2] = Board.BoardState.BLACK;
-		testBoardData[0][3] = Board.BoardState.WHITE;
-		testBoardData[0][4] = Board.BoardState.WHITE;
-		testBoardData[1][3] = Board.BoardState.WHITE;
-		testBoardData[1][3] = Board.BoardState.BLACK;
-		Board testBoard = new Board(testBoardData,7);
+		char[][] testBoardData = DebugFunctions.makeSolidBoardCharArray('.');
+		testBoardData[0][0] = 'b';
+		testBoardData[0][1] = 'w';
+		testBoardData[0][2] = 'b';
+		testBoardData[0][3] = 'w';
+		testBoardData[0][4] = 'w';
+		testBoardData[1][3] = 'w';
+		testBoardData[1][3] = 'b';
+		Board testBoard = new Board(DebugFunctions.charArrayToBoardString(testBoardData));
 		assertEquals(testBoard.scoreMove(new Move(0,5), PlayerType.BLACK),2);
 		assertEquals(testBoard.scoreMove(new Move(2,3), PlayerType.WHITE),1);
-	}
-
-	@Test
-	public void testGet() {
-		Board testBoard = new Board();
-		assertEquals(testBoard.get(0,0),Board.BoardState.EMPTY);
-		
 	}
 
 
 	@Test
 	public void testScoreBoard() {
-		Board.BoardState[][] testBoardData = DebugFunctions.makeSolidBoardStateArray(Board.BoardState.EMPTY);
+		char[][] testBoardData = DebugFunctions.makeSolidBoardCharArray('.');
 		Random generator = new Random();
 		int seed = generator.nextInt();
 		Random seededGenerator = new Random(generator.nextInt());
@@ -66,9 +59,9 @@ public class BoardTest {
 			int x = seededGenerator.nextInt(10);
 			int y = seededGenerator.nextInt(10);
 			boolean player = seededGenerator.nextBoolean();
-			testBoardData[x][y] = player?Board.BoardState.WHITE:Board.BoardState.BLACK;
+			testBoardData[x][y] = player?'w':'b';
 		}
-		Board testBoard = new Board(testBoardData,0);
+		Board testBoard = new Board(DebugFunctions.charArrayToBoardString(testBoardData));
 		//We're going to fail
 		if(testBoard.scoreBoard(PlayerType.BLACK) != -testBoard.scoreBoard(PlayerType.WHITE))
 		{
@@ -79,12 +72,12 @@ public class BoardTest {
 
 	@Test
 	public void testApply() {
-		Board.BoardState[][] testBoardData = DebugFunctions.makeSolidBoardStateArray(Board.BoardState.EMPTY);
-		testBoardData[4][5] = Board.BoardState.WHITE;
-		testBoardData[5][4] = Board.BoardState.WHITE;
-		testBoardData[4][4] = Board.BoardState.BLACK;
-		testBoardData[5][5] = Board.BoardState.BLACK;
-		Board testBoard = new Board(testBoardData,0);
+		char[][] testBoardData = DebugFunctions.makeSolidBoardCharArray('.');
+		testBoardData[4][5] = 'w';
+		testBoardData[5][4] = 'w';
+		testBoardData[4][4] = 'b';
+		testBoardData[5][5] = 'b';
+		Board testBoard = new Board(DebugFunctions.charArrayToBoardString(testBoardData));
 		Board sameBoard = testBoard.apply(new Move(0,0), PlayerType.BLACK, false);
 		for(int x = 0; x < Board.BOARD_SIZE; x++)
 		{

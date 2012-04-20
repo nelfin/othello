@@ -24,18 +24,17 @@ public class AlphaBetaPlayerTest extends PlayerTest {
 	@Test
 	public void testChooseMoveBestLine() {
 		AlphaBetaPlayer abPlayer = new AlphaBetaPlayer(Player.PlayerType.WHITE, 1);
-		Board.BoardState[][] testBoardData = DebugFunctions.makeSolidBoardStateArray(Board.BoardState.EMPTY);
+		char[][] testBoardData = DebugFunctions.makeSolidBoardCharArray('.');
 
-		testBoardData[0][0] = Board.BoardState.WHITE;
-		testBoardData[0][1] = Board.BoardState.BLACK;
-		testBoardData[0][2] = Board.BoardState.BLACK;
+		testBoardData[0][0] = 'w';
+		testBoardData[0][1] = 'b';
+		testBoardData[0][2] = 'b';
 		
-		testBoardData[3][0] = Board.BoardState.WHITE;
-		testBoardData[3][1] = Board.BoardState.BLACK;
-		testBoardData[3][2] = Board.BoardState.BLACK;
-		testBoardData[3][3] = Board.BoardState.BLACK;
-		Board testBoard = new Board(testBoardData, 7);
-		testBoard.visualise();
+		testBoardData[3][0] = 'w';
+		testBoardData[3][1] = 'b';
+		testBoardData[3][2] = 'b';
+		testBoardData[3][3] = 'b';
+		Board testBoard = new Board(DebugFunctions.charArrayToBoardString(testBoardData));
 		
 		assertEquals(abPlayer.chooseMove(testBoard), new Move(3,4));
 	}
