@@ -84,7 +84,7 @@ public class BoardTest {
 		testBoardData[4][4] = Board.BoardState.BLACK;
 		testBoardData[5][5] = Board.BoardState.BLACK;
 		Board testBoard = new Board(testBoardData,0);
-		Board sameBoard = testBoard.apply(new Move(0,0), PlayerType.BLACK);
+		Board sameBoard = testBoard.apply(new Move(0,0), PlayerType.BLACK, false);
 		for(int x = 0; x < Board.BOARD_SIZE; x++)
 		{
 			for(int y = 0; y < Board.BOARD_SIZE; y++)
