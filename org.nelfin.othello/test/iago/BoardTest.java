@@ -1,6 +1,7 @@
 package iago;
 
 import static org.junit.Assert.*;
+import org.junit.Test;
 
 import java.util.HashSet;
 import java.util.Random;
@@ -8,7 +9,7 @@ import java.util.Set;
 
 import iago.Player.PlayerType;
 
-import org.junit.Test;
+
 
 public class BoardTest {
 
