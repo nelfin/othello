@@ -9,9 +9,20 @@ public class MoveComparator implements Comparator<Move> {
     private Board board;
     private PlayerType player;
     
+    /**
+     * Compare two moves based on number of captures
+     * 
+     * XXX Note: This compares elements in reverse! Higher
+     * scoring moves will be sorted before ("less") than lower
+     * scoring moves
+     * 
+     * @param arg0
+     * @param arg1
+     * @return sort key value
+     */
     @Override
     public int compare(Move arg0, Move arg1) {
-        return simpleScore(arg0) - simpleScore(arg1);
+        return simpleScore(arg1) - simpleScore(arg0);
     }
     
     private int simpleScore(Move m) {
