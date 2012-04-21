@@ -87,6 +87,7 @@ public class Board {
         this.cellCount.put(BoardState.WHITE, board2.cellCount.get(BoardState.WHITE));
     }
     
+
     public Board(String representation) {
         this.board = new BoardState[BOARD_SIZE][BOARD_SIZE];
         this.cellCount = new HashMap<BoardState, Integer>();
@@ -221,7 +222,9 @@ public class Board {
                 numFlipped += flipPieces(x, y, dx, dy, player, commit);
             }
         }
-        if (commit) {
+        if (commit && numFlipped > 0) {
+            addCellCount(BoardState.asBoardState(player),1); //We need to add the extra count for the stone placed
+            // This can't be increased if numFlipped == 0, it was not a valid move
             this.movesPlayed++;
         }
         return numFlipped;
@@ -252,7 +255,7 @@ public class Board {
                 y -= dy;
             }
             subtractCellCount(opponent, opponentPieces);
-            addCellCount(current, opponentPieces+1);
+            addCellCount(current, opponentPieces);//The +1 here was removed due to a bug when multiple lines flipped at once
         }
         
         return opponentPieces;
@@ -347,4 +350,5 @@ public class Board {
                 (getCellCount(BoardState.BLACK) == 0) ||
                 (getCellCount(BoardState.WHITE) == 0));
     }
+    
 }
