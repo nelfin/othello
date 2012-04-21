@@ -5,17 +5,19 @@ import java.util.Set;
 
 public class NegamaxPlayer extends AbstractPlayer {
     
-    public static final int DEFAULT_DEPTH = 6;
+    public static final int DEFAULT_DEPTH = 10;
+    public static final int DEFAULT_SORT_DEPTH = 6; 
     private static final int INF = 65535;
     
     private int searchDepth;
+    private int sortDepth;
     private Move bestMove;
     
     @Override
     public Move chooseMove(Board board) {
         this.bestMove = null;
         
-        negamax(board, getColour(), 1, -INF, INF, getSearchDepth());
+        negamax(board, getColour(), 1, -INF, INF, getSearchDepth(), 0);
         
         if (this.bestMove == null) {
             return pickGreedyMove(board);
@@ -25,22 +27,27 @@ public class NegamaxPlayer extends AbstractPlayer {
     }
     
     private int negamax(Board board, PlayerType player,
-            int colour, int alpha, int beta, int depth) {
+            int colour, int alpha, int beta, int depth, int plies) {
         if ((depth <= 0) || board.isVictory()) {
             return colour * board.scoreBoard(player);
         }
         
         PlayerType nextPlayer = player.getOpponent();
-        Set<Move> successors = board.validMoves(player);
+        Set<Move> successors;
+        if (plies < sortDepth) {
+            successors = board.validMovesSorted(player);
+        } else {
+            successors = board.validMoves(player);
+        }
         Move lBestMove = null;
         
         if (successors.size() == 0) {
-            return -negamax(board, nextPlayer, -colour, -beta, -alpha, depth-1);
+            return -negamax(board, nextPlayer, -colour, -beta, -alpha, depth-1, plies+1);
         }
         
         for (Move m : successors) {
             int v = -negamax(board.apply(m, player, false), nextPlayer,
-                    -colour, -beta, -alpha, depth-1);
+                    -colour, -beta, -alpha, depth-1, plies+1);
             if (v >= beta) {
                 if (player == getColour()) {
                     this.bestMove = m;
@@ -77,12 +84,13 @@ public class NegamaxPlayer extends AbstractPlayer {
         return bestMove;
     }
     public NegamaxPlayer(PlayerType colour) {
-        this(colour, DEFAULT_DEPTH);
+        this(colour, DEFAULT_DEPTH, DEFAULT_SORT_DEPTH);
     }
     
-    public NegamaxPlayer(PlayerType colour, int depth) {
+    public NegamaxPlayer(PlayerType colour, int depth, int sortDepth) {
         super(colour);
         this.searchDepth = depth; 
+        this.setSortDepth(sortDepth);
     }
     
     public void setSearchDepth(int searchDepth) {
@@ -91,6 +99,14 @@ public class NegamaxPlayer extends AbstractPlayer {
     
     public int getSearchDepth() {
         return searchDepth;
+    }
+    
+    public void setSortDepth(int sortDepth) {
+        this.sortDepth = sortDepth;
+    }
+    
+    public int getSortDepth() {
+        return sortDepth;
     }
     
 }
