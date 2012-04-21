@@ -87,6 +87,10 @@ public class NegamaxPlayer extends AbstractPlayer {
         this(colour, DEFAULT_DEPTH, DEFAULT_SORT_DEPTH);
     }
     
+    public NegamaxPlayer(PlayerType colour, int depth) {
+        this(colour, depth, DEFAULT_SORT_DEPTH);
+    }
+    
     public NegamaxPlayer(PlayerType colour, int depth, int sortDepth) {
         super(colour);
         this.searchDepth = depth; 
