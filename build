@@ -1,0 +1,5 @@
+#!/bin/bash
+
+BUILDFILE="org.nelfin.othello/build.xml"
+
+ant -f $BUILDFILE
