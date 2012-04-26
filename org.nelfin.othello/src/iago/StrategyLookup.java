@@ -10,6 +10,7 @@ public class StrategyLookup {
     private static final Map<String, Class<? extends Player>> strategyTable =
         new HashMap<String, Class<? extends Player>>();
     static {
+        strategyTable.put("human", HumanPlayer.class);
         strategyTable.put("simple", SimplePlayer.class);
         strategyTable.put("greedy", GreedyPlayer.class);
         strategyTable.put("alpha-beta", AlphaBetaPlayer.class);
