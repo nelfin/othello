@@ -167,6 +167,26 @@ public class Board {
         }
     }
     
+    @Override
+    public String toString() {
+        StringBuilder s = new StringBuilder();
+        for (int y = 0; y < BOARD_SIZE; y++) {
+            for (int x = 0; x < BOARD_SIZE; x++) {
+                BoardState b = get(x, y);
+                if (b == BoardState.BLOCKED) {
+                    s.append('*');
+                } else if (b == BoardState.WHITE) {
+                    s.append('w');
+                } else if (b == BoardState.BLACK) {
+                    s.append('b');
+                } else {
+                    s.append('.');
+                }
+            }
+        }
+        return s.toString();
+    }
+    
     public Set<Move> validMoves(PlayerType player) {
         Set<Move> moves = new HashSet<Move>();
         for (int y = 0; y < BOARD_SIZE; y++) {

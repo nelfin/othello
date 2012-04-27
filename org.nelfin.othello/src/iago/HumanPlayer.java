@@ -8,6 +8,7 @@ public class HumanPlayer extends AbstractPlayer {
      * @see iago.Player#chooseMove(iago.Board)
      */
     public Move chooseMove(Board board) {
+        this.game.update(board);
         Set<Move> legalMoves = board.validMoves(getColour());
         if (legalMoves.size() > 1) {
             System.out.println(legalMoves.size() + " moves available:");
@@ -38,7 +39,12 @@ public class HumanPlayer extends AbstractPlayer {
         }
     }
     
+    private GameScreen game;
+    
     public HumanPlayer(PlayerType colour) {
         super(colour);
+        this.game = new GameScreen();
+        this.game.draw();
+        this.game.blit();
     }
 }
