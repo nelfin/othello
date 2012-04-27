@@ -1,12 +1,19 @@
 package iago;
 
+import iago.Player.PlayerType;
+
 import java.awt.Color;
 import java.awt.Container;
 import java.awt.Graphics;
+import java.awt.Point;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 import java.awt.image.BufferedImage;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
 
 import javax.swing.JFrame;
 
@@ -21,21 +28,36 @@ public class GameScreen extends JFrame implements MouseListener, MouseMotionList
     private static final int gridy = Board.BOARD_SIZE;
     private static final int lengthx = xdim/gridx;
     private static final int lengthy = ydim/gridy;
+    private static final long DELAY = 20;
     
     private Board board;
+    private PlayerType colour;
+    private Set<Point> moveRects;
+    private Map<Point, Move> rectLookup;
     private Container content;
     private BufferedImage offscreen;
+    private Move chosenMove;
+    private boolean moveChosen;
     
     // Using the Tango icon theme palette:
     private static final Color BG_COLOUR = new Color(78, 154, 6);
+    private static final Color HIGHLIGHT_COLOUR = new Color(138, 226, 52);
     private static final Color BLOCKED_COLOUR = new Color(237, 212, 0);
     private static final Color WHITE_COLOUR = new Color(238, 238, 236);
     private static final Color BLACK_COLOUR = new Color(46, 52, 54);
+    private static final int arcH = 20;
+    private static final int arcW = 20;
     
-    public GameScreen() {
+    public GameScreen(PlayerType colour) {
         super("Othello");
         
         this.board = new Board();
+        this.colour = colour;
+        this.moveRects = new HashSet<Point>();
+        this.rectLookup = new HashMap<Point, Move>();
+        this.chosenMove = null;
+        this.moveChosen = false;
+        
         this.content = getContentPane();
         this.offscreen = new BufferedImage(xdim, ydim, BufferedImage.TYPE_INT_RGB);
         
@@ -51,7 +73,14 @@ public class GameScreen extends JFrame implements MouseListener, MouseMotionList
     
     public void update(Board b) {
         this.board = b;
-        //blit();
+        Set<Move> legalMoves = this.board.validMoves(this.colour);
+        this.moveRects.clear();
+        this.rectLookup.clear();
+        for (Move m : legalMoves) {
+            Point rect = new Point(m.x*lengthx, m.y*lengthy);
+            this.moveRects.add(rect);
+            this.rectLookup.put(rect, m);
+        }
         draw();
         blit();
     }
@@ -73,11 +102,11 @@ public class GameScreen extends JFrame implements MouseListener, MouseMotionList
                     break;
                 case 'w':
                     g.setColor(WHITE_COLOUR);
-                    g.fillRect(x*lengthx, y*lengthy, lengthx, lengthy);
+                    g.fillRoundRect(x*lengthx, y*lengthy, lengthx, lengthy, arcW, arcH);
                     break;
                 case 'b':
                     g.setColor(BLACK_COLOUR);
-                    g.fillRect(x*lengthx, y*lengthy, lengthx, lengthy);
+                    g.fillRoundRect(x*lengthx, y*lengthy, lengthx, lengthy, arcW, arcH);
                     break;
                 }
             }
@@ -95,14 +124,46 @@ public class GameScreen extends JFrame implements MouseListener, MouseMotionList
     
     @Override
     public void mouseClicked(MouseEvent arg0) {
-        // TODO Auto-generated method stub
-        
+        Point p = arg0.getPoint();
+        for (Point rect : this.moveRects) {
+            int dx = p.x - rect.x;
+            int dy = p.y - rect.y;
+            if (0 <= dx && dx < lengthx && 0 <= dy && dy < lengthy) {
+                notifyMove(getMove(rect));
+            }
+        }
+    }
+    
+    private void notifyMove(Move move) {
+        chosenMove= move;
+        moveChosen = true;
+    }
+    
+    private Move getMove(Point rect) {
+        return rectLookup.get(rect);
     }
     
     @Override
     public void mouseMoved(MouseEvent arg0) {
-        // TODO Auto-generated method stub
-        
+        Point p = arg0.getPoint();
+        for (Point rect : this.moveRects) {
+            int dx = p.x - rect.x;
+            int dy = p.y - rect.y;
+            if (0 <= dx && dx < lengthx && 0 <= dy && dy < lengthy) {
+                // above: Manhattan distance -> inside the box
+                highlight(rect);
+                return;
+            }
+        }
+        draw();
+        blit();
+    }
+    
+    private void highlight(Point rect) {
+        Graphics g = offscreen.getGraphics();
+        g.setColor(HIGHLIGHT_COLOUR);
+        g.fillRect(rect.x, rect.y, lengthx, lengthy);
+        blit();
     }
     
     @Override
@@ -123,5 +184,18 @@ public class GameScreen extends JFrame implements MouseListener, MouseMotionList
     
     @Override
     public void mouseDragged(MouseEvent arg0) {
+    }
+    
+    public Move pollForMove() {
+        while (!this.moveChosen) {
+            try {
+                Thread.sleep(DELAY);
+            } catch (InterruptedException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
+        }
+        this.moveChosen = false;
+        return chosenMove;
     }
 }
