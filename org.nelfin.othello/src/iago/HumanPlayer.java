@@ -1,6 +1,5 @@
 package iago;
 
-import java.util.Scanner;
 import java.util.Set;
 
 public class HumanPlayer extends AbstractPlayer {
