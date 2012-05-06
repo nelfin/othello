@@ -1,8 +1,10 @@
 package iago;
 
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
@@ -36,6 +38,17 @@ public class FeatureSet {
 	//A game has just ended, evaluate and adjust features based on Win/Loss
 	public void update (FeatureSet opponent, Board finalstate) {
 		//Learn how to learn
+	}
+	
+	public void save () {
+		try {
+			BufferedWriter bw = new BufferedWriter(new FileWriter(playerID + ".pl"));
+			for (Feature f: Features)
+				bw.write(f.name + ":" + Double.toString(f.getWeight()) + "\n");
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 	public void load () {
