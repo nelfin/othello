@@ -83,7 +83,7 @@ public class NegamaxPlayer extends AbstractPlayer {
     
     //TODO: add a constructor that uses a minimal Feature Set if no feature set is specified
     
-    public NegamaxPlayer(PlayerType colour, FeatureSet features) {
+    public NegamaxPlayer(PlayerType colour) {
         this(colour, DEFAULT_DEPTH);
     }
     
@@ -92,7 +92,6 @@ public class NegamaxPlayer extends AbstractPlayer {
         this.searchDepth = depth;
         //Choose the features here
         features.add(new StoneCount(1));
-        
     }
     
     public void setSearchDepth(int searchDepth) {
