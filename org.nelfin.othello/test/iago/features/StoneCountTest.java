@@ -33,7 +33,7 @@ public class StoneCountTest {
                 					 "b..w..b..." +
                 					 ".*...w...*" +
                 					 "w...b..*.w");
-		System.out.println(stoneCount.evaluate(smallBoard));
+		assertTrue(stoneCount.evaluate(smallBoard) == 6);
 	}
 	
 	@Test

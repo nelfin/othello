@@ -87,6 +87,7 @@ public class BoardTest {
 	                                ".........." +
 	                                "..........");
 		Board sameBoard = testBoard.apply(new Move(0,0), PlayerType.BLACK, false);
+		
 		for(int x = 0; x < Board.BOARD_SIZE; x++)
 		{
 			for(int y = 0; y < Board.BOARD_SIZE; y++)

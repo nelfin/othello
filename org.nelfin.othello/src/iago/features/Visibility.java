@@ -44,7 +44,7 @@ public class Visibility extends Feature{
 		}
 	}
 	/**
-	 * Recursively find the visibility from each position
+	 * Recursively find the visibility from each position.
 	 * @param state		The board state (used for checking blocked positions only)
 	 * @param x			The current x coordinate
 	 * @param y			The current y coordinate
@@ -53,12 +53,16 @@ public class Visibility extends Feature{
 	 */
 	private int checkDirection(Board state, int x, int y, int dx, int dy)
 	{
-		boolean outOfBounds = (x < 0 || y < 0 || x >= Board.BOARD_SIZE || y >= Board.BOARD_SIZE);
+		boolean outOfBounds = (x+dx < 0 || y+dy < 0 || x+dx >= Board.BOARD_SIZE || y+dy >= Board.BOARD_SIZE);
 		if(!outOfBounds)
 		{
-			if(!(state.get(x, y)==Board.BoardState.BLOCKED))
+			//We want it to return 0 if the current space is blocked (we asked for the visibility of a blocked square)
+			//and return 0 if the next square is blocked / out of bounds
+			if(!(state.get(x+dx, y+dy)==Board.BoardState.BLOCKED || state.get(x, y)==Board.BoardState.BLOCKED))
 			{
 				return checkDirection(state,x+dx,y+dy,dx,dy) + 1;
+			}else{
+				return 0;
 			}
 		}
 		return 0;
