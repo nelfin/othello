@@ -92,6 +92,8 @@ public class NegamaxPlayer extends AbstractPlayer {
         this.searchDepth = depth;
         //Choose the features here
         features.add(new StoneCount(1));
+        features.add(new Visibility(1));
+
     }
     
     public void setSearchDepth(int searchDepth) {
