@@ -87,6 +87,10 @@ public class Board {
     
 
     public Board(String representation) {
+    	if(representation.length() != BOARD_SIZE * BOARD_SIZE)
+    	{
+    		System.err.println("[Board] Board(String representation): string size "+representation.length()+" != "+BOARD_SIZE*BOARD_SIZE);
+    	}
         this.board = new BoardState[BOARD_SIZE][BOARD_SIZE];
         this.cellCount = new HashMap<BoardState, Integer>();
         processChars(representation.toCharArray());
