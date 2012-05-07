@@ -12,7 +12,7 @@ public class Board {
     public static final int BOARD_SIZE = 10;
     private static final int BLOCKED_NUM = 4;
     
-    private enum BoardState {
+    public enum BoardState {
         EMPTY, WHITE, BLACK, BLOCKED;
         
         private static BoardState fromByte(byte b) {

@@ -1,12 +1,14 @@
-package iago;
+package iago.features;
+
+import iago.Board;
+
 
 public abstract class Feature {
 
 	public String name;
 	
 	public String description;
-	
-	private double weight;
+	private double weight; 
 	
 	public Feature (String name, String description, double weight) {
 		this.name        = name;
@@ -18,6 +20,10 @@ public abstract class Feature {
 	//direct over-write
 	public void updateWeight(double weight) {
 		this.weight = weight;
+	}
+	//For use in the feature set
+	public double getWeight() {
+		return weight;
 	}
 	
 	public abstract Integer evaluate(Board state);

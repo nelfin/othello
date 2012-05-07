@@ -1,5 +1,8 @@
 package iago;
 
+import iago.features.*;
+
+import java.util.ArrayList;
 import java.util.Set;
 
 
@@ -10,6 +13,7 @@ public class NegamaxPlayer extends AbstractPlayer {
     
     private int searchDepth;
     private Move bestMove;
+    private FeatureSet features = new FeatureSet();
     
     @Override
     public Move chooseMove(Board board) {
@@ -24,10 +28,10 @@ public class NegamaxPlayer extends AbstractPlayer {
         return this.bestMove;
     }
     
-    private int negamax(Board board, PlayerType player,
-            int colour, int alpha, int beta, int depth) {
+    private double negamax(Board board, PlayerType player,
+            int colour, double alpha, double beta, int depth) {
         if ((depth <= 0) || (board.movesRemaining() == 0)) {
-            return colour * board.scoreBoard(player);
+            return colour * features.score(board);
         }
         
         PlayerType nextPlayer = player.getOpponent();
@@ -39,7 +43,7 @@ public class NegamaxPlayer extends AbstractPlayer {
         }
         
         for (Move m : successors) {
-            int v = -negamax(board.apply(m, player, false), nextPlayer,
+        	double v = -negamax(board.apply(m, player, false), nextPlayer,
                     -colour, -beta, -alpha, depth-1);
             if (v >= beta) {
                 if (player == getColour()) {
@@ -76,13 +80,19 @@ public class NegamaxPlayer extends AbstractPlayer {
         
         return bestMove;
     }
-    public NegamaxPlayer(PlayerType colour) {
+    
+    //TODO: add a constructor that uses a minimal Feature Set if no feature set is specified
+    
+    public NegamaxPlayer(PlayerType colour, FeatureSet features) {
         this(colour, DEFAULT_DEPTH);
     }
     
     public NegamaxPlayer(PlayerType colour, int depth) {
-        super(colour);
-        this.searchDepth = depth; 
+    	super(colour);
+        this.searchDepth = depth;
+        //Choose the features here
+        features.add(new StoneCount(1));
+        
     }
     
     public void setSearchDepth(int searchDepth) {

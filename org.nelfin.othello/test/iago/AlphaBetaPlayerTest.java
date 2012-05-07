@@ -2,6 +2,7 @@ package iago;
 import static org.junit.Assert.*;
 import org.junit.Test;
 
+
 public class AlphaBetaPlayerTest extends SmartPlayerTest {
 	protected void setUp() {
 		greedyPlayer = new AlphaBetaPlayer(Player.PlayerType.WHITE, 1);
