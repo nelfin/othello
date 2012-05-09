@@ -1,6 +1,6 @@
 package iago;
 
-import iago.Player.PlayerType;
+import iago.players.Player.PlayerType;
 
 import java.util.HashMap;
 import java.util.HashSet;

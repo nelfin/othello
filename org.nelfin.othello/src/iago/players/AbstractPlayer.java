@@ -1,4 +1,4 @@
-package iago;
+package iago.players;
 
 public abstract class AbstractPlayer implements Player {
     private PlayerType colour;

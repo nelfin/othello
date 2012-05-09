@@ -1,5 +1,7 @@
-package iago;
+package iago.players;
 
+import iago.Board;
+import iago.Move;
 import iago.features.*;
 
 import java.util.ArrayList;

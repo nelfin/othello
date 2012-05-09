@@ -1,4 +1,8 @@
-package iago;
+package iago.players;
+
+import iago.Board;
+import iago.GameScreen;
+import iago.Move;
 
 import java.util.Set;
 

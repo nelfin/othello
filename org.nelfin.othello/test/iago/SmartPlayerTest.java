@@ -1,6 +1,7 @@
 package iago;
 
-import iago.Player.PlayerType;
+import iago.players.Player;
+import iago.players.Player.PlayerType;
 
 import org.junit.Test;
 

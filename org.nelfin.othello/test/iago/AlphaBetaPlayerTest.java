@@ -1,4 +1,7 @@
 package iago;
+import iago.players.AlphaBetaPlayer;
+import iago.players.Player;
+
 import org.junit.Test;
 
 

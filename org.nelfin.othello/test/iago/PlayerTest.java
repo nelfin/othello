@@ -1,5 +1,6 @@
 package iago;
 
+import iago.players.Player;
 import junit.framework.TestCase;
 
 import org.junit.Test;

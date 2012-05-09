@@ -1,6 +1,12 @@
 package iago;
 
-import iago.Player.PlayerType;
+import iago.players.AlphaBetaPlayer;
+import iago.players.GreedyPlayer;
+import iago.players.HumanPlayer;
+import iago.players.NegamaxPlayer;
+import iago.players.Player;
+import iago.players.SimplePlayer;
+import iago.players.Player.PlayerType;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
