@@ -5,11 +5,19 @@ from sys import stdout, argv
 import atexit
 
 CLASSPATH='org.nelfin.othello/bin/'
-
+#Default strategies
+us_strategy = "negamax"
+them_strategy = ""
 if len(argv) < 2:
     iterations = 100
 else:
     iterations = int(argv[1])
+    if len(argv) == 3:
+        us_strategy = argv[2]
+    if len(argv) == 4:
+        us_strategy = argv[2]
+        them_strategy = argv[3]
+
 
 global server, devnull, output
 
@@ -33,10 +41,14 @@ for colour, results in [('white', as_white), ('black', as_black)]:
     server = Popen(['othello-reference/server_headless', '0'],
             stderr=devnull, stdout=PIPE)
     for i in xrange(iterations):
-        us = Popen(['java', '-cp', CLASSPATH, 'iago/Client', colour],
-                stdin=devnull, stderr=devnull, stdout=devnull)
-        them = Popen(['othello-reference/client', opponent(colour)],
-                stdin=devnull, stderr=devnull, stdout=devnull)
+        us = Popen(['java', '-cp', CLASSPATH, 'iago/Client', colour, "3130", us_strategy],
+                stdin=devnull, stderr=output, stdout=output)
+        if(them_strategy == ""): #If we haven't been told what strategy to use for the opponent, use the reference opponent
+            them = Popen(['othello-reference/client', opponent(colour)],
+                    stdin=devnull, stderr=output, stdout=output)
+        else:
+            them = Popen(['java', '-cp', CLASSPATH, 'iago/Client', opponent(colour), "3130", them_strategy],
+                stdin=devnull, stderr=output, stdout=output)
         us.wait()
         them.wait()
 
