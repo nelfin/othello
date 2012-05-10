@@ -6,6 +6,7 @@ import java.util.Random;
 import iago.Board;
 import iago.DebugFunctions;
 import iago.Move;
+import iago.players.AlphaBetaPlayer;
 import iago.players.GreedyPlayer;
 import iago.players.MetaPlayer;
 import iago.players.NegamaxPlayer;
@@ -16,29 +17,28 @@ public class PracticeArena{
 	static final int GAME_REPEATS=5;
 	public static void main(String[] args)
 	{
-		GreedyPlayer blackOpponent = new GreedyPlayer(PlayerType.BLACK);
-		GreedyPlayer whiteOpponent = new GreedyPlayer(PlayerType.WHITE);
+		AlphaBetaPlayer blackOpponent = new AlphaBetaPlayer(PlayerType.BLACK);
+		AlphaBetaPlayer whiteOpponent = new AlphaBetaPlayer(PlayerType.WHITE);
 		//This is the learning player. They could both learn, but it's easy to reference them this way
-		NegamaxPlayer whiteLearner = new NegamaxPlayer(PlayerType.WHITE); 
-		NegamaxPlayer blackLearner = new NegamaxPlayer(PlayerType.BLACK); 
+		MetaPlayer whiteLearner = new MetaPlayer(PlayerType.WHITE); 
+		MetaPlayer blackLearner = new MetaPlayer(PlayerType.BLACK); 
 
-		Board board = new Board();
 		double feedback = 0;
 		
 		for(int i = 0; i < GAME_REPEATS;i++)
 		{
 
 			int side = 0;
-			NegamaxPlayer learner;
-			GreedyPlayer opponent;
-			Board initialBoard = generateRandomBoard();
+			MetaPlayer learner;
+			AlphaBetaPlayer opponent;
+			String initialBoardRepresentation = generateRandomBoard();
 			//We want the player to play from both sides
 			for(side = 0; side <= 1; side++) //side==0 means Learner is playing white
 			{
 				System.out.println("Playing game "+(i+1)+"/"+GAME_REPEATS+((side==0)?"":" reversed"));
-
+				
 				//Set up a game
-				board = initialBoard;
+				Board board = new Board(initialBoardRepresentation);
 				boolean learnerTurn;
 				if(side==0){
 					learner = whiteLearner;
@@ -52,7 +52,8 @@ public class PracticeArena{
 				Move nextMove = new Move(0,0);
 				
 				//Start playing the game
-				while(!nextMove.equals(new Move(-1,-1)))
+				int consecutivePasses = 0;
+				while(consecutivePasses < 2)
 				{		
 					if(!learnerTurn)
 					{
@@ -66,6 +67,13 @@ public class PracticeArena{
 						board.apply(nextMove, (side==0)?PlayerType.WHITE:PlayerType.BLACK, true);
 					}
 					learnerTurn = !learnerTurn;
+					
+					//For figuring out if the game is over
+					if(nextMove.equals(new Move(-1,-1))){
+						consecutivePasses++;
+					}else{
+						consecutivePasses = 0;
+					}
 				}
 				int boardScore = board.scoreBoard(PlayerType.WHITE);
 				
@@ -85,14 +93,13 @@ public class PracticeArena{
 					thisGameFeedback = 0.5 / (2.0 * GAME_REPEATS);
 				}
 				feedback += thisGameFeedback;
-				System.out.println(boardScore);
-				System.out.println(thisGameFeedback);
+				System.out.println("Feedback: "+thisGameFeedback);
 			}
 		}
 		System.out.println("Final score: "+feedback+" / 1");
 
 	}
-	private static Board generateRandomBoard()
+	private static String generateRandomBoard()
 	{
 		char[][] randomBoardRepresentation = DebugFunctions.makeSolidBoardCharArray('.');
 
@@ -129,8 +136,8 @@ public class PracticeArena{
 		randomBoardRepresentation[4][5] = 'b';
 		randomBoardRepresentation[5][4] = 'b';
 		
-		Board board = new Board(DebugFunctions.charArrayToBoardString(randomBoardRepresentation));
-		return board;
+		
+		return (DebugFunctions.charArrayToBoardString(randomBoardRepresentation));
 	}
 
 }
