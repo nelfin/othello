@@ -15,7 +15,7 @@ public class NegamaxPlayer extends AbstractPlayer {
     
     private int searchDepth;
     private Move bestMove;
-    private FeatureSet features = new FeatureSet();
+    private FeatureSet features = new FeatureSet("negamax");
     
     @Override
     public Move chooseMove(Board board) {
@@ -95,7 +95,7 @@ public class NegamaxPlayer extends AbstractPlayer {
         //Choose the features here
         features.add(new StoneCount(1));
         //features.add(new Visibility(1));
-        //features.add(new LegalMoves(0));
+        //features.add(new LegalMoves(5));
     }
     
     public void setSearchDepth(int searchDepth) {
@@ -104,6 +104,14 @@ public class NegamaxPlayer extends AbstractPlayer {
     
     public int getSearchDepth() {
         return searchDepth;
+    }
+    
+    public void setFeatureSet(FeatureSet features) {
+    	this.features = features;
+    }
+    
+    public FeatureSet getFeatureSet() {
+    	return features;
     }
     
 }

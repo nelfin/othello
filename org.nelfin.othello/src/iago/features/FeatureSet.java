@@ -13,14 +13,19 @@ import java.io.IOException;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
+import java.util.Iterator;
 
-public class FeatureSet {
+public class FeatureSet implements Iterable<Feature>{
 
 	private ArrayList<Feature> Features;
 	private String playerID;
 	
 	public FeatureSet (ArrayList<Feature> Features, String playerID) {
 		this.Features = Features;
+		this.playerID = playerID;
+	}
+	public FeatureSet (String playerID) {
+		this.Features = new ArrayList<Feature>();
 		this.playerID = playerID;
 	}
 	public FeatureSet () {
@@ -99,5 +104,9 @@ public class FeatureSet {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} 
+	}
+	@Override
+	public Iterator<Feature> iterator() {
+		return Features.iterator();
 	}
 }
