@@ -5,9 +5,11 @@ import iago.players.Player;
 
 public class StoneCount extends Feature{
 	
+	private static final double DEFAULT_WEIGHT = 1;
+	
 	public StoneCount(double weight)
 	{
-		super("Stone Count", "Number of player's stones - number of opponent(player)'s stones", weight);
+		super("Stone Count", "Number of player's stones - number of opponent(player)'s stones",DEFAULT_WEIGHT, weight);
 	}
 	/**
 	 * A very basic feature that counts the number of stones in white's favour

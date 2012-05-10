@@ -3,6 +3,8 @@ package iago.features;
 import static org.junit.Assert.assertTrue;
 import iago.Board;
 import iago.features.Visibility;
+import iago.players.Player;
+
 import org.junit.Test;
 
 public class VisibilityTest {
@@ -19,7 +21,7 @@ public class VisibilityTest {
 	                                 "**********" +
 	                                 "**********" +
 	                                 "**********");
-		assertTrue(visibility.evaluate(smallBoard) == 6);
+		assertTrue(visibility.evaluate(smallBoard,Player.PlayerType.WHITE) == 6);
 	}
 	@Test
 	public void emptyBoardTest(){
@@ -33,7 +35,7 @@ public class VisibilityTest {
 	                                 ".........." +
 	                                 ".........." +
 	                                 "..........");
-		assertTrue(visibility.evaluate(emptyBoard) == 0);
+		assertTrue(visibility.evaluate(emptyBoard,Player.PlayerType.WHITE) == 0);
 	}
 	
 	@Test
@@ -48,6 +50,6 @@ public class VisibilityTest {
 				 						".........." +
 				 						".........." +
 									    "w........b");
-		assertTrue(visibility.evaluate(symmetryBoard) == 0);
+		assertTrue(visibility.evaluate(symmetryBoard,Player.PlayerType.WHITE) == 0);
 	}
 }

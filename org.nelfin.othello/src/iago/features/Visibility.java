@@ -6,13 +6,14 @@ import iago.Board;
 import iago.players.Player;
 
 public class Visibility extends Feature{
-	
+	private static final double DEFAULT_WEIGHT = 1;
+
 	private HashSet<Integer[]> blockedPoints = new HashSet<Integer[]>();
 	private Integer[][] visibilityMap = new Integer[Board.BOARD_SIZE][Board.BOARD_SIZE];
 	private boolean visibilityMapInitialised = false;
 	public Visibility(double weight)
 	{
-		super("Visibility", "The visibility of white's squares - the visibility of black's squares", weight);
+		super("Visibility", "The visibility of white's squares - the visibility of black's squares",DEFAULT_WEIGHT, weight);
 	}
 	
 	

@@ -1,6 +1,8 @@
 package iago.features;
 import static org.junit.Assert.assertTrue;
 import iago.Board;
+import iago.players.Player;
+
 import org.junit.Test;
 
 
@@ -18,7 +20,7 @@ public class StoneCountTest {
 	                                 ".........." +
 	                                 "........*." +
 	                                 "w........w");
-		assertTrue(stoneCount.evaluate(smallBoard) == 4);
+		assertTrue(stoneCount.evaluate(smallBoard,Player.PlayerType.WHITE) == 4);
 	}
 	
 	@Test
@@ -33,7 +35,7 @@ public class StoneCountTest {
                 					 "b..w..b..." +
                 					 ".*...w...*" +
                 					 "w...b..*.w");
-		assertTrue(stoneCount.evaluate(smallBoard) == 6);
+		assertTrue(stoneCount.evaluate(smallBoard,Player.PlayerType.WHITE) == 6);
 	}
 	
 	@Test

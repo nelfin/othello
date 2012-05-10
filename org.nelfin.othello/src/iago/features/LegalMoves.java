@@ -5,9 +5,11 @@ import iago.players.Player;
 
 public class LegalMoves extends Feature{
 	
+	private static final double DEFAULT_WEIGHT = 1;
+	
 	public LegalMoves(double weight)
 	{
-		super("LegalMoves", "The number of legal moves for white", weight);
+		super("LegalMoves", "The number of legal moves for white",DEFAULT_WEIGHT, weight);
 	}
 	
 	
