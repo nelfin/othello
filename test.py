@@ -40,6 +40,8 @@ as_black = list()
 for colour, results in [('white', as_white), ('black', as_black)]:
     server = Popen(['othello-reference/server_headless', '0'],
             stderr=devnull, stdout=PIPE)
+    print(us_strategy," is ",colour)
+    print(them_strategy," is ",opponent(colour))
     for i in xrange(iterations):
         us = Popen(['java', '-cp', CLASSPATH, 'iago/Client', colour, "3130", us_strategy],
                 stdin=devnull, stderr=output, stdout=output)

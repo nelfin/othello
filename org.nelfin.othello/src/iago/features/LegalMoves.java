@@ -21,8 +21,8 @@ public class LegalMoves extends Feature{
 	 * The number of legal moves for the next player
 	 * @return Legal moves white
 	 */
-	public Integer evaluate(Board state)
+	public Integer evaluate(Board state, Player.PlayerType player)
 	{
-		return state.validMoves(Player.PlayerType.WHITE).size();
+		return state.validMoves(player).size();
 	}
 }

@@ -33,7 +33,7 @@ public class NegamaxPlayer extends AbstractPlayer {
     private double negamax(Board board, PlayerType player,
             int colour, double alpha, double beta, int depth) {
         if ((depth <= 0) || (board.movesRemaining() == 0)) {
-            return colour * features.score(board);
+            return colour * features.score(board, player);
         }
         
         PlayerType nextPlayer = player.getOpponent();
@@ -94,8 +94,8 @@ public class NegamaxPlayer extends AbstractPlayer {
         this.searchDepth = depth;
         //Choose the features here
         features.add(new StoneCount(1));
-        features.add(new Visibility(1));
-        features.add(new LegalMoves(1));
+        //features.add(new Visibility(1));
+        //features.add(new LegalMoves(0));
     }
     
     public void setSearchDepth(int searchDepth) {

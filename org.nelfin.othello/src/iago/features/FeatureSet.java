@@ -2,6 +2,7 @@ package iago.features;
 
 
 import iago.Board;
+import iago.players.Player;
 
 import java.util.ArrayList;
 
@@ -20,14 +21,14 @@ public class FeatureSet {
 		Features.add(f);
 	}
 
-	public double score (Board state){
+	public double score (Board state, Player.PlayerType player){
 		double boardscore = 0;
 		//Evaluate victory condition (this bit probably unnecessary)
 		Boolean victory = false;
 		if (victory) return Integer.MAX_VALUE;
 		//Loop through features and evaluate each one
 		for (Feature f: Features)
-			boardscore += f.evaluate(state) * f.getWeight();
+			boardscore += f.evaluate(state, player) * f.getWeight();
 		return boardscore;
 	}
 	

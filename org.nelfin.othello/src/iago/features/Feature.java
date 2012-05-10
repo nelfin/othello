@@ -1,6 +1,7 @@
 package iago.features;
 
 import iago.Board;
+import iago.players.Player;
 
 
 public abstract class Feature {
@@ -26,6 +27,6 @@ public abstract class Feature {
 		return weight;
 	}
 	
-	public abstract Integer evaluate(Board state);
+	public abstract Integer evaluate(Board state, Player.PlayerType player);
 
 }

@@ -3,6 +3,7 @@ package iago.features;
 import java.util.HashSet;
 
 import iago.Board;
+import iago.players.Player;
 
 public class Visibility extends Feature{
 	
@@ -69,9 +70,9 @@ public class Visibility extends Feature{
 	}
 	/**
 	 * Visibility is the number of squares in any direction until a side or a block is reached
-	 * @return Visibility white - Visibility black
+	 * @return Visibility player - Visibility opponent(player)
 	 */
-	public Integer evaluate(Board state)
+	public Integer evaluate(Board state, Player.PlayerType player)
 	{
 		HashSet<Integer[]> thisBoardBlockedPoints = new HashSet<Integer[]>();
 		for(int x=0;x<Board.BOARD_SIZE;x++){
@@ -90,9 +91,9 @@ public class Visibility extends Feature{
 		for(int x=0;x<Board.BOARD_SIZE;x++){
 			for(int y=0;y<Board.BOARD_SIZE;y++){
 				
-				if(state.get(x, y)==Board.BoardState.WHITE){
+				if(Board.BoardState.asBoardState(player) == state.get(x, y)){
 					whiteVisibilityAdvantage += visibilityMap[x][y];
-				}else if(state.get(x,y)==Board.BoardState.BLACK){
+				}else if(Board.BoardState.asBoardState(player.getOpponent()) == state.get(x, y)){
 					whiteVisibilityAdvantage -= visibilityMap[x][y];
 				}
 			}
