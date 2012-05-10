@@ -15,6 +15,7 @@ public class Client implements Runnable {
     
     private static final String DEFAULT_HOST = "localhost";
     private static final int DEFAULT_PORT = 3130;
+    private static final String DEFAULT_STRATEGY = "negamax";
     private static final String NAME = "Jafar";
     
     private String host;
@@ -36,14 +37,15 @@ public class Client implements Runnable {
      * @param args
      */
     public static void main(String[] args) {
-        if ((args.length < 1) || (args.length > 2)) {
-            System.err.println("usage: " + Client.class.getName() + " <white|black> [[host:]port]");
+        if ((args.length < 1) || (args.length > 3)) {
+            System.err.println("usage: " + Client.class.getName() + " <white|black> [[host:]port] [strategy]");
             System.exit(1);
         }
         
         PlayerType player = PlayerType.NONE;
         String host = DEFAULT_HOST;
         int port = DEFAULT_PORT;
+        String strategy = DEFAULT_STRATEGY;
         
         if (args[0].startsWith("white")) {
             player = PlayerType.WHITE;
@@ -56,7 +58,7 @@ public class Client implements Runnable {
         
         System.err.println("[client] player is " + player.toString());
         
-        if (args.length == 2) {
+        if (args.length >= 2) {
             String[] parts = args[1].split(":");
             if (parts.length == 1) {
                 port = Integer.parseInt(parts[0]);
@@ -65,9 +67,19 @@ public class Client implements Runnable {
                 port = Integer.parseInt(parts[1]);
             }
         }
+        if (args.length == 3) {
+            strategy = args[2]; 
+        }
         
         // And, we're off!
-        Client mClient = new Client(player, host, port, new NegamaxPlayer(player));
+        Player ai = null;
+        try {
+            ai = StrategyLookup.playerFromStrategy(strategy, player);
+        } catch (IllegalArgumentException e) {
+            System.err.println("[client] invalid strategy: " + strategy);
+            System.exit(1);
+        }
+        Client mClient = new Client(player, host, port, ai);
         if (!mClient.connect()) {
             System.err.println("[client] unable to establish a connection, exiting");
             System.exit(1);
