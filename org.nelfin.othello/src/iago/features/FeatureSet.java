@@ -6,10 +6,14 @@ import iago.players.Player;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
@@ -17,6 +21,8 @@ import java.util.Iterator;
 
 public class FeatureSet implements Iterable<Feature>{
 
+	private static final long serialVersionUID = -5179576268344247586L;
+	
 	private ArrayList<Feature> Features;
 	private String playerID;
 	
@@ -49,10 +55,49 @@ public class FeatureSet implements Iterable<Feature>{
 	
 	//A game has just ended, evaluate and adjust features based on Win/Loss
 	public void update (FeatureSet opponent, Board finalstate) {
-		//Learn how to learn
+		// TODO Learn how to learn
 	}
 	
-	public void save () {
+	/**
+	 * Save the FeatureSet to a serialised Feature array
+	 */
+	public void save() {
+		try {
+			ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream(playerID + ".spl"));
+			out.writeObject(Features);
+			out.close();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
+	/**
+	 * Load the FeatureSet from a serialised Feature array.
+	 * If the serialised file is not found; attempt to load from text file
+	 */
+	@SuppressWarnings("unchecked")
+	public void load() {
+		try {
+			ObjectInputStream in = new ObjectInputStream(new FileInputStream(playerID + ".spl"));
+			Features = (ArrayList<Feature>) in.readObject();
+			in.close();
+		} catch (FileNotFoundException e) {
+			// Simple way to add new player (use .pl if .spl not found)
+			loadFromFile();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (ClassNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
+	/**
+	 * Save the FeatureSet to a text file
+	 */
+	public void saveToFile () {
 		try {
 			BufferedWriter bw = new BufferedWriter(new FileWriter(playerID + ".pl"));
 			for (Feature f: Features)
@@ -63,7 +108,10 @@ public class FeatureSet implements Iterable<Feature>{
 		}
 	}
 
-	public void load () {
+	/**
+	 * Load the FeatureSet from a text file
+	 */
+	public void loadFromFile () {
 		try {
 			BufferedReader br = new BufferedReader(new FileReader(playerID + ".pl"));
 			String featureLn;
@@ -105,6 +153,7 @@ public class FeatureSet implements Iterable<Feature>{
 			e.printStackTrace();
 		} 
 	}
+	
 	@Override
 	public Iterator<Feature> iterator() {
 		return Features.iterator();
