@@ -9,9 +9,13 @@ public class LegalMoves extends Feature{
 	
 	public LegalMoves(double weight)
 	{
-		super("LegalMoves", "The number of legal moves for white",DEFAULT_WEIGHT, weight);
+		super("LegalMoves", "The number of legal moves for white",weight);
 	}
 	
+	public LegalMoves()
+	{
+		super("LegalMoves", "The number of legal moves for white",DEFAULT_WEIGHT);
+	}
 	
 	
 	/**
