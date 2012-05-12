@@ -13,7 +13,12 @@ public class Visibility extends Feature{
 	private boolean visibilityMapInitialised = false;
 	public Visibility(double weight)
 	{
-		super("Visibility", "The visibility of white's squares - the visibility of black's squares",DEFAULT_WEIGHT, weight);
+		super("Visibility", "The visibility of white's squares - the visibility of black's squares",weight);
+	}
+	
+	public Visibility()
+	{
+		super("Visibility", "The visibility of white's squares - the visibility of black's squares",DEFAULT_WEIGHT);
 	}
 	
 	

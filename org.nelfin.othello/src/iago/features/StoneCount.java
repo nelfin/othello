@@ -9,11 +9,11 @@ public class StoneCount extends Feature{
 	
 	public StoneCount(double weight)
 	{
-		super("Stone Count", "Number of player's stones - number of opponent(player)'s stones",DEFAULT_WEIGHT, weight);
+		super("Stone Count", "Number of player's stones - number of opponent(player)'s stones",weight);
 	}
 	public StoneCount()
 	{
-		super("Stone Count", "Number of player's stones - number of opponent(player)'s stones",DEFAULT_WEIGHT, DEFAULT_WEIGHT);
+		super("Stone Count", "Number of player's stones - number of opponent(player)'s stones",DEFAULT_WEIGHT);
 	}
 	/**
 	 * A very basic feature that counts the number of stones in white's favour
