@@ -14,19 +14,22 @@ import iago.players.Player.PlayerType;
 
 public class PracticeArena{
 	static final int BLOCKED_COUNT=4; //TODO: move this
-	static final int GAME_REPEATS=5;
+	static final int LEARNING_ITERATIONS=15000;
 	public static void main(String[] args)
 	{
-		AlphaBetaPlayer blackOpponent = new AlphaBetaPlayer(PlayerType.BLACK);
-		AlphaBetaPlayer whiteOpponent = new AlphaBetaPlayer(PlayerType.WHITE);
+		AlphaBetaPlayer blackOpponent = new AlphaBetaPlayer(PlayerType.BLACK,3);
+		AlphaBetaPlayer whiteOpponent = new AlphaBetaPlayer(PlayerType.WHITE,3);
 		//This is the learning player. They could both learn, but it's easy to reference them this way
-		MetaPlayer whiteLearner = new MetaPlayer(PlayerType.WHITE); 
-		MetaPlayer blackLearner = new MetaPlayer(PlayerType.BLACK); 
-
-		double feedback = 0;
+		MetaPlayer whiteLearner = new MetaPlayer(PlayerType.WHITE,3); 
+		MetaPlayer blackLearner = new MetaPlayer(PlayerType.BLACK,3); 
 		
-		for(int i = 0; i < GAME_REPEATS;i++)
-		{
+		
+		
+		for(int a = 0; a < LEARNING_ITERATIONS; a++){
+			double feedback = 0;
+			System.out.println("=====================");
+			System.out.println("Learning iteration "+(a+1));
+			System.out.println("=====================");
 
 			int side = 0;
 			MetaPlayer learner;
@@ -35,7 +38,7 @@ public class PracticeArena{
 			//We want the player to play from both sides
 			for(side = 0; side <= 1; side++) //side==0 means Learner is playing white
 			{
-				System.out.println("Playing game "+(i+1)+"/"+GAME_REPEATS+((side==0)?"":" reversed"));
+				System.out.println("Playing game "+(a+1)+"/"+LEARNING_ITERATIONS+((side==0)?"":" reversed"));
 				
 				//Set up a game
 				Board board = new Board(initialBoardRepresentation);
@@ -84,19 +87,27 @@ public class PracticeArena{
 				
 				//Allocate points
 				if(whiteWins && side==0 && !tie){ //Learner won while white
-					thisGameFeedback = 1.0 / (2.0 * GAME_REPEATS); //We only give 0.5 for a win, as we have to play from both sides. 1 means we won both sides.
+					thisGameFeedback = 1.0;
 				}
 				if(!whiteWins && side==1 && !tie){ //Learner won while black
-					thisGameFeedback = 1.0 / (2.0 * GAME_REPEATS); 
+					thisGameFeedback = 1.0; 
 				}
 				if(tie){
-					thisGameFeedback = 0.5 / (2.0 * GAME_REPEATS);
+					thisGameFeedback = 0.5;
 				}
 				feedback += thisGameFeedback;
 				System.out.println("Feedback: "+thisGameFeedback);
 			}
+		
+			//Improve our feature weights (maybe)
+			whiteLearner.receiveFeedback(feedback);
+			//Both players can learn, and we can check out the weights for playing from both sides separately
+			blackLearner.receiveFeedback(feedback);
+			System.out.println("White: "+whiteLearner.getFeatureSet());
+			System.out.println("Black: "+blackLearner.getFeatureSet());
 		}
-		System.out.println("Final score: "+feedback+" / 1");
+		
+		System.out.println("Done");
 
 	}
 	private static String generateRandomBoard()

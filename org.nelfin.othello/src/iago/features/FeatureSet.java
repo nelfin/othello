@@ -15,7 +15,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Iterator;
 
-public class FeatureSet implements Iterable<Feature>{
+public class FeatureSet extends ArrayList<Feature>{
 
 	private ArrayList<Feature> Features;
 	private String playerID;
@@ -32,8 +32,22 @@ public class FeatureSet implements Iterable<Feature>{
 		this.Features = new ArrayList<Feature>();
 	}
 	
-	public void add (Feature f) {
+	public boolean add (Feature f) {
 		Features.add(f);
+		return true;
+	}
+	/**
+	 * Will make all weights be between -1 and 1. You may or may not want this depending on your use of the features
+	 */
+	public void normaliseWeights(){
+		double weightMagnitude = 0;
+		for (Feature f : this){
+			weightMagnitude += Math.pow(f.getWeight(), 2);
+		}
+		weightMagnitude = Math.sqrt(weightMagnitude);
+		for (Feature f : this){
+			f.setWeight(f.getWeight() / weightMagnitude);
+		}
 	}
 
 	public double score (Board state, Player.PlayerType player){
@@ -105,8 +119,39 @@ public class FeatureSet implements Iterable<Feature>{
 			e.printStackTrace();
 		} 
 	}
+	/** Modifies this feature set so that the weights of this feature set are the sum of the original + the other
+	 * 
+	 * @param other		The other feature set that we're adding to this one
+	 */
+	public void combine(FeatureSet other){
+		for(Feature o : other){
+			for(Feature t : this){
+				if(o.name==t.name){
+					t.setWeight(t.getWeight() + o.getWeight());
+				}
+			}
+		}
+	}
+	@Override
+	public Feature get(int index){
+		return Features.get(index);
+	}
+	@Override
+	public int size(){
+		return Features.size();
+	}
 	@Override
 	public Iterator<Feature> iterator() {
 		return Features.iterator();
 	}
+	@Override
+	public String toString(){
+		String output = "{";
+		for (Feature f : Features){
+			output += "(Name: "+f.name + ", Weight: "+f.getWeight()+"), ";
+		}
+		output += "}";
+		return output;
+	}
+	
 }

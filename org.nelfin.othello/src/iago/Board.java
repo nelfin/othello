@@ -7,7 +7,7 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-public class Board {
+public class Board implements Cloneable{
     
     public static final int BOARD_SIZE = 10;
     private static final int BLOCKED_NUM = 4;
@@ -353,6 +353,14 @@ public class Board {
     public int movesRemaining() {
         return BOARD_SIZE*BOARD_SIZE - BLOCKED_NUM - this.movesPlayed;
     }
+    
+    @Override
+	public Object clone()
+    {
+    	Board newBoard = new Board(this);
+    	
+        return newBoard;
+    } 
     
     
 }
