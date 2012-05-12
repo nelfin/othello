@@ -10,7 +10,12 @@ import iago.features.*;
 public class MetaPlayer extends LearningPlayer{
 	private NegamaxPlayer negamaxPlayer;
 	
-	FeatureSet initialWeights = new FeatureSet();
+	static FeatureSet initialWeights = new FeatureSet();
+	static {
+	    initialWeights.add(new LegalMoves(0.577350269));
+	    initialWeights.add(new StoneCount(0.577350269));
+	    initialWeights.add(new Visibility(0.577350269));
+	}
 	FeatureSet currentWeights = new FeatureSet();
 	
 	private final double LEARNING_RATE = 0.1;
@@ -20,15 +25,6 @@ public class MetaPlayer extends LearningPlayer{
 	
 	ArrayList<Board> gameHistory = new ArrayList<Board>();
 	
-	public void setupWeights(){
-		initialWeights.add(new LegalMoves(0.577350269));
-		initialWeights.add(new StoneCount(0.577350269));
-		initialWeights.add(new Visibility(0.577350269));
-		
-		
-		currentWeights = (FeatureSet) initialWeights.clone();
-		negamaxPlayer.setFeatureSet(currentWeights);
-	}
 	/**
 	 * The J function in the TD lambda algorithm. J takes a board and a set of weights and returns a board value
 	 * @param x		The board
@@ -49,7 +45,7 @@ public class MetaPlayer extends LearningPlayer{
 	private double deltaJ(Board x, FeatureSet w, Feature f){
 		final double step = 0.001; //step is the derivative step
 		double before = J(x,w);
-		FeatureSet wPlusStep = (FeatureSet) w.clone();
+		FeatureSet wPlusStep = new FeatureSet(w);
 		
 		for(Feature wFeature : w){
 			if(wFeature.name == f.name){
@@ -65,21 +61,18 @@ public class MetaPlayer extends LearningPlayer{
 	public MetaPlayer(PlayerType colour, int depth) {
 		super(colour);
 		negamaxPlayer = new NegamaxPlayer(colour, depth);
-		setupWeights();
+		currentWeights = new FeatureSet(initialWeights);
+		negamaxPlayer.setFeatureSet(currentWeights);
 	}
 	
 	public MetaPlayer(PlayerType colour) {
-		super(colour);
-		negamaxPlayer = new NegamaxPlayer(colour);
-		setupWeights();
-		
-		
+		this(colour, NegamaxPlayer.DEFAULT_DEPTH);
 	}
 	
 
 	@Override
 	public Move chooseMove(Board board) {
-		gameHistory.add((Board) board.clone());
+		gameHistory.add(new Board(board));
 		return negamaxPlayer.chooseMove(board);
 	}
 

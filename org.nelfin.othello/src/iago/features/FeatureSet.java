@@ -38,7 +38,12 @@ public class FeatureSet extends ArrayList<Feature>{
 		this.Features = new ArrayList<Feature>();
 	}
 	
-	public boolean add (Feature f) {
+	public FeatureSet(FeatureSet other) {
+	    this.Features = new ArrayList<Feature>(other.Features);
+	    this.playerID = other.playerID;
+	}
+	
+    public boolean add (Feature f) {
 		Features.add(f);
 		return true;
 	}
