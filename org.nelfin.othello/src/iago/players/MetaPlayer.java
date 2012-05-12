@@ -107,7 +107,7 @@ public class MetaPlayer extends LearningPlayer{
 
 			}
 			
-			Feature deltaFeature = (Feature) f.clone();
+			Feature deltaFeature = new ErsatzFeature(f);
 			deltaFeature.setWeight(deltaWeight);
 			deltaWeights.add(deltaFeature);
 		}

@@ -4,7 +4,7 @@ import iago.Board;
 import iago.players.Player;
 
 
-public abstract class Feature implements Cloneable {
+public abstract class Feature {
 
 	private double weight;
 
@@ -16,6 +16,12 @@ public abstract class Feature implements Cloneable {
 		this.name        = name;
 		this.description = description;
 		this.weight = weight;
+	}
+	
+	public Feature(Feature other) {
+	    this.name = other.name;
+	    this.description = other.description;
+	    this.weight = other.weight;
 	}
 	
 	public void setWeight(double weight) {
@@ -35,17 +41,4 @@ public abstract class Feature implements Cloneable {
 	
 	public abstract Integer evaluate(Board state, Player.PlayerType player);
 	
-	@Override
-	public Object clone()
-    {
-        try
-        {
-            return super.clone();
-        }
-	    catch( CloneNotSupportedException e )
-	    {
-	            return null;
-        }
-    } 
-
 }
