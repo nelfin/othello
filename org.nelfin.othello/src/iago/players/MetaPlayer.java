@@ -12,9 +12,10 @@ public class MetaPlayer extends LearningPlayer{
 	
 	static FeatureSet initialWeights = new FeatureSet();
 	static {
-	    initialWeights.add(new LegalMoves(0.577350269));
-	    initialWeights.add(new StoneCount(0.577350269));
-	    initialWeights.add(new Visibility(0.577350269));
+	    initialWeights.add(new LegalMoves(1));
+	    initialWeights.add(new StoneCount(1));
+	    initialWeights.add(new Visibility(1));
+	    initialWeights.normaliseWeights();
 	}
 	FeatureSet currentWeights = new FeatureSet();
 	
@@ -43,14 +44,16 @@ public class MetaPlayer extends LearningPlayer{
 	 * @return		The board value
 	 */
 	private double deltaJ(Board x, FeatureSet w, Feature f){
-		final double step = 0.001; //step is the derivative step
+		FeatureSet tempW = new FeatureSet(w);
+		final double step = 0.00001; //step is the derivative step
 		double before = J(x,w);
-		FeatureSet wPlusStep = new FeatureSet(w);
+		FeatureSet wPlusStep = new FeatureSet();
 		
-		for(Feature wFeature : w){
+		for(Feature wFeature : tempW){
 			if(wFeature.name == f.name){
 				wFeature.setWeight(wFeature.getWeight() + step);
 			}
+			wPlusStep.add(wFeature);
 		}
 		double after  = J(x,wPlusStep);
 		

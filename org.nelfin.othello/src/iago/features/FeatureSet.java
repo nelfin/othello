@@ -68,7 +68,7 @@ public class FeatureSet extends ArrayList<Feature>{
 		if (victory) return Integer.MAX_VALUE;
 		//Loop through features and evaluate each one
 		for (Feature f: Features)
-			boardscore += f.evaluate(state, player) * f.getWeight();
+			boardscore += (f.evaluate(state, player) / (double)f.bestScore) * f.getWeight();
 		return boardscore;
 	}
 	

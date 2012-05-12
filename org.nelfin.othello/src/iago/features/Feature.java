@@ -10,18 +10,21 @@ public abstract class Feature {
 
 	public final String description;
 	public final String name;
+	public final Integer bestScore;
 	
 	//Feature classes should pass static hard-coded constants for first 3.
-	public Feature (String name, String description, double weight) {
+	public Feature (String name, String description, double weight, Integer bestScore) {
 		this.name        = name;
 		this.description = description;
 		this.weight = weight;
+		this.bestScore = bestScore;
 	}
 	
 	public Feature(Feature other) {
 	    this.name = other.name;
 	    this.description = other.description;
 	    this.weight = other.weight;
+	    this.bestScore = other.bestScore;
 	}
 	
 	public void setWeight(double weight) {
