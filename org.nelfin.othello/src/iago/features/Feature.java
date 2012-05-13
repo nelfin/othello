@@ -1,10 +1,13 @@
 package iago.features;
 
+import java.io.Serializable;
+
 import iago.Board;
 import iago.players.Player;
 
 
-public abstract class Feature {
+public abstract class Feature implements Serializable{
+	private static final long serialVersionUID = 1L;
 
 	private double weight;
 

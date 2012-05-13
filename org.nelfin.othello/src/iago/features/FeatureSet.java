@@ -126,7 +126,8 @@ public class FeatureSet extends ArrayList<Feature>{
 		try {
 			BufferedWriter bw = new BufferedWriter(new FileWriter(playerID + ".pl"));
 			for (Feature f: Features)
-				bw.write(f.name + ":" + Double.toString(f.getWeight()) + "\n");
+				bw.write(f.getClass().getSimpleName() + ":" + Double.toString(f.getWeight()) + "\n");
+			bw.close();
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -145,7 +146,7 @@ public class FeatureSet extends ArrayList<Feature>{
 			while ((featureLn = br.readLine()) != null)   {
 				fname   = featureLn.split(":")[0];
 				fweight = Double.parseDouble(featureLn.split(":")[1]);
-				Constructor<?> fcons = Class.forName(fname).getConstructor(new Class[]{Double.TYPE});
+				Constructor<?> fcons = Class.forName("iago.features."+fname).getConstructor(new Class[]{Double.TYPE});
 				Feature f = (Feature) fcons.newInstance(new Object[]{fweight});
 				Features.add(f);
 			}
@@ -200,7 +201,6 @@ public class FeatureSet extends ArrayList<Feature>{
 	public int size(){
 		return Features.size();
 	}
-
 	@Override
 	public Iterator<Feature> iterator() {
 		return Features.iterator();
