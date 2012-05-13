@@ -21,7 +21,7 @@ import iago.players.Player.PlayerType;
 public class PracticeArena{
 	static final int BLOCKED_COUNT=4; //TODO: move this
 	static final int LEARNING_ITERATIONS=1000000;//ONE MILLION
-	static final int RUNNING_WIN_LOSS_SIZE=50; //We get the win loss over the past RUNNING_WIN_LOSS_SIZE games
+	static final int RUNNING_WIN_LOSS_SIZE=100; //We get the win loss over the past RUNNING_WIN_LOSS_SIZE games
 	static final int LOG_SAVE_COUNT = 100; //Saves the file every LOG_SAVE_COUNT games
 	static final String LOG_DIRECTORY = "LearningLogs";
 	

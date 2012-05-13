@@ -13,8 +13,8 @@ public class MetaPlayer extends LearningPlayer{
 	static FeatureSet initialWeights = new FeatureSet();
 	static {
 	    initialWeights.add(new LegalMoves(1));
-	    initialWeights.add(new StoneCount(1));
-	    initialWeights.add(new Visibility(1));
+	    initialWeights.add(new StoneCount(0));
+	    initialWeights.add(new Visibility(0));
 	    initialWeights.normaliseWeights();
 	}
 	FeatureSet currentWeights = new FeatureSet();
@@ -98,15 +98,8 @@ public class MetaPlayer extends LearningPlayer{
 					Board afterXT = gameHistory.get(t+1);
 					double dt = (J(afterXT,weightsUsed) - J(xt,weightsUsed)); //The temporal difference
 					lambdaTD += Math.pow(LAMBDA, j-t) * dt;
-//					System.out.println("-----------------");
-//					xt.visualise();
-//					afterXT.visualise();
-//					System.out.println("-----------------");
-//					System.out.println("Feature "+f+" J(afterXT,weightsUsed) - J(xt,weightsUsed): "+J(afterXT,weightsUsed) + "-" + J(xt,weightsUsed));
-
 				}
-
-				deltaWeight = LEARNING_RATE * (thisStepDelta * lambdaTD);
+				deltaWeight += LEARNING_RATE * (thisStepDelta * lambdaTD);
 				
 
 			}
