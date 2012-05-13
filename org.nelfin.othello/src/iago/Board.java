@@ -56,6 +56,8 @@ public class Board {
     
     private BoardState[][] board;
     private int movesPlayed;
+    Set<Move> moves;
+    boolean validMovesGenerated = false;
     private Map<BoardState, Integer> cellCount;
     
     public Board() {
@@ -192,15 +194,19 @@ public class Board {
     }
     
     public Set<Move> validMoves(PlayerType player) {
-        Set<Move> moves = new HashSet<Move>();
-        for (int y = 0; y < BOARD_SIZE; y++) {
-            for (int x = 0; x < BOARD_SIZE; x++) {
-                if (validMove(x, y, player)) {
-                    moves.add(new Move(x, y));
-                }
-            }
-        }
-        return moves;
+    	//Optimisation. Only ever run once.
+    	if (!validMovesGenerated) {
+    		moves = new HashSet<Move>();
+    		for (int y = 0; y < BOARD_SIZE; y++) {
+    			for (int x = 0; x < BOARD_SIZE; x++) {
+    				if (validMove(x, y, player)) {
+    					moves.add(new Move(x, y));
+    				}
+    			}
+    		}
+    		validMovesGenerated = true;
+    	}
+    	return moves;
     }
     
     private boolean validMove(int x, int y, PlayerType player) {
