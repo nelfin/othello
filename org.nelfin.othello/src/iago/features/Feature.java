@@ -6,7 +6,7 @@ import iago.Board;
 import iago.players.Player;
 
 
-public abstract class Feature implements Serializable{
+public abstract class Feature implements Serializable, Cloneable{
 	private static final long serialVersionUID = 1L;
 
 	private double weight;
@@ -29,6 +29,11 @@ public abstract class Feature implements Serializable{
 	    this.weight = other.weight;
 	    this.bestScore = other.bestScore;
 	}
+	
+	@Override
+	 public Object clone() throws CloneNotSupportedException {
+		    return super.clone();
+	 }
 	
 	public void setWeight(double weight) {
 		this.weight = weight;

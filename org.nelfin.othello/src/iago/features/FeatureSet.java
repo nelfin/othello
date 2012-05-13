@@ -40,7 +40,16 @@ public class FeatureSet extends ArrayList<Feature>{
 	}
 	
 	public FeatureSet(FeatureSet other) {
-	    this.Features = new ArrayList<Feature>(other.Features);
+	    this.Features = new ArrayList<Feature>(other.Features); //Changed this because the array copy constructor wasn't shallow
+	    this.Features = new ArrayList<Feature>();
+	    for(Feature f : other.Features){
+	    	try {
+				this.Features.add((Feature) f.clone());
+			} catch (CloneNotSupportedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+	    }
 	    this.playerID = other.playerID;
 	}
 	

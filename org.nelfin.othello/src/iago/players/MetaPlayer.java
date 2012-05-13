@@ -17,7 +17,7 @@ public class MetaPlayer extends LearningPlayer{
 	    initialWeights.add(new Visibility(0));
 	    initialWeights.normaliseWeights();
 	}
-	FeatureSet currentWeights = new FeatureSet();
+	FeatureSet currentWeights = new FeatureSet("MetaPlayerLearntWeights");
 	
 	private final double LEARNING_RATE = 0.1;
 	private final double LAMBDA = 0.9;
@@ -60,6 +60,7 @@ public class MetaPlayer extends LearningPlayer{
 		
 		return (after-before)/step;
 		
+
 	}
 	
 	public MetaPlayer(PlayerType colour, int depth) {
@@ -84,11 +85,11 @@ public class MetaPlayer extends LearningPlayer{
 	public void receiveFeedback(double feedback) { //TODO we don't really need the feedback because the J function will tell us if we won/lost on the last step
 		FeatureSet weightsUsed = negamaxPlayer.getFeatureSet();
 		FeatureSet deltaWeights = new FeatureSet();
-		
+
 		//Calculate the change in weight for every feature f
 		for(Feature f : weightsUsed)
 		{
-			double previousWeight = f.getWeight();
+
 			double deltaWeight = 0;
 			for(int t = 0; t < gameHistory.size()-1; t++){
 				Board xt = gameHistory.get(t);
@@ -100,20 +101,25 @@ public class MetaPlayer extends LearningPlayer{
 					lambdaTD += Math.pow(LAMBDA, j-t) * dt;
 				}
 				deltaWeight += LEARNING_RATE * (thisStepDelta * lambdaTD);
-				
+
 
 			}
 			
 			Feature deltaFeature = new ErsatzFeature(f);
 			deltaFeature.setWeight(deltaWeight);
 			deltaWeights.add(deltaFeature);
+			
+
 		}
-		
+
 		//We're done with this game
 		gameHistory.clear();
 		//Modify our feature set
+
+
 		currentWeights.combine(deltaWeights);
 		currentWeights.normaliseWeights();
+		
 		negamaxPlayer.setFeatureSet(currentWeights);
 		negamaxPlayer.getFeatureSet().saveToFile();
 		
