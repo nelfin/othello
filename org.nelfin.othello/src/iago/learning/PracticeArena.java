@@ -146,7 +146,8 @@ public class PracticeArena{
 				for(Double result : runningWinLoss){
 					avgFeedback += result;
 				}
-				avgFeedback /=  RUNNING_WIN_LOSS_SIZE;
+				
+				avgFeedback /=  runningWinLoss.size();
 				partialWinLossLog.write(a+","+avgFeedback.toString()+"\n");
 				allWinLossLog.write(a+","+avgFeedback.toString()+"\n");
 				if(a % LOG_SAVE_COUNT == 0){
