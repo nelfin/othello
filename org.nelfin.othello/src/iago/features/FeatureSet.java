@@ -3,6 +3,7 @@ package iago.features;
 
 import iago.Board;
 import iago.players.Player;
+import iago.players.Player.PlayerType;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -48,24 +49,29 @@ public class FeatureSet extends ArrayList<Feature>{
 		return true;
 	}
 	/**
-	 * Will make all weights be between -1 and 1. You may or may not want this depending on your use of the features
+	 * Will make all weights be between -1 and 1. You may or may not want this depending on your use of the features.
+	 * The sum of the weights is 1 but the ratio between them is maintained
 	 */
 	public void normaliseWeights(){
-		double weightMagnitude = 0;
+		double weightSum = 0;
 		for (Feature f : this){
-			weightMagnitude += Math.pow(f.getWeight(), 2);
+			weightSum += f.getWeight();
 		}
-		weightMagnitude = Math.sqrt(weightMagnitude);
 		for (Feature f : this){
-			f.setWeight(f.getWeight() / weightMagnitude);
+			f.setWeight(f.getWeight() / weightSum);
 		}
 	}
 
 	public double score (Board state, Player.PlayerType player){
 		double boardscore = 0;
-		//Evaluate victory condition (this bit probably unnecessary)
-		Boolean victory = false;
-		if (victory) return Integer.MAX_VALUE;
+		//Evaluate victory condition
+		//TODO: think about ties
+		boolean gameOver = (state.validMoves(player).size() == 0) && (state.validMoves(player).size() == 0);
+		boolean weHaveMorePoints = state.scoreBoard(player) > state.scoreBoard(PlayerType.getOpponent(player));
+		
+		if (gameOver && weHaveMorePoints) return 1;
+		if (gameOver && !weHaveMorePoints) return 0;
+
 		//Loop through features and evaluate each one
 		for (Feature f: Features)
 			boardscore += (f.evaluate(state, player) / (double)f.bestScore) * f.getWeight();
@@ -189,6 +195,7 @@ public class FeatureSet extends ArrayList<Feature>{
 	public Feature get(int index){
 		return Features.get(index);
 	}
+	
 	@Override
 	public int size(){
 		return Features.size();

@@ -21,24 +21,21 @@ import iago.players.Player.PlayerType;
 public class PracticeArena{
 	static final int BLOCKED_COUNT=4; //TODO: move this
 	static final int LEARNING_ITERATIONS=1000000;//ONE MILLION
-	static final int RUNNING_WIN_LOSS_SIZE=20; //We get the win loss over the past RUNNING_WIN_LOSS_SIZE games
-	static final int LOG_SAVE_COUNT = 1000; //Saves the file every LOG_SAVE_COUNT games
+	static final int RUNNING_WIN_LOSS_SIZE=50; //We get the win loss over the past RUNNING_WIN_LOSS_SIZE games
+	static final int LOG_SAVE_COUNT = 100; //Saves the file every LOG_SAVE_COUNT games
 	static final String LOG_DIRECTORY = "LearningLogs";
 	
-	private void updateResultsLog(){
 		
-	}
-	
 	public static void main(String[] args)
 	{
 		LinkedList<Double> runningWinLoss = new LinkedList<Double>();
 
 		
-		AlphaBetaPlayer blackOpponent = new AlphaBetaPlayer(PlayerType.BLACK,3);
-		AlphaBetaPlayer whiteOpponent = new AlphaBetaPlayer(PlayerType.WHITE,3);
+		AlphaBetaPlayer blackOpponent = new AlphaBetaPlayer(PlayerType.BLACK,2);
+		AlphaBetaPlayer whiteOpponent = new AlphaBetaPlayer(PlayerType.WHITE,2);
 		//This is the learning player. They could both learn, but it's easy to reference them this way
-		MetaPlayer whiteLearner = new MetaPlayer(PlayerType.WHITE,3); 
-		MetaPlayer blackLearner = new MetaPlayer(PlayerType.BLACK,3); 
+		MetaPlayer whiteLearner = new MetaPlayer(PlayerType.WHITE,2); 
+		MetaPlayer blackLearner = new MetaPlayer(PlayerType.BLACK,2); 
 		
 		//Start our history file
 		try{
@@ -119,13 +116,13 @@ public class PracticeArena{
 					
 					//Allocate points
 					if(whiteWins && side==0 && !tie){ //Learner won while white
-						thisGameFeedback = 1.0;
+						thisGameFeedback = 1.0 / 2; // div 2 since we're going to play from both sides
 					}
 					if(!whiteWins && side==1 && !tie){ //Learner won while black
-						thisGameFeedback = 1.0; 
+						thisGameFeedback = 1.0 / 2; 
 					}
 					if(tie){
-						thisGameFeedback = 0.5;
+						thisGameFeedback = 0.5 / 2;
 					}
 					feedback += thisGameFeedback;
 					System.out.println("Feedback: "+thisGameFeedback);
@@ -147,8 +144,9 @@ public class PracticeArena{
 				}
 				Double avgFeedback = 0.0;
 				for(Double result : runningWinLoss){
-					avgFeedback += (result / RUNNING_WIN_LOSS_SIZE);
+					avgFeedback += result;
 				}
+				avgFeedback /=  RUNNING_WIN_LOSS_SIZE;
 				partialWinLossLog.write(a+","+avgFeedback.toString()+"\n");
 				allWinLossLog.write(a+","+avgFeedback.toString()+"\n");
 				if(a % LOG_SAVE_COUNT == 0){

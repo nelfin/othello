@@ -33,7 +33,8 @@ public class MetaPlayer extends LearningPlayer{
 	 * @return		The board value
 	 */
 	private double J(Board x, FeatureSet w){
-		return w.score(x, negamaxPlayer.getColour());
+		PlayerType colour = negamaxPlayer.getColour();
+		return w.score(x, colour);
 	}
 	
 	/**
@@ -65,7 +66,7 @@ public class MetaPlayer extends LearningPlayer{
 		super(colour);
 		negamaxPlayer = new NegamaxPlayer(colour, depth);
 		currentWeights = new FeatureSet(initialWeights);
-		negamaxPlayer.setFeatureSet(currentWeights);
+		negamaxPlayer.setFeatureSet(currentWeights); //this will overwrite the features that negamax has as default
 	}
 	
 	public MetaPlayer(PlayerType colour) {
@@ -121,7 +122,7 @@ public class MetaPlayer extends LearningPlayer{
 		currentWeights.combine(deltaWeights);
 		currentWeights.normaliseWeights();
 		negamaxPlayer.setFeatureSet(currentWeights);
-		
+		negamaxPlayer.getFeatureSet().saveToFile();
 		
 	}
 
