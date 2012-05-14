@@ -12,7 +12,7 @@ public class FeatureSetTest {
 		fs.add(new StoneCount(1));
 		fs.add(new Visibility(2));
 		fs.add(new Visibility(-100));
-		fs.normaliseWeights();
+		fs.standardiseWeights();
 		for(Feature f : fs){
 			assertTrue(f.getWeight() <= 1);
 			assertTrue(f.getWeight() >= -1);
