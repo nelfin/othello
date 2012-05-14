@@ -3,6 +3,8 @@ package iago.learning;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
+import java.io.IOException;
+import java.io.Writer;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.LinkedList;
@@ -25,6 +27,7 @@ public class PracticeArena{
 	static final int LOG_SAVE_COUNT = 100; //Saves the file every LOG_SAVE_COUNT games
 	static final String LOG_DIRECTORY = "LearningLogs";
 	
+	private static Writer allWinLossLog;
 		
 	public static void main(String[] args)
 	{
@@ -46,12 +49,19 @@ public class PracticeArena{
 				System.err.println("Error: " + e.getMessage());
 			}
 		    // Create file 
-		    FileWriter smallStream = new FileWriter(LOG_DIRECTORY+"/LearningHistory_1-"+(LOG_SAVE_COUNT+1)+".csv");
 		    FileWriter longStream = new FileWriter(LOG_DIRECTORY+"/LearningHistory.csv");
-		    BufferedWriter partialWinLossLog = new BufferedWriter(smallStream);
-		    BufferedWriter allWinLossLog = new BufferedWriter(longStream);
-		    partialWinLossLog.write("Iteration,Win/Loss\n");
+		    allWinLossLog = new BufferedWriter(longStream);
 		    allWinLossLog.write("Iteration,Win/Loss\n");
+		    Runtime.getRuntime().addShutdownHook(new Thread() {
+		        public void run() {
+		            System.out.println("Closing arena log.");
+		            try {
+                        allWinLossLog.close();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+		        }
+		    });
 		    /**</META CODE>**/
 		    
 			for(int a = 0; a < LEARNING_ITERATIONS; a++){
@@ -152,12 +162,9 @@ public class PracticeArena{
 				}
 				
 				avgFeedback /=  runningWinLoss.size();
-				partialWinLossLog.write(a+","+avgFeedback.toString()+"\n");
 				allWinLossLog.write(a+","+avgFeedback.toString()+"\n");
 				if(a % LOG_SAVE_COUNT == 0){
-					partialWinLossLog.close();
-					smallStream = new FileWriter(LOG_DIRECTORY+"/LearningHistory_"+(a+1)+"-"+(a+1+LOG_SAVE_COUNT)+".csv");
-					partialWinLossLog = new BufferedWriter(smallStream);
+				    allWinLossLog.flush();
 				}
 			    /**</META CODE>**/
 				
@@ -165,9 +172,7 @@ public class PracticeArena{
 			
 		System.out.println("Done");
 		
-	    //Close the output stream
-		partialWinLossLog.close();
-		allWinLossLog.close();
+	    // Output stream is closed automatically
 	    }catch (Exception e){//Catch exception if any
 	    	  System.err.println("Error: " + e.getMessage());
 	    }
