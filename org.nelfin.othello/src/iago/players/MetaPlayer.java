@@ -13,9 +13,7 @@ public class MetaPlayer extends LearningPlayer{
 	
 	static FeatureSet initialWeights = new FeatureSet();
 	static {
-	    initialWeights.add(new LegalMoves(0));
 	    initialWeights.add(new StoneCount(1));
-	    initialWeights.add(new Visibility(0));
 	    initialWeights.add(new SidePieces(0));
 	    initialWeights.add(new CornerPieces(0));
 	    initialWeights.standardiseWeights();
