@@ -27,7 +27,7 @@ public class PracticeArena{
 	static final int LOG_SAVE_COUNT = 100; //Saves the file every LOG_SAVE_COUNT games
 	static final String LOG_DIRECTORY = "LearningLogs";
 	// Higher values of ALPHA => greater discount on older values of feedback
-    private static final double ALPHA = 0.2;
+    private static final double ALPHA = 0.05;
 	
 	private static Writer allWinLossLog;
 		
