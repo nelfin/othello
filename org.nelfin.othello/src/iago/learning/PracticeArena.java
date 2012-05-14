@@ -26,19 +26,21 @@ public class PracticeArena{
 	static final int RUNNING_WIN_LOSS_SIZE=1000; //We get the win loss over the past RUNNING_WIN_LOSS_SIZE games
 	static final int LOG_SAVE_COUNT = 100; //Saves the file every LOG_SAVE_COUNT games
 	static final String LOG_DIRECTORY = "LearningLogs";
+	// Higher values of ALPHA => greater discount on older values of feedback
+    private static final double ALPHA = 0.2;
 	
 	private static Writer allWinLossLog;
 		
 	public static void main(String[] args)
 	{
-		LinkedList<Double> runningWinLoss = new LinkedList<Double>();
-
-		
 		MetaPlayer blackOpponent = new MetaPlayer(PlayerType.BLACK,2);
 		MetaPlayer whiteOpponent = new MetaPlayer(PlayerType.WHITE,2);
 		//This is the learning player. They could both learn, but it's easy to reference them this way
 		MetaPlayer whiteLearner = new MetaPlayer(PlayerType.WHITE,2); 
 		MetaPlayer blackLearner = new MetaPlayer(PlayerType.BLACK,2); 
+		
+		double cumAvg = 0.0;
+		double expMovAvg = 0.0;
 		
 		//Start our history file
 		try{
@@ -51,7 +53,7 @@ public class PracticeArena{
 		    // Create file 
 		    FileWriter longStream = new FileWriter(LOG_DIRECTORY+"/LearningHistory.csv");
 		    allWinLossLog = new BufferedWriter(longStream);
-		    allWinLossLog.write("Iteration,Win/Loss\n");
+		    allWinLossLog.write("Iteration,Cumulative Average,Exponential Moving Average\n");
 		    Runtime.getRuntime().addShutdownHook(new Thread() {
 		        public void run() {
 		            System.out.println("Closing arena log.");
@@ -111,7 +113,7 @@ public class PracticeArena{
 						learnerTurn = !learnerTurn;
 						
 						//For figuring out if the game is over
-						if(nextMove.equals(new Move(-1,-1))){
+						if(nextMove.equals(Move.NO_MOVE)){
 							consecutivePasses++;
 						}else{
 							consecutivePasses = 0;
@@ -152,17 +154,13 @@ public class PracticeArena{
 				
 				/**<META CODE>**/
 				//Update the win/loss log
-				runningWinLoss.add(feedback);
-				if(runningWinLoss.size() > RUNNING_WIN_LOSS_SIZE){
-					runningWinLoss.remove();
+				cumAvg = (feedback + a * cumAvg) / (a + 1);
+				if (a == 0) {
+				    expMovAvg = feedback;
+				} else {
+				    expMovAvg = ALPHA * feedback + (1 - ALPHA) * expMovAvg;
 				}
-				Double avgFeedback = 0.0;
-				for(Double result : runningWinLoss){
-					avgFeedback += result;
-				}
-				
-				avgFeedback /=  runningWinLoss.size();
-				allWinLossLog.write(a+","+avgFeedback.toString()+"\n");
+				allWinLossLog.write(a + "," + cumAvg + "," + expMovAvg + "\n");
 				if(a % LOG_SAVE_COUNT == 0){
 				    allWinLossLog.flush();
 				}
