@@ -3,8 +3,8 @@ package iago.players;
 import iago.Board;
 import iago.Move;
 import iago.features.*;
+import iago.players.AbstractPlayer;
 
-import java.util.ArrayList;
 import java.util.Set;
 
 
@@ -48,7 +48,7 @@ public class NegamaxPlayer extends AbstractPlayer {
         }
         
         for (Move m : successors) {
-        	double v = -negamax(board.apply(m, player, false), nextPlayer,
+            double v = -negamax(board.apply(m, player, false), nextPlayer,
                     -colour, -beta, -alpha, depth-1);
             if (v >= beta) {
                 if (player == getColour()) {
@@ -93,7 +93,7 @@ public class NegamaxPlayer extends AbstractPlayer {
     }
     
     public NegamaxPlayer(PlayerType colour, int depth) {
-    	super(colour);
+        super(colour);
         this.searchDepth = depth;
         //Choose the features here
         features.add(new StoneCount(0.106));
@@ -111,11 +111,11 @@ public class NegamaxPlayer extends AbstractPlayer {
     }
     
     public void setFeatureSet(FeatureSet features) {
-    	this.features = features;
+        this.features = features;
     }
     
     public FeatureSet getFeatureSet() {
-    	return features;
+        return features;
     }
     
 }

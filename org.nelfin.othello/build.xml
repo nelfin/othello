@@ -72,14 +72,13 @@
             <test name="iago.AlphaBetaPlayerTest" todir="${junit.output.dir}"/>
             <test name="iago.BoardTest" todir="${junit.output.dir}"/>
             <test name="iago.NegamaxPlayerTest" todir="${junit.output.dir}"/>
+            <test name="iago.features.CornerPiecesTest" todir="${junit.output.dir}"/>
+            <test name="iago.features.FeatureSetTest" todir="${junit.output.dir}"/>
+            <test name="iago.features.SidePiecesTest" todir="${junit.output.dir}"/>
+            <test name="iago.features.StoneCountTest" todir="${junit.output.dir}"/>
+            <test name="iago.features.VisibilityTest" todir="${junit.output.dir}"/>
             <classpath refid="org.nelfin.othello.classpath"/>
         </junit>
-    </target>
-    <target name="Client">
-        <java classname="iago.Client" failonerror="true" fork="yes">
-            <arg line="black"/>
-            <classpath refid="org.nelfin.othello.classpath"/>
-        </java>
     </target>
     <target name="junitreport">
         <junitreport todir="${junit.output.dir}">
