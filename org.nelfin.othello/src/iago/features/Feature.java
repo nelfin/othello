@@ -1,6 +1,7 @@
 package iago.features;
 
 import iago.Board;
+import iago.players.Player.PlayerType;
 
 
 public abstract class Feature {

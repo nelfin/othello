@@ -2,6 +2,7 @@ package iago.features;
 
 
 import iago.Board;
+import iago.players.Player.PlayerType;
 
 import java.util.ArrayList;
 

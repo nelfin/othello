@@ -43,7 +43,7 @@ public class Board {
             return null;
         }
         
-        private static BoardState asBoardState(PlayerType p) {
+        public static BoardState asBoardState(PlayerType p) {
             switch (p) {
             case WHITE:
                 return WHITE;
