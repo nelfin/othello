@@ -341,7 +341,6 @@ public class Board {
     public Board apply(Move m, PlayerType player, boolean destructive) {
         if (destructive) {
             this.makeMove(m.x, m.y, player, true);
-            validMovesGenerated = false;
             return this;
         } else {
             Board result = new Board(this);
