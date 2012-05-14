@@ -3,7 +3,6 @@ package iago.features;
 
 import iago.Board;
 import iago.players.Player;
-import iago.players.Player.PlayerType;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -76,7 +75,7 @@ public class FeatureSet extends ArrayList<Feature>{
 		//Evaluate victory condition
 		//TODO: think about ties
 		boolean gameOver = (state.validMoves(player).size() == 0) && (state.validMoves(player).size() == 0);
-		boolean weHaveMorePoints = state.scoreBoard(player) > state.scoreBoard(PlayerType.getOpponent(player));
+		boolean weHaveMorePoints = state.scoreBoard(player) > state.scoreBoard(Player.PlayerType.getOpponent(player));
 		
 		if (gameOver && weHaveMorePoints) return 1;
 		if (gameOver && !weHaveMorePoints) return 0;
