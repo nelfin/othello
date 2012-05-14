@@ -20,6 +20,8 @@ public class LegalMoves extends Feature{
 	
 	/**
 	 * The number of legal moves for the next player
+	 * @param state		The board
+	 * @param player	The player
 	 * @return Legal moves white
 	 */
 	public Integer evaluate(Board state, Player.PlayerType player)

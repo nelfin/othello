@@ -15,7 +15,7 @@ public class MetaPlayer extends LearningPlayer{
 	    initialWeights.add(new LegalMoves(1));
 	    initialWeights.add(new StoneCount(0));
 	    initialWeights.add(new Visibility(0));
-	    initialWeights.normaliseWeights();
+	    initialWeights.standardiseWeights();
 	}
 	FeatureSet currentWeights = new FeatureSet("MetaPlayerLearntWeights");
 	
@@ -91,7 +91,7 @@ public class MetaPlayer extends LearningPlayer{
 		{
 
 			double deltaWeight = 0;
-			for(int t = 0; t < gameHistory.size()-1; t++){
+			for(int t = 0; t <= gameHistory.size()-1; t++){
 				Board xt = gameHistory.get(t);
 				double thisStepDelta = deltaJ(xt,weightsUsed, f);
 				double lambdaTD = 0;
@@ -100,6 +100,7 @@ public class MetaPlayer extends LearningPlayer{
 					double dt = (J(afterXT,weightsUsed) - J(xt,weightsUsed)); //The temporal difference
 					lambdaTD += Math.pow(LAMBDA, j-t) * dt;
 				}
+				//if(t==gameHistory.size()-1)System.out.println(lambdaTD);
 				deltaWeight += LEARNING_RATE * (thisStepDelta * lambdaTD);
 
 
@@ -118,7 +119,7 @@ public class MetaPlayer extends LearningPlayer{
 
 
 		currentWeights.combine(deltaWeights);
-		currentWeights.normaliseWeights();
+		currentWeights.standardiseWeights();
 		
 		negamaxPlayer.setFeatureSet(currentWeights);
 		negamaxPlayer.getFeatureSet().saveToFile();

@@ -40,7 +40,7 @@ public class FeatureSet extends ArrayList<Feature>{
 	}
 	
 	public FeatureSet(FeatureSet other) {
-	    this.Features = new ArrayList<Feature>(other.Features); //Changed this because the array copy constructor wasn't shallow
+	    this.Features = new ArrayList<Feature>(other.Features); //Changed this because the array copy constructor wasn't deep
 	    this.Features = new ArrayList<Feature>();
 	    for(Feature f : other.Features){
 	    	try {
@@ -61,7 +61,7 @@ public class FeatureSet extends ArrayList<Feature>{
 	 * Will make all weights be between -1 and 1. You may or may not want this depending on your use of the features.
 	 * The sum of the weights is 1 but the ratio between them is maintained
 	 */
-	public void normaliseWeights(){
+	public void standardiseWeights(){
 		double weightSum = 0;
 		for (Feature f : this){
 			weightSum += f.getWeight();
