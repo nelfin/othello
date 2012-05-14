@@ -22,7 +22,6 @@ public class SidePieces extends Feature{
 		for(int y = 1; y < Board.BOARD_SIZE; y++) if(state.get(Board.BOARD_SIZE-1, y)==Board.BoardState.asBoardState(player)) sideScore++;
 		for(int x = 0; x < Board.BOARD_SIZE-1; x++) if(state.get(x, Board.BOARD_SIZE-1)==Board.BoardState.asBoardState(player)) sideScore++;
 		for(int y = 1; y < Board.BOARD_SIZE-1; y++) if(state.get(0, y)==Board.BoardState.asBoardState(player)) sideScore++;
-		System.out.println(sideScore);
 		return sideScore;
 	}
 }
