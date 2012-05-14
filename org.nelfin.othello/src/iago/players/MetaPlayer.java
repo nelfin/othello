@@ -22,7 +22,7 @@ public class MetaPlayer extends LearningPlayer{
 	
 	private final double LEARNING_RATE = 0.1;
 	private final double LAMBDA = 0.9;
-	private final double RANDOM_MOVE_CHANCE = 0.05;
+	private final double RANDOM_MOVE_CHANCE = 0.01;
 	private Random randomMoveGenerator = new Random();
 	
 	double previousFeedback = 0;

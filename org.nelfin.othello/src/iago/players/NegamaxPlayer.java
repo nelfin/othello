@@ -32,7 +32,10 @@ public class NegamaxPlayer extends AbstractPlayer {
     
     private double negamax(Board board, PlayerType player,
             int colour, double alpha, double beta, int depth) {
-        if ((depth <= 0) || (board.movesRemaining() == 0)) {
+        if (board.movesRemaining() == 0) {
+            return colour * board.scoreBoard(player);
+        }
+        if (depth <= 0) {
             return colour * features.score(board, player);
         }
         
