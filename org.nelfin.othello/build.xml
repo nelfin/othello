@@ -6,7 +6,7 @@
               as the first entry and export the buildfile again. -->
 <project basedir="." default="build" name="org.nelfin.othello">
     <property environment="env"/>
-    <property name="ECLIPSE_HOME" value="../../../../../../../usr/lib/eclipse"/>
+    <property name="ECLIPSE_HOME" value="/usr/lib/eclipse"/>
     <property name="junit.output.dir" value="junit"/>
     <property name="debuglevel" value="source,lines,vars"/>
     <property name="target" value="1.6"/>
