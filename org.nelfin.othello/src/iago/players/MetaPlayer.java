@@ -2,6 +2,7 @@ package iago.players;
 
 import java.util.ArrayList;
 import java.util.Random;
+import java.util.Set;
 
 import iago.Board;
 import iago.Move;
@@ -23,6 +24,8 @@ public class MetaPlayer extends LearningPlayer{
 	
 	private final double LEARNING_RATE = 0.1;
 	private final double LAMBDA = 0.9;
+	private final double RANDOM_MOVE_CHANCE = 0.05;
+	private Random randomMoveGenerator = new Random();
 	
 	double previousFeedback = 0;
 	
@@ -80,7 +83,16 @@ public class MetaPlayer extends LearningPlayer{
 	@Override
 	public Move chooseMove(Board board) {
 		gameHistory.add(new Board(board));
-		return negamaxPlayer.chooseMove(board);
+		Move nextMove = new Move(-1,-1);
+		if(randomMoveGenerator.nextDouble() <= RANDOM_MOVE_CHANCE){
+			Set<Move> moveSet = board.validMoves(getColour());
+			if(moveSet.size() > 0){ //If there are no valid moves, we'll pass
+				nextMove = (Move) moveSet.toArray()[randomMoveGenerator.nextInt(moveSet.size())];
+			}
+		}else{
+			nextMove =  negamaxPlayer.chooseMove(board);
+		}
+		return nextMove;
 	}
 
 	@Override
