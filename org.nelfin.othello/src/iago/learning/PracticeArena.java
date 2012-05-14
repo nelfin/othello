@@ -24,7 +24,8 @@ public class PracticeArena{
 	static final int BLOCKED_COUNT=4; //TODO: move this
 	static final int LEARNING_ITERATIONS=100000;//ONE MILLION
 	static final int RUNNING_WIN_LOSS_SIZE=1000; //We get the win loss over the past RUNNING_WIN_LOSS_SIZE games
-	static final int LOG_SAVE_COUNT = 100; //Saves the file every LOG_SAVE_COUNT games
+	// Flush log file if last save was more than LOG_SAVE_MILLIS ago
+	private static final long LOG_SAVE_MILLIS = 5*60*1000;
 	static final String LOG_DIRECTORY = "LearningLogs";
 	// Higher values of ALPHA => greater discount on older values of feedback
     private static final double ALPHA = 0.05;
@@ -41,6 +42,7 @@ public class PracticeArena{
 		
 		double cumAvg = 0.0;
 		double expMovAvg = 0.0;
+		long lastSaveTime = System.currentTimeMillis();
 		
 		//Start our history file
 		try{
@@ -161,8 +163,10 @@ public class PracticeArena{
 				    expMovAvg = ALPHA * feedback + (1 - ALPHA) * expMovAvg;
 				}
 				allWinLossLog.write(a + "," + cumAvg + "," + expMovAvg + "\n");
-				if(a % LOG_SAVE_COUNT == 0){
+				long elapsedTime = System.currentTimeMillis() - lastSaveTime;
+				if (elapsedTime > LOG_SAVE_MILLIS) {
 				    allWinLossLog.flush();
+				    lastSaveTime = System.currentTimeMillis();
 				}
 			    /**</META CODE>**/
 				
