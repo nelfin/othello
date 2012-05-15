@@ -63,7 +63,7 @@ public class FeatureSet extends ArrayList<Feature>{
 	public void standardiseWeights(){
 		double weightSum = 0;
 		for (Feature f : this){
-			weightSum += f.getWeight();
+			weightSum += Math.abs(f.getWeight());
 		}
 		for (Feature f : this){
 			f.setWeight(f.getWeight() / weightSum);
