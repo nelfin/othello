@@ -45,7 +45,7 @@ public class EloSet extends FeatureSet{
 		Features.add(new StoneCount(r.nextDouble()));
 		Features.add(new Visibility(r.nextDouble()));
 		Features.add(new LegalMoves(r.nextDouble()));
-		this.normaliseWeights();
+		this.standardiseWeights();
 	}
 
 	public void makeScaledWeights(ArrayList<EloSet> champs) {
@@ -66,6 +66,6 @@ public class EloSet extends FeatureSet{
 			System.out.println(weighttotal / elototal);
 			f.setWeight(r.nextGaussian()*variance + weighttotal / elototal);
 		}
-		this.normaliseWeights();
+		this.standardiseWeights();
 	}
 }
