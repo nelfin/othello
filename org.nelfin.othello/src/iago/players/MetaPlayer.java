@@ -75,6 +75,12 @@ public class MetaPlayer extends LearningPlayer{
 		negamaxPlayer.setFeatureSet(currentWeights); //this will overwrite the features that negamax has as default
 	}
 	
+	public MetaPlayer(PlayerType colour, int depth, FeatureSet features) {
+		super(colour);
+		negamaxPlayer = new NegamaxPlayer(colour, depth);
+		negamaxPlayer.setFeatureSet(features);
+	}
+	
 	public MetaPlayer(PlayerType colour) {
 		this(colour, NegamaxPlayer.DEFAULT_DEPTH);
 	}

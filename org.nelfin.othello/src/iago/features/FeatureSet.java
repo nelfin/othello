@@ -23,7 +23,7 @@ public class FeatureSet extends ArrayList<Feature>{
 
 	private static final long serialVersionUID = -5179576268344247586L;
 	
-	private ArrayList<Feature> Features;
+	protected ArrayList<Feature> Features;
 	private String playerID;
 	
 	public FeatureSet (ArrayList<Feature> Features, String playerID) {
@@ -159,8 +159,7 @@ public class FeatureSet extends ArrayList<Feature>{
 				Features.add(f);
 			}
 		} catch (FileNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			// Player does not exist. Do nothing
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -223,4 +222,7 @@ public class FeatureSet extends ArrayList<Feature>{
 		return output;
 	}
 	
+	public String getName(){
+		return playerID;
+	}
 }

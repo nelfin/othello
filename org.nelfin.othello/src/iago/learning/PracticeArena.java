@@ -181,7 +181,7 @@ public class PracticeArena{
 	}
 
 	
-	private static String generateRandomBoard()
+	public static String generateRandomBoard()
 	{
 		char[][] randomBoardRepresentation = DebugFunctions.makeSolidBoardCharArray('.');
 
