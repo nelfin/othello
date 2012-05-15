@@ -56,14 +56,16 @@ public class Board {
     
     private BoardState[][] board;
     private int movesPlayed;
-    Set<Move> moves;
-    boolean validMovesGenerated = false;
+    private Set<Move> whiteMoves;
+    private Set<Move> blackMoves;
     private Map<BoardState, Integer> cellCount;
     
     public Board() {
         this.board = new BoardState[BOARD_SIZE][BOARD_SIZE];
         this.movesPlayed = 0;
         this.cellCount = new HashMap<BoardState, Integer>();
+        this.whiteMoves = null;
+        this.blackMoves = null;
         
         for (int x = 0; x < BOARD_SIZE; x++) {
             for (int y = 0; y < BOARD_SIZE; y++) {
@@ -78,6 +80,9 @@ public class Board {
         this.board = new BoardState[BOARD_SIZE][BOARD_SIZE];
         this.movesPlayed = board2.movesPlayed;
         this.cellCount = new HashMap<BoardState, Integer>();
+        this.whiteMoves = null;
+        this.blackMoves = null;
+        
         for (int x = 0; x < BOARD_SIZE; x++) {
             for (int y = 0; y < BOARD_SIZE; y++) {
                 set(x, y, board2.get(x, y)); 
@@ -95,6 +100,8 @@ public class Board {
     	}
         this.board = new BoardState[BOARD_SIZE][BOARD_SIZE];
         this.cellCount = new HashMap<BoardState, Integer>();
+        this.whiteMoves = null;
+        this.blackMoves = null;
         processChars(representation.toCharArray());
     }
     
@@ -194,19 +201,29 @@ public class Board {
     }
     
     public Set<Move> validMoves(PlayerType player) {
-    	//Optimisation. Only ever run once.
-    	if (!validMovesGenerated) {
-    		moves = new HashSet<Move>();
-    		for (int y = 0; y < BOARD_SIZE; y++) {
-    			for (int x = 0; x < BOARD_SIZE; x++) {
-    				if (validMove(x, y, player)) {
-    					moves.add(new Move(x, y));
-    				}
-    			}
-    		}
-    		validMovesGenerated = true;
-    	}
-    	return moves;
+        if (player == PlayerType.WHITE && null != this.whiteMoves) {
+            return this.whiteMoves;
+        }
+        if (player == PlayerType.BLACK && null != this.blackMoves) {
+            return this.blackMoves;
+        }
+        Set<Move> validMoves = new HashSet<Move>();
+        for (int y = 0; y < BOARD_SIZE; y++) {
+            for (int x = 0; x < BOARD_SIZE; x++) {
+                if (validMove(x, y, player)) {
+                    validMoves.add(new Move(x, y));
+                }
+            }
+        }
+        switch (player) {
+        case WHITE:
+            this.whiteMoves = validMoves;
+            break;
+        case BLACK:
+            this.blackMoves = validMoves;
+            break;
+        }
+        return validMoves;
     }
     
     private boolean validMove(int x, int y, PlayerType player) {
@@ -241,8 +258,22 @@ public class Board {
             addCellCount(BoardState.asBoardState(player),1); //We need to add the extra count for the stone placed
             // This can't be increased if numFlipped == 0, it was not a valid move
             this.movesPlayed++;
+            clearValidMoves();
         }
         return numFlipped;
+    }
+    
+    private void clearValidMoves() {
+        try {
+            this.whiteMoves.clear();
+        } catch (NullPointerException e) {
+        }
+        try {
+            this.blackMoves.clear();
+        } catch (NullPointerException e) {
+        }
+        this.whiteMoves = null;
+        this.blackMoves = null;
     }
     
     private int flipPieces(int x, int y, int dx, int dy, PlayerType player,
@@ -347,7 +378,6 @@ public class Board {
     public Board apply(Move m, PlayerType player, boolean destructive) {
         if (destructive) {
             this.makeMove(m.x, m.y, player, true);
-            validMovesGenerated = false;
             return this;
         } else {
             Board result = new Board(this);
