@@ -146,6 +146,7 @@ public class Board {
     public void processMessage(ServerMessage m) {
         byte[] boardArray = m.getBoardArray();
         processBytes(boardArray);
+        clearValidMoves();
     }
     
     private void setCellCount(BoardState b, int count) {
