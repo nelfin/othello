@@ -5,7 +5,7 @@ import junit.framework.TestCase;
 
 import org.junit.Test;
 
-public abstract class PlayerTest extends TestCase{
+public abstract class PlayerTestAbstract extends TestCase{
 	protected Player greedyPlayer;
 	
 	@Test

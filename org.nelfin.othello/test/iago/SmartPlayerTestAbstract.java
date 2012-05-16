@@ -5,7 +5,7 @@ import iago.players.Player.PlayerType;
 
 import org.junit.Test;
 
-public abstract class SmartPlayerTest extends PlayerTest {
+public abstract class SmartPlayerTestAbstract extends PlayerTestAbstract {
 	protected Player smartWhitePlayer, smartBlackPlayer;
 	
 	//This is a solved game, white (2nd player) wins by 8
