@@ -12,3 +12,27 @@ Contributors
 * [Tim Cosgrove](https://github.com/CapnP)
 * [Joshua Nelson](https://github.com/cyberdash)
 
+Building
+--------
+
+```bash
+% git clone --recursive git://github.com/nelfin/othello.git
+% cd othello/
+% make
+```
+
+Running
+-------
+
+### Standard play:
+```bash
+% ./client <white|black> [[host:]port] [strategy]
+```
+
+### Learning:
+```bash
+% ./plain_arena
+```
+```bash
+% ./elo_arena
+```
