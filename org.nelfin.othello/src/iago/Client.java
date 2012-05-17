@@ -1,6 +1,8 @@
 package iago;
 
-import iago.Player.PlayerType;
+import iago.players.GreedyPlayer;
+import iago.players.Player;
+import iago.players.Player.PlayerType;
 
 import java.io.ByteArrayOutputStream;
 import java.io.DataInputStream;

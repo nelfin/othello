@@ -1,8 +1,11 @@
 package iago;
-import static org.junit.Assert.*;
+import iago.players.AlphaBetaPlayer;
+import iago.players.Player;
+
 import org.junit.Test;
 
-public class AlphaBetaPlayerTest extends SmartPlayerTest {
+
+public class AlphaBetaPlayerTest extends SmartPlayerTestAbstract {
 	protected void setUp() {
 		greedyPlayer = new AlphaBetaPlayer(Player.PlayerType.WHITE, 1);
 		smartWhitePlayer = new AlphaBetaPlayer(Player.PlayerType.WHITE, 8);

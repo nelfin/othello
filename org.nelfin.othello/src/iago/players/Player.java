@@ -1,4 +1,7 @@
-package iago;
+package iago.players;
+
+import iago.Board;
+import iago.Move;
 
 public interface Player {
     

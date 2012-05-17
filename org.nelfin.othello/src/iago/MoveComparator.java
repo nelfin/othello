@@ -1,6 +1,7 @@
 package iago;
 
-import iago.Player.PlayerType;
+import iago.Move;
+import iago.players.Player.PlayerType;
 
 import java.util.Comparator;
 

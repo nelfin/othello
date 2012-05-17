@@ -1,5 +1,10 @@
-package iago;
+package iago.players;
 
+import iago.Board;
+import iago.Move;
+import iago.features.*;
+
+import java.util.ArrayList;
 import java.util.Set;
 
 
@@ -12,6 +17,7 @@ public class NegamaxPlayer extends AbstractPlayer {
     private int searchDepth;
     private int sortDepth;
     private Move bestMove;
+    private FeatureSet features = new FeatureSet("negamax");
     
     @Override
     public Move chooseMove(Board board) {
@@ -26,10 +32,10 @@ public class NegamaxPlayer extends AbstractPlayer {
         return this.bestMove;
     }
     
-    private int negamax(Board board, PlayerType player,
-            int colour, int alpha, int beta, int depth, int plies) {
+    private double negamax(Board board, PlayerType player,
+            int colour, double alpha, double beta, int depth, int plies) {
         if ((depth <= 0) || board.isVictory()) {
-            return colour * board.scoreBoard(player);
+            return colour * features.score(board, player);
         }
         
         PlayerType nextPlayer = player.getOpponent();
@@ -46,7 +52,7 @@ public class NegamaxPlayer extends AbstractPlayer {
         }
         
         for (Move m : successors) {
-            int v = -negamax(board.apply(m, player, false), nextPlayer,
+            double v = -negamax(board.apply(m, player, false), nextPlayer,
                     -colour, -beta, -alpha, depth-1, plies+1);
             if (v >= beta) {
                 if (player == getColour()) {
@@ -83,6 +89,9 @@ public class NegamaxPlayer extends AbstractPlayer {
         
         return bestMove;
     }
+    
+    //TODO: add a constructor that uses a minimal Feature Set if no feature set is specified
+    
     public NegamaxPlayer(PlayerType colour) {
         this(colour, DEFAULT_DEPTH, DEFAULT_SORT_DEPTH);
     }
@@ -95,6 +104,8 @@ public class NegamaxPlayer extends AbstractPlayer {
         super(colour);
         this.searchDepth = depth; 
         this.setSortDepth(sortDepth);
+        //Choose the features here
+        features.add(new StoneCount(1.0));
     }
     
     public void setSearchDepth(int searchDepth) {
@@ -111,6 +122,14 @@ public class NegamaxPlayer extends AbstractPlayer {
     
     public int getSortDepth() {
         return sortDepth;
+    }
+
+    public void setFeatureSet(FeatureSet features) {
+    	this.features = features;
+    }
+    
+    public FeatureSet getFeatureSet() {
+    	return features;
     }
     
 }

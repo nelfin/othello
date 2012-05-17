@@ -1,6 +1,6 @@
 package iago;
 
-import iago.Player.PlayerType;
+import iago.players.Player.PlayerType;
 
 import java.util.HashMap;
 import java.util.HashSet;
@@ -14,7 +14,7 @@ public class Board {
     public static final int BOARD_SIZE = 10;
     private static final int BLOCKED_NUM = 4;
     
-    private enum BoardState {
+    public enum BoardState {
         EMPTY, WHITE, BLACK, BLOCKED;
         
         private static BoardState fromByte(byte b) {
@@ -45,7 +45,7 @@ public class Board {
             return null;
         }
         
-        private static BoardState asBoardState(PlayerType p) {
+        public static BoardState asBoardState(PlayerType p) {
             switch (p) {
             case WHITE:
                 return WHITE;
@@ -58,12 +58,16 @@ public class Board {
     
     private BoardState[][] board;
     private int movesPlayed;
+    private Set<Move> whiteMoves;
+    private Set<Move> blackMoves;
     private Map<BoardState, Integer> cellCount;
     
     public Board() {
         this.board = new BoardState[BOARD_SIZE][BOARD_SIZE];
         this.movesPlayed = 0;
         this.cellCount = new HashMap<BoardState, Integer>();
+        this.whiteMoves = null;
+        this.blackMoves = null;
         
         for (int x = 0; x < BOARD_SIZE; x++) {
             for (int y = 0; y < BOARD_SIZE; y++) {
@@ -78,6 +82,9 @@ public class Board {
         this.board = new BoardState[BOARD_SIZE][BOARD_SIZE];
         this.movesPlayed = board2.movesPlayed;
         this.cellCount = new HashMap<BoardState, Integer>();
+        this.whiteMoves = null;
+        this.blackMoves = null;
+        
         for (int x = 0; x < BOARD_SIZE; x++) {
             for (int y = 0; y < BOARD_SIZE; y++) {
                 set(x, y, board2.get(x, y)); 
@@ -89,8 +96,14 @@ public class Board {
     
 
     public Board(String representation) {
+    	if(representation.length() != BOARD_SIZE * BOARD_SIZE)
+    	{
+    		System.err.println("[Board] Board(String representation): string size "+representation.length()+" != "+BOARD_SIZE*BOARD_SIZE);
+    	}
         this.board = new BoardState[BOARD_SIZE][BOARD_SIZE];
         this.cellCount = new HashMap<BoardState, Integer>();
+        this.whiteMoves = null;
+        this.blackMoves = null;
         processChars(representation.toCharArray());
     }
     
@@ -135,6 +148,7 @@ public class Board {
     public void processMessage(ServerMessage m) {
         byte[] boardArray = m.getBoardArray();
         processBytes(boardArray);
+        clearValidMoves();
     }
     
     private void setCellCount(BoardState b, int count) {
@@ -190,15 +204,29 @@ public class Board {
     }
     
     public Set<Move> validMoves(PlayerType player) {
-        Set<Move> moves = new HashSet<Move>();
+        if (player == PlayerType.WHITE && null != this.whiteMoves) {
+            return this.whiteMoves;
+        }
+        if (player == PlayerType.BLACK && null != this.blackMoves) {
+            return this.blackMoves;
+        }
+        Set<Move> validMoves = new HashSet<Move>();
         for (int y = 0; y < BOARD_SIZE; y++) {
             for (int x = 0; x < BOARD_SIZE; x++) {
                 if (validMove(x, y, player)) {
-                    moves.add(new Move(x, y));
+                    validMoves.add(new Move(x, y));
                 }
             }
         }
-        return moves;
+        switch (player) {
+        case WHITE:
+            this.whiteMoves = validMoves;
+            break;
+        case BLACK:
+            this.blackMoves = validMoves;
+            break;
+        }
+        return validMoves;
     }
     
     public SortedSet<Move> validMovesSorted(PlayerType player) {
@@ -246,8 +274,22 @@ public class Board {
             addCellCount(BoardState.asBoardState(player),1); //We need to add the extra count for the stone placed
             // This can't be increased if numFlipped == 0, it was not a valid move
             this.movesPlayed++;
+            clearValidMoves();
         }
         return numFlipped;
+    }
+    
+    private void clearValidMoves() {
+        try {
+            this.whiteMoves.clear();
+        } catch (NullPointerException e) {
+        }
+        try {
+            this.blackMoves.clear();
+        } catch (NullPointerException e) {
+        }
+        this.whiteMoves = null;
+        this.blackMoves = null;
     }
     
     private int flipPieces(int x, int y, int dx, int dy, PlayerType player,
@@ -352,7 +394,6 @@ public class Board {
     public Board apply(Move m, PlayerType player, boolean destructive) {
         if (destructive) {
             this.makeMove(m.x, m.y, player, true);
-            // Does this make sense/do what I think it does?
             return this;
         } else {
             Board result = new Board(this);

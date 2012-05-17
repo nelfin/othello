@@ -2,4 +2,4 @@
 
 BUILDFILE="org.nelfin.othello/build.xml"
 
-ant -f $BUILDFILE
+ant -f $BUILDFILE $*

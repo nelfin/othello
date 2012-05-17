@@ -1,0 +1,7 @@
+<!-- Change this to local values as necessary and save as
+     build.properties -->
+<property name="junit.output.dir" value="junit"/>
+<property name="debuglevel" value="source,lines,vars"/>
+<path id="junit4.libraryclasspath>
+  <pathelement location="/usr/share/java/junit4.jar"/>
+</path>

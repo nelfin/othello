@@ -7,7 +7,7 @@ import java.util.HashSet;
 import java.util.Random;
 import java.util.Set;
 
-import iago.Player.PlayerType;
+import iago.players.Player.PlayerType;
 
 
 
@@ -87,6 +87,7 @@ public class BoardTest {
 	                                ".........." +
 	                                "..........");
 		Board sameBoard = testBoard.apply(new Move(0,0), PlayerType.BLACK, false);
+		
 		for(int x = 0; x < Board.BOARD_SIZE; x++)
 		{
 			for(int y = 0; y < Board.BOARD_SIZE; y++)

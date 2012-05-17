@@ -1,4 +1,8 @@
-package iago;
+package iago.players;
+
+import iago.Board;
+import iago.Move;
+import iago.players.Player.PlayerType;
 
 import java.util.Set;
 
@@ -12,6 +16,7 @@ public class AlphaBetaPlayer extends AbstractPlayer {
     private int searchDepth;
     private Move bestMove;
     private boolean isMaxPlayer;
+    
     
     @Override
     public Move chooseMove(Board board) {

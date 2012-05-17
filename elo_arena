@@ -1,0 +1,6 @@
+#!/bin/bash
+
+CLASSPATH="org.nelfin.othello/bin/"
+
+java -cp $CLASSPATH iago.learning/EloArena $*
+
