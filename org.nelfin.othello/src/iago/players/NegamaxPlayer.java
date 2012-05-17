@@ -10,8 +10,8 @@ import java.util.Set;
 
 public class NegamaxPlayer extends AbstractPlayer {
     
-    public static final int DEFAULT_DEPTH = 10;
-    public static final int DEFAULT_SORT_DEPTH = 6; 
+    public static final int DEFAULT_DEPTH = 6;
+    public static final int DEFAULT_SORT_DEPTH = 3;
     private static final int INF = 65535;
     
     private int searchDepth;
@@ -105,7 +105,8 @@ public class NegamaxPlayer extends AbstractPlayer {
         this.searchDepth = depth; 
         this.setSortDepth(sortDepth);
         //Choose the features here
-        features.add(new StoneCount(1.0));
+        features.add(new StoneCount(0.4));
+        features.add(new LegalMoves(0.6));
     }
     
     public void setSearchDepth(int searchDepth) {
