@@ -7,6 +7,9 @@ import java.util.Comparator;
 
 public class MoveComparator implements Comparator<Move> {
     
+    private static final int MINOR = Board.BOARD_SIZE;
+    private static final int MAJOR = MINOR * MINOR;
+    
     private Board board;
     private PlayerType player;
     
@@ -27,7 +30,7 @@ public class MoveComparator implements Comparator<Move> {
     }
     
     private int simpleScore(Move m) {
-        return board.scoreMove(m, player);
+        return board.scoreMove(m, player)*MAJOR + m.x*MINOR + m.y;
     }
     
     public void setBoard(Board b) {
