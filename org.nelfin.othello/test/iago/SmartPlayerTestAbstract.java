@@ -14,7 +14,8 @@ public abstract class SmartPlayerTestAbstract extends PlayerTestAbstract {
 		Board small4x4Board = new Board(DebugFunctions.make4x4OthelloString());
 		Boolean blacksTurn = true;
 		Move nextMove = new Move(0,0);
-		while(!nextMove.equals(new Move(-1,-1)))
+		int consecutivePasses = 0;
+		while(consecutivePasses < 2)
 		{		
 			if(blacksTurn)
 			{
@@ -22,12 +23,17 @@ public abstract class SmartPlayerTestAbstract extends PlayerTestAbstract {
 			}else{
 				nextMove = smartWhitePlayer.chooseMove(small4x4Board);
 			}
-			//apply the move
-			small4x4Board.apply(nextMove, blacksTurn?PlayerType.BLACK:PlayerType.WHITE, true);
+			if (nextMove.equals(Move.NO_MOVE)) {
+			    consecutivePasses++;
+			} else {
+		        //apply the move
+			    small4x4Board.apply(nextMove, blacksTurn?PlayerType.BLACK:PlayerType.WHITE, true);
+			    consecutivePasses = 0;
+			}
 			blacksTurn = !blacksTurn;
 		}
 
 
-		assertEquals(small4x4Board.scoreBoard(PlayerType.WHITE),8);
+		assertEquals(8, small4x4Board.scoreBoard(PlayerType.WHITE));
 	}
 }
