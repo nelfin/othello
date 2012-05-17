@@ -55,7 +55,7 @@ public class NegamaxPlayer extends AbstractPlayer {
             double v = -negamax(board.apply(m, player, false), nextPlayer,
                     -colour, -beta, -alpha, depth-1, plies+1);
             if (v >= beta) {
-                if (player == getColour()) {
+                if (plies == 0 && player == getColour()) {
                     this.bestMove = m;
                 }
                 return v;
@@ -68,7 +68,7 @@ public class NegamaxPlayer extends AbstractPlayer {
             }
         }
         
-        if (lBestMove != null) {
+        if (plies == 0 && lBestMove != null) {
             this.bestMove = lBestMove;
         }
         return alpha;
