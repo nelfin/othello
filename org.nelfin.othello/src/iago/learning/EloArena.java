@@ -4,28 +4,17 @@ import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.io.ObjectOutputStream;
-import java.lang.reflect.Constructor;
 import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.LinkedList;
-import java.util.Queue;
+import java.util.Collections;
 import java.util.Random;
 
 import iago.Board;
-import iago.DebugFunctions;
 import iago.Move;
-import iago.features.Feature;
-import iago.features.FeatureSet;
-import iago.players.AlphaBetaPlayer;
 import iago.players.EloSet;
-import iago.players.GreedyPlayer;
 import iago.players.MetaPlayer;
-import iago.players.NegamaxPlayer;
 import iago.players.Player.PlayerType;
 
 public class EloArena {
@@ -35,16 +24,20 @@ public class EloArena {
 	static final int LOG_SAVE_COUNT = 100; //Saves the file every LOG_SAVE_COUNT games
 	static final String LOG_DIRECTORY = "EloLogs";
 	static final int DEPTH = 2;
-	static final int MAX_CHAMPS = 40;
+	static final int MAX_CHAMPS = 20;
 	static final int MIN_CHAMPS = 5;
 	static final int DEFAULT_ELO = 1200;
 	static final int GAMES_PER_PAIRING = 5;
 	
 	static ArrayList<EloSet> champs= new ArrayList<EloSet>();
+	static ArrayList<String> names= new ArrayList<String>();
+	
+	static Random r = new Random();
 	
 	public static void main(String[] args)
 	{
 		loadArena();
+		loadNames();
 		while (champs.size() < MIN_CHAMPS)
 			addRandomChamp();
 		for(int a = 0; a < LEARNING_ITERATIONS; a++){
@@ -57,6 +50,7 @@ public class EloArena {
 						playGame(c1, c2);
 						saveArena();
 					}
+			sortChamps();
 			addScaledChamp();
 			if (champs.size() > MAX_CHAMPS) trimChamps();
 			saveArena();
@@ -64,21 +58,33 @@ public class EloArena {
 	}
 	
 	private static void addRandomChamp() {
-		String name = Integer.toString(champs.size());
-		EloSet champ = new EloSet(DEFAULT_ELO, LOG_DIRECTORY+"/"+name);
+		String name = names.get(r.nextInt(names.size()));
+		int edition = 0;
+		while ((new File(LOG_DIRECTORY+"/"+name+edition)).exists()) edition++;
+		
+		EloSet champ = new EloSet(DEFAULT_ELO, LOG_DIRECTORY+"/"+name+edition);
 		champ.makeRandomWeights();
 		champs.add(champ);
 	}
 	
 	private static void addScaledChamp() {
-		String name = Integer.toString(champs.size());
-		EloSet champ = new EloSet(DEFAULT_ELO, LOG_DIRECTORY+"/"+name);
+		String name = names.get(r.nextInt(names.size()));
+		int edition = 0;
+		while ((new File(LOG_DIRECTORY+"/"+name+edition)).exists()) edition++;
+		
+		EloSet champ = new EloSet(DEFAULT_ELO, LOG_DIRECTORY+"/"+name+edition);
 		champ.makeScaledWeights(champs);
-		champs.add(champ);
+		//Insert at front so it won't be immediately trimmed
+		champs.add(0,champ);
+	}
+	
+	private static void sortChamps() {
+		Collections.sort(champs);
+		Collections.reverse(champs);
 	}
 	
 	private static void trimChamps() {
-		//TODO: cut down champs. problem with naming atm
+		while (champs.size() > MAX_CHAMPS) champs.remove(champs.size()-1);
 	}
 	
 	private static void playGame(int c1, int c2) {
@@ -151,8 +157,10 @@ public class EloArena {
 		}
 		System.out.println("Player " + c1 + " with ELO " + champ1.getELO() + " modified by " + champ1.updateELO(champ2.getELO(),   feedback));
 		System.out.println("Player " + c2 + " with ELO " + champ2.getELO() + " modified by " + champ2.updateELO(champ1.getELO(), 1-feedback));
+		champ1.standardiseWeights();
 		champ1.save();
 		champ1.saveToFile();
+		champ2.standardiseWeights();
 		champ2.save();
 		champ2.saveToFile();
 	}
@@ -181,6 +189,25 @@ public class EloArena {
 		}
 	}
 
+	private static void loadNames() {
+		try {
+			//Make a directory for the logs if it doesn't exist
+			try{new File(LOG_DIRECTORY).mkdir();}
+			catch (Exception e){//Catch exception if any
+				System.err.println("Error: " + e.getMessage());
+			}
+			BufferedReader br = new BufferedReader(new FileReader(LOG_DIRECTORY+"/champs"));
+			String name;
+			while ((name = br.readLine()) != null)   {
+				names.add(name);
+			}
+		} catch (FileNotFoundException e) {
+			System.out.println("Names list not found!");
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
 	private static void saveArena() {
 		//Make a directory for the logs if it doesn't exist
 		try{new File(LOG_DIRECTORY).mkdir();}
