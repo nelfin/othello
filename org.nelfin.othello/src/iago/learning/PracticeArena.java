@@ -34,11 +34,11 @@ public class PracticeArena{
 		
 	public static void main(String[] args)
 	{
-		MetaPlayer blackOpponent = new MetaPlayer(PlayerType.BLACK,2);
-		MetaPlayer whiteOpponent = new MetaPlayer(PlayerType.WHITE,2);
+		MetaPlayer blackOpponent = new MetaPlayer(PlayerType.BLACK,6);
+		MetaPlayer whiteOpponent = new MetaPlayer(PlayerType.WHITE,6);
 		//This is the learning player. They could both learn, but it's easy to reference them this way
-		MetaPlayer whiteLearner = new MetaPlayer(PlayerType.WHITE,2); 
-		MetaPlayer blackLearner = new MetaPlayer(PlayerType.BLACK,2); 
+		MetaPlayer whiteLearner = new MetaPlayer(PlayerType.WHITE,6,true); 
+		MetaPlayer blackLearner = new MetaPlayer(PlayerType.BLACK,6,true); 
 		
 		double cumAvg = 0.0;
 		double expMovAvg = 0.0;
@@ -99,18 +99,24 @@ public class PracticeArena{
 					
 					//Start playing the game
 					int consecutivePasses = 0;
+					long tabletime = 0;
+					long notabletime = 0;
 					while(consecutivePasses < 2)
 					{		
 						if(!learnerTurn)
 						{
+							long time = System.currentTimeMillis();
 							nextMove = opponent.chooseMove(board);
 							//apply the move
 							board.apply(nextMove, (side==0)?PlayerType.BLACK:PlayerType.WHITE, true);
+							notabletime += System.currentTimeMillis()-time;
 	
 						}else{
+							long time = System.currentTimeMillis();
 							nextMove = learner.chooseMove(board);
 							//apply the move
 							board.apply(nextMove, (side==0)?PlayerType.WHITE:PlayerType.BLACK, true);
+							tabletime += System.currentTimeMillis()-time;
 						}
 						learnerTurn = !learnerTurn;
 						
@@ -140,6 +146,9 @@ public class PracticeArena{
 					}
 					feedback += thisGameFeedback;
 					System.out.println("Feedback: "+thisGameFeedback);
+					System.out.println("NoTableTime: " + notabletime);
+					System.out.println("TableTime:   " + tabletime);
+					System.out.println("Table Overhead: " + learner.getOverhead());
 				}
 				//Learner
 				//Improve our feature weights

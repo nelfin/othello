@@ -85,6 +85,13 @@ public class MetaPlayer extends LearningPlayer{
 		this(colour, NegamaxPlayer.DEFAULT_DEPTH);
 	}
 	
+	public MetaPlayer(PlayerType colour, int depth, boolean usetable) {
+		super(colour);
+		negamaxPlayer = new NegamaxPlayer(colour, depth, usetable);
+		currentWeights = new FeatureSet(initialWeights);
+		negamaxPlayer.setFeatureSet(currentWeights); //this will overwrite the features that negamax has as default
+	}
+	
 
 	@Override
 	public Move chooseMove(Board board) {
@@ -156,4 +163,7 @@ public class MetaPlayer extends LearningPlayer{
 		negamaxPlayer.setFeatureSet(featureSet);
 	}
 
+	public double getOverhead() {
+		return negamaxPlayer.overhead;
+	}
 }

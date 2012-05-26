@@ -3,8 +3,10 @@ package iago.players;
 import iago.Board;
 import iago.Move;
 import iago.features.*;
+import iago.players.Player.PlayerType;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Set;
 
 
@@ -17,23 +19,39 @@ public class NegamaxPlayer extends AbstractPlayer {
     private int searchDepth;
     private int sortDepth;
     private Move bestMove;
+    boolean usetable = false;
     private FeatureSet features = new FeatureSet("negamax");
+    
+    public long overhead = 0;
+    
+    HashMap<String, Double> stateTable = new HashMap<String, Double>();
     
     @Override
     public Move chooseMove(Board board) {
         this.bestMove = null;
         
-        negamax(board, getColour(), 1, -INF, INF, getSearchDepth(), 0);
+        Double movescore = negamax(board, getColour(), 1, -INF, INF, getSearchDepth(), 0);
         
         if (this.bestMove == null) {
             return pickGreedyMove(board);
         }
+        //else {
+        //	stateTable.put(board.toString(), movescore);
+        //}
         
         return this.bestMove;
     }
     
     private double negamax(Board board, PlayerType player,
             int colour, double alpha, double beta, int depth, int plies) {
+    	if (usetable && stateTable.containsKey(board.toString())) {
+    		//System.out.println("HIT!");
+    		long time = System.currentTimeMillis();
+    		double result = stateTable.get(board.toString());
+			overhead += System.currentTimeMillis()-time;
+			return result;
+    	}
+    	
         if ((depth <= 0) || board.isVictory()) {
             return colour * features.score(board, player);
         }
@@ -67,6 +85,7 @@ public class NegamaxPlayer extends AbstractPlayer {
                 }
             }
         }
+        if (usetable) stateTable.put(board.toString(), alpha);
         
         if (plies == 0 && lBestMove != null) {
             this.bestMove = lBestMove;
@@ -98,6 +117,11 @@ public class NegamaxPlayer extends AbstractPlayer {
     
     public NegamaxPlayer(PlayerType colour, int depth) {
         this(colour, depth, DEFAULT_SORT_DEPTH);
+    }
+    
+    public NegamaxPlayer(PlayerType colour, int depth, boolean usetable) {
+        this(colour, depth, DEFAULT_SORT_DEPTH);
+        this.usetable = true;
     }
     
     public NegamaxPlayer(PlayerType colour, int depth, int sortDepth) {
