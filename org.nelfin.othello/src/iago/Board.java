@@ -6,6 +6,8 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+import java.util.SortedSet;
+import java.util.TreeSet;
 
 public class Board {
     
@@ -227,6 +229,19 @@ public class Board {
         return validMoves;
     }
     
+    public SortedSet<Move> validMovesSorted(PlayerType player) {
+        MoveComparator comp = new MoveComparator(this, player);
+        SortedSet<Move> moves = new TreeSet<Move>(comp);
+        for (int y = 0; y < BOARD_SIZE; y++) {
+            for (int x = 0; x < BOARD_SIZE; x++) {
+                if (validMove(x, y, player)) {
+                    moves.add(new Move(x, y));
+                }
+            }
+        }
+        return moves;
+    }
+    
     private boolean validMove(int x, int y, PlayerType player) {
         // Check if any pieces are flipped
         return makeMove(x, y, player, false) > 0;
@@ -358,8 +373,8 @@ public class Board {
         int score = (getCellCount(BoardState.WHITE) -
                      getCellCount(BoardState.BLACK));
         // Preference victories
-        if (movesRemaining() == 0) {
-            if (score > 0) {
+        if (isVictory()) {
+            if (score > 0 || getCellCount(BoardState.BLACK) == 0) {
                 score += BOARD_SIZE*BOARD_SIZE + 1;
             } else {
                 score -= BOARD_SIZE*BOARD_SIZE + 1;
@@ -389,6 +404,12 @@ public class Board {
     
     public int movesRemaining() {
         return BOARD_SIZE*BOARD_SIZE - BLOCKED_NUM - this.movesPlayed;
+    }
+    
+    public boolean isVictory() {
+        return ((movesRemaining() == 0) ||
+                (getCellCount(BoardState.BLACK) == 0) ||
+                (getCellCount(BoardState.WHITE) == 0));
     }
     
 }

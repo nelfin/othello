@@ -74,11 +74,11 @@ public class FeatureSet extends ArrayList<Feature>{
 		double boardscore = 0;
 		//Evaluate victory condition
 		//TODO: think about ties
-		boolean gameOver = (state.validMoves(player).size() == 0) && (state.validMoves(player.getOpponent()).size() == 0);
-		boolean weHaveMorePoints = state.scoreBoard(player) > 0;
-		
-		if (gameOver && weHaveMorePoints) return 1;
-		if (gameOver && !weHaveMorePoints) return 0;
+//		boolean gameOver = (state.validMoves(player).size() == 0) && (state.validMoves(player.getOpponent()).size() == 0);
+//		boolean weHaveMorePoints = state.scoreBoard(player) > 0;
+//		
+//		if (gameOver && weHaveMorePoints) return 1;
+//		if (gameOver && !weHaveMorePoints) return 0;
 
 		//Loop through features and evaluate each one
 		for (Feature f: Features)

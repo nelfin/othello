@@ -11,9 +11,11 @@ import java.util.Set;
 public class NegamaxPlayer extends AbstractPlayer {
     
     public static final int DEFAULT_DEPTH = 6;
+    public static final int DEFAULT_SORT_DEPTH = 3;
     private static final int INF = 65535;
     
     private int searchDepth;
+    private int sortDepth;
     private Move bestMove;
     private FeatureSet features = new FeatureSet("negamax");
     
@@ -21,7 +23,7 @@ public class NegamaxPlayer extends AbstractPlayer {
     public Move chooseMove(Board board) {
         this.bestMove = null;
         
-        negamax(board, getColour(), 1, -INF, INF, getSearchDepth());
+        negamax(board, getColour(), 1, -INF, INF, getSearchDepth(), 0);
         
         if (this.bestMove == null) {
             return pickGreedyMove(board);
@@ -31,24 +33,29 @@ public class NegamaxPlayer extends AbstractPlayer {
     }
     
     private double negamax(Board board, PlayerType player,
-            int colour, double alpha, double beta, int depth) {
-        if ((depth <= 0) || (board.movesRemaining() == 0)) {
+            int colour, double alpha, double beta, int depth, int plies) {
+        if ((depth <= 0) || board.isVictory()) {
             return colour * features.score(board, player);
         }
         
         PlayerType nextPlayer = player.getOpponent();
-        Set<Move> successors = board.validMoves(player);
+        Set<Move> successors;
+        if (plies < sortDepth) {
+            successors = board.validMovesSorted(player);
+        } else {
+            successors = board.validMoves(player);
+        }
         Move lBestMove = null;
         
         if (successors.size() == 0) {
-            return -negamax(board, nextPlayer, -colour, -beta, -alpha, depth-1);
+            return -negamax(board, nextPlayer, -colour, -beta, -alpha, depth-1, plies+1);
         }
         
         for (Move m : successors) {
-        	double v = -negamax(board.apply(m, player, false), nextPlayer,
-                    -colour, -beta, -alpha, depth-1);
+            double v = -negamax(board.apply(m, player, false), nextPlayer,
+                    -colour, -beta, -alpha, depth-1, plies+1);
             if (v >= beta) {
-                if (player == getColour()) {
+                if (plies == 0 && player == getColour()) {
                     this.bestMove = m;
                 }
                 return v;
@@ -61,7 +68,7 @@ public class NegamaxPlayer extends AbstractPlayer {
             }
         }
         
-        if (lBestMove != null) {
+        if (plies == 0 && lBestMove != null) {
             this.bestMove = lBestMove;
         }
         return alpha;
@@ -86,14 +93,20 @@ public class NegamaxPlayer extends AbstractPlayer {
     //TODO: add a constructor that uses a minimal Feature Set if no feature set is specified
     
     public NegamaxPlayer(PlayerType colour) {
-        this(colour, DEFAULT_DEPTH);
+        this(colour, DEFAULT_DEPTH, DEFAULT_SORT_DEPTH);
     }
     
     public NegamaxPlayer(PlayerType colour, int depth) {
-    	super(colour);
-        this.searchDepth = depth;
+        this(colour, depth, DEFAULT_SORT_DEPTH);
+    }
+    
+    public NegamaxPlayer(PlayerType colour, int depth, int sortDepth) {
+        super(colour);
+        this.searchDepth = depth; 
+        this.setSortDepth(sortDepth);
         //Choose the features here
-        features.add(new StoneCount(1.0));
+        features.add(new StoneCount(0.4));
+        features.add(new LegalMoves(0.6));
     }
     
     public void setSearchDepth(int searchDepth) {
@@ -104,6 +117,14 @@ public class NegamaxPlayer extends AbstractPlayer {
         return searchDepth;
     }
     
+    public void setSortDepth(int sortDepth) {
+        this.sortDepth = sortDepth;
+    }
+    
+    public int getSortDepth() {
+        return sortDepth;
+    }
+
     public void setFeatureSet(FeatureSet features) {
     	this.features = features;
     }
