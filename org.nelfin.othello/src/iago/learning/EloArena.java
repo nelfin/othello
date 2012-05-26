@@ -60,7 +60,7 @@ public class EloArena {
 	private static void addRandomChamp() {
 		String name = names.get(r.nextInt(names.size()));
 		int edition = 0;
-		while ((new File(LOG_DIRECTORY+"/"+name+edition)).exists()) edition++;
+		while ((new File(LOG_DIRECTORY+"/"+name+edition+".pl")).exists()) edition++;
 		
 		EloSet champ = new EloSet(DEFAULT_ELO, LOG_DIRECTORY+"/"+name+edition);
 		champ.makeRandomWeights();
@@ -70,7 +70,7 @@ public class EloArena {
 	private static void addScaledChamp() {
 		String name = names.get(r.nextInt(names.size()));
 		int edition = 0;
-		while ((new File(LOG_DIRECTORY+"/"+name+edition)).exists()) edition++;
+		while ((new File(LOG_DIRECTORY+"/"+name+edition+".pl")).exists()) edition++;
 		
 		EloSet champ = new EloSet(DEFAULT_ELO, LOG_DIRECTORY+"/"+name+edition);
 		System.out.println("New champ " + name + " enters the fray!!");
