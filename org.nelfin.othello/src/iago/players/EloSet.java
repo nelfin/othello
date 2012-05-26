@@ -9,7 +9,7 @@ public class EloSet extends FeatureSet implements Comparable<EloSet>{
 
 	private static final long serialVersionUID = -1039441396732532388L;
 	private int ELO;
-	private static final int K = 64;
+	private static final int K = 32;
 	private static final double variance = 0.07;
 	private static final int influencers = 5;
 	Random r = new Random();
@@ -23,7 +23,7 @@ public class EloSet extends FeatureSet implements Comparable<EloSet>{
 	
 	public int updateELO(int otherELO, double actual){
 		double expected = 1 / (1 + Math.pow(10,((otherELO-getELO()) / 400)));
-		System.out.println(expected);
+		//System.out.println(expected);
 		double diff = (K*(actual-expected)); 
 		ELO += diff;
 		return (int) diff;
@@ -67,8 +67,9 @@ public class EloSet extends FeatureSet implements Comparable<EloSet>{
 					}
 				}
 			}
-			System.out.println(weighttotal / elototal);
+			System.out.println(f.name + ": Before mutation - " + (weighttotal / elototal));
 			f.setWeight(r.nextGaussian()*variance + weighttotal / elototal);
+			System.out.println(f.name + ": After mutation - " + f.getWeight());
 		}
 		this.standardiseWeights();
 	}

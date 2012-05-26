@@ -44,9 +44,9 @@ public class EloArena {
 			for (int c1=0; c1<champs.size(); c1++) 
 				for (int c2=c1+1; c2<champs.size(); c2++) 
 					for (int i=0; i<GAMES_PER_PAIRING; i++) {
-						System.out.println("=====================");
-						System.out.println("Playing Game between " + c1 + " and " + c2);
-						System.out.println("=====================");
+						//System.out.println("=====================");
+						//System.out.println("Playing Game between " + c1 + " and " + c2);
+						//System.out.println("=====================");
 						playGame(c1, c2);
 						saveArena();
 					}
@@ -73,6 +73,7 @@ public class EloArena {
 		while ((new File(LOG_DIRECTORY+"/"+name+edition)).exists()) edition++;
 		
 		EloSet champ = new EloSet(DEFAULT_ELO, LOG_DIRECTORY+"/"+name+edition);
+		System.out.println("New champ " + name + " enters the fray!!");
 		champ.makeScaledWeights(champs);
 		//Insert at front so it won't be immediately trimmed
 		champs.add(0,champ);
@@ -153,10 +154,12 @@ public class EloArena {
 				thisGameFeedback = 0.5 / 2;
 			}
 			feedback += thisGameFeedback;
-			System.out.println("Feedback: "+thisGameFeedback);
+			//System.out.println("Feedback: "+thisGameFeedback);
 		}
-		System.out.println("Player " + c1 + " with ELO " + champ1.getELO() + " modified by " + champ1.updateELO(champ2.getELO(),   feedback));
-		System.out.println("Player " + c2 + " with ELO " + champ2.getELO() + " modified by " + champ2.updateELO(champ1.getELO(), 1-feedback));
+		int diff1 = champ1.updateELO(champ2.getELO(),   feedback);
+		int diff2 = champ2.updateELO(champ1.getELO(), 1-feedback);
+		//System.out.println("Player " + c1 + " with ELO " + champ1.getELO() + " modified by " + diff1);
+		//System.out.println("Player " + c2 + " with ELO " + champ2.getELO() + " modified by " + diff2);
 		champ1.standardiseWeights();
 		champ1.save();
 		champ1.saveToFile();
