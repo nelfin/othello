@@ -19,11 +19,12 @@ import java.util.Random;
 import iago.Board;
 import iago.DebugFunctions;
 import iago.Move;
+import iago.features.EloSet;
 import iago.features.Feature;
 import iago.features.FeatureSet;
 import iago.players.AlphaBetaPlayer;
-import iago.players.EloSet;
 import iago.players.GreedyPlayer;
+import iago.players.LearningPlayer;
 import iago.players.MetaPlayer;
 import iago.players.NegamaxPlayer;
 import iago.players.Player.PlayerType;
@@ -82,8 +83,8 @@ public class EloArena {
 	}
 	
 	private static void playGame(int c1, int c2) {
-		MetaPlayer black;
-		MetaPlayer white;
+		LearningPlayer black;
+		LearningPlayer white;
 		double feedback = 0;
 		EloSet champ1 = champs.get(c1);
 		EloSet champ2 = champs.get(c2);
@@ -95,12 +96,12 @@ public class EloArena {
 			Board board = new Board(initialBoardRepresentation);
 			boolean whiteTurn;
 			if(side==0){
-				white = new MetaPlayer(PlayerType.WHITE,DEPTH,champ1);
-				black = new MetaPlayer(PlayerType.BLACK,DEPTH,champ2);
+				white = new LearningPlayer(PlayerType.WHITE,DEPTH,champ1);
+				black = new LearningPlayer(PlayerType.BLACK,DEPTH,champ2);
 				whiteTurn = true;
 			}else{
-				white = new MetaPlayer(PlayerType.WHITE,DEPTH,champ2);
-				black = new MetaPlayer(PlayerType.BLACK,DEPTH,champ1);
+				white = new LearningPlayer(PlayerType.WHITE,DEPTH,champ2);
+				black = new LearningPlayer(PlayerType.BLACK,DEPTH,champ1);
 				whiteTurn = false;
 			}
 			Move nextMove = new Move(0,0);
