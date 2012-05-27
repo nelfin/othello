@@ -247,7 +247,7 @@ public class Board {
         return makeMove(x, y, player, false) > 0;
     }
     
-    private boolean validLocation(int x, int y) {
+    public boolean validLocation(int x, int y) {
         return ((x >= 0) && (x < BOARD_SIZE) && (y >= 0) && (y < BOARD_SIZE) &&
                 (get(x, y) != BoardState.BLOCKED)); 
         
