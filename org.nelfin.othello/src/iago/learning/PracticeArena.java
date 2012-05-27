@@ -18,6 +18,7 @@ import iago.players.AlphaBetaPlayer;
 import iago.players.GreedyPlayer;
 import iago.players.MetaPlayer;
 import iago.players.NegamaxPlayer;
+import iago.players.OpeningBookPlayer;
 import iago.players.Player.PlayerType;
 
 public class PracticeArena{
@@ -34,11 +35,11 @@ public class PracticeArena{
 		
 	public static void main(String[] args)
 	{
-		MetaPlayer blackOpponent = new MetaPlayer(PlayerType.BLACK,2);
-		MetaPlayer whiteOpponent = new MetaPlayer(PlayerType.WHITE,2);
+		NegamaxPlayer blackOpponent = new NegamaxPlayer(PlayerType.BLACK,2);
+		NegamaxPlayer whiteOpponent = new NegamaxPlayer(PlayerType.WHITE,2);
 		//This is the learning player. They could both learn, but it's easy to reference them this way
-		MetaPlayer whiteLearner = new MetaPlayer(PlayerType.WHITE,2); 
-		MetaPlayer blackLearner = new MetaPlayer(PlayerType.BLACK,2); 
+		MetaPlayer whiteLearner = new MetaPlayer(PlayerType.WHITE, 2); 
+		MetaPlayer blackLearner = new MetaPlayer(PlayerType.BLACK, 2); 
 		
 		double cumAvg = 0.0;
 		double expMovAvg = 0.0;
@@ -76,7 +77,7 @@ public class PracticeArena{
 	
 				int side = 0;
 				MetaPlayer learner;
-				MetaPlayer opponent;
+				NegamaxPlayer opponent;
 				String initialBoardRepresentation = generateRandomBoard();
 				//We want the player to play from both sides
 				for(side = 0; side <= 1; side++) //side==0 means Learner is playing white
@@ -100,10 +101,11 @@ public class PracticeArena{
 					//Start playing the game
 					int consecutivePasses = 0;
 					while(consecutivePasses < 2)
-					{		
+					{
 						if(!learnerTurn)
 						{
 							nextMove = opponent.chooseMove(board);
+
 							//apply the move
 							board.apply(nextMove, (side==0)?PlayerType.BLACK:PlayerType.WHITE, true);
 	
@@ -113,7 +115,7 @@ public class PracticeArena{
 							board.apply(nextMove, (side==0)?PlayerType.WHITE:PlayerType.BLACK, true);
 						}
 						learnerTurn = !learnerTurn;
-						
+
 						//For figuring out if the game is over
 						if(nextMove.equals(Move.NO_MOVE)){
 							consecutivePasses++;
@@ -141,17 +143,18 @@ public class PracticeArena{
 					feedback += thisGameFeedback;
 					System.out.println("Feedback: "+thisGameFeedback);
 				}
+				
 				//Learner
 				//Improve our feature weights
-				whiteLearner.receiveFeedback(feedback);
+				//whiteLearner.receiveFeedback(feedback);
 				//Both players can learn, and we can check out the weights for playing from both sides separately
-				blackLearner.receiveFeedback(feedback);
+				//blackLearner.receiveFeedback(feedback);
 				//Opponent learns too
-				whiteOpponent.receiveFeedback(feedback);
-				blackOpponent.receiveFeedback(feedback);
+				//whiteOpponent.receiveFeedback(feedback);
+				//blackOpponent.receiveFeedback(feedback);
 				
-				System.out.println("White: "+whiteLearner.getFeatureSet());
-				System.out.println("Black: "+blackLearner.getFeatureSet());
+				//System.out.println("White: "+whiteLearner.getFeatureSet());
+				//System.out.println("Black: "+blackLearner.getFeatureSet());
 				
 				
 				/**<META CODE>**/
@@ -175,7 +178,7 @@ public class PracticeArena{
 		System.out.println("Done");
 		
 	    // Output stream is closed automatically
-	    }catch (Exception e){//Catch exception if any
+	    }catch (IOException e){//Catch exception if any
 	    	  System.err.println("Error: " + e.getMessage());
 	    }
 	}

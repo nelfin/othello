@@ -11,7 +11,9 @@ public class OpeningBookLoader {
         System.out.println(initialPosition.name);
         for (Move m: initialPosition.children.keySet()) {
             System.out.println(m.toString() + ": " + initialPosition.getNextPosition(m).name);
+            for (Move m2: initialPosition.getNextPosition(m).children.keySet()) {
+                System.out.println("\t"+m2.toString() + ": " + initialPosition.getNextPosition(m).getNextPosition(m2).name);
+            }
         }
     }
-    
 }
