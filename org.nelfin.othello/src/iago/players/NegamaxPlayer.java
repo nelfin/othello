@@ -24,7 +24,7 @@ public class NegamaxPlayer extends AbstractPlayer {
     
     public long overhead = 0;
     
-    HashMap<String, Double> stateTable = new HashMap<String, Double>();
+    public HashMap<String, Double> stateTable = new HashMap<String, Double>();
     
     @Override
     public Move chooseMove(Board board) {
@@ -44,16 +44,22 @@ public class NegamaxPlayer extends AbstractPlayer {
     
     private double negamax(Board board, PlayerType player,
             int colour, double alpha, double beta, int depth, int plies) {
+    	
+        double v = 0;
+    	
+        long time = System.currentTimeMillis();
     	if (usetable && stateTable.containsKey(board.toString())) {
     		//System.out.println("HIT!");
-    		long time = System.currentTimeMillis();
-    		double result = stateTable.get(board.toString());
+    		v = stateTable.get(board.toString());
 			overhead += System.currentTimeMillis()-time;
-			return result;
+			return v;
     	}
+    	overhead += System.currentTimeMillis()-time;
     	
         if ((depth <= 0) || board.isVictory()) {
-            return colour * features.score(board, player);
+            v = colour * features.score(board, player);
+            if (usetable) stateTable.put(board.toString(), v);
+            return v;
         }
         
         PlayerType nextPlayer = player.getOpponent();
@@ -66,30 +72,35 @@ public class NegamaxPlayer extends AbstractPlayer {
         Move lBestMove = null;
         
         if (successors.size() == 0) {
-            return -negamax(board, nextPlayer, -colour, -beta, -alpha, depth-1, plies+1);
+            v =  -negamax(board, nextPlayer, -colour, -beta, -alpha, depth-1, plies+1);
+            if (usetable) stateTable.put(board.toString(), v);
+            return v;
         }
         
         for (Move m : successors) {
-            double v = -negamax(board.apply(m, player, false), nextPlayer,
+            v = -negamax(board.apply(m, player, false), nextPlayer,
                     -colour, -beta, -alpha, depth-1, plies+1);
             if (v >= beta) {
                 if (plies == 0 && player == getColour()) {
                     this.bestMove = m;
                 }
+                if (usetable) stateTable.put(board.toString(), v);
                 return v;
             }
             if (v > alpha) {
                 alpha = v;
                 if (player == getColour()) {
                     lBestMove = m;
+                    //if (usetable) stateTable.put(board.toString(), v);
                 }
             }
         }
-        if (usetable) stateTable.put(board.toString(), alpha);
+        //if (usetable) stateTable.put(board.toString(), v);
         
         if (plies == 0 && lBestMove != null) {
             this.bestMove = lBestMove;
         }
+        if (usetable) stateTable.put(board.toString(), alpha);
         return alpha;
     }
     

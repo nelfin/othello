@@ -34,11 +34,11 @@ public class PracticeArena{
 		
 	public static void main(String[] args)
 	{
-		MetaPlayer blackOpponent = new MetaPlayer(PlayerType.BLACK,6);
-		MetaPlayer whiteOpponent = new MetaPlayer(PlayerType.WHITE,6);
+		MetaPlayer blackOpponent = new MetaPlayer(PlayerType.BLACK,5);
+		MetaPlayer whiteOpponent = new MetaPlayer(PlayerType.WHITE,5);
 		//This is the learning player. They could both learn, but it's easy to reference them this way
-		MetaPlayer whiteLearner = new MetaPlayer(PlayerType.WHITE,6,true); 
-		MetaPlayer blackLearner = new MetaPlayer(PlayerType.BLACK,6,true); 
+		MetaPlayer whiteLearner = new MetaPlayer(PlayerType.WHITE,5,true); 
+		MetaPlayer blackLearner = new MetaPlayer(PlayerType.BLACK,5,true); 
 		
 		double cumAvg = 0.0;
 		double expMovAvg = 0.0;
@@ -149,6 +149,7 @@ public class PracticeArena{
 					System.out.println("NoTableTime: " + notabletime);
 					System.out.println("TableTime:   " + tabletime);
 					System.out.println("Table Overhead: " + learner.getOverhead());
+					System.out.println("Table Size: " + learner.getStateTableSize());
 				}
 				//Learner
 				//Improve our feature weights

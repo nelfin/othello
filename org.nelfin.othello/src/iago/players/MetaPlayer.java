@@ -1,6 +1,7 @@
 package iago.players;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Random;
 import java.util.Set;
 
@@ -13,8 +14,8 @@ public class MetaPlayer extends LearningPlayer{
 	
 	static FeatureSet initialWeights = new FeatureSet();
 	static {
-	    initialWeights.add(new LegalMoves(0));
-	    initialWeights.add(new StoneCount(1));
+	    initialWeights.add(new LegalMoves(1));
+	    initialWeights.add(new StoneCount(0));
 	    initialWeights.add(new Visibility(0));
 	    initialWeights.add(new SidePieces(0));
 	    initialWeights.add(new CornerPieces(0));
@@ -165,5 +166,9 @@ public class MetaPlayer extends LearningPlayer{
 
 	public double getOverhead() {
 		return negamaxPlayer.overhead;
+	}
+	
+	public int getStateTableSize() {
+		return negamaxPlayer.stateTable.size();
 	}
 }
