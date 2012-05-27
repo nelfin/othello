@@ -35,11 +35,11 @@ public class PracticeArena{
 		
 	public static void main(String[] args)
 	{
-		NegamaxPlayer blackOpponent = new NegamaxPlayer(PlayerType.BLACK,6);
-		NegamaxPlayer whiteOpponent = new NegamaxPlayer(PlayerType.WHITE,6);
+		NegamaxPlayer blackOpponent = new NegamaxPlayer(PlayerType.BLACK,2);
+		NegamaxPlayer whiteOpponent = new NegamaxPlayer(PlayerType.WHITE,2);
 		//This is the learning player. They could both learn, but it's easy to reference them this way
-		OpeningBookPlayer whiteLearner = new OpeningBookPlayer(PlayerType.WHITE); 
-		OpeningBookPlayer blackLearner = new OpeningBookPlayer(PlayerType.BLACK); 
+		MetaPlayer whiteLearner = new MetaPlayer(PlayerType.WHITE, 2); 
+		MetaPlayer blackLearner = new MetaPlayer(PlayerType.BLACK, 2); 
 		
 		double cumAvg = 0.0;
 		double expMovAvg = 0.0;
@@ -76,7 +76,7 @@ public class PracticeArena{
 				System.out.println("=====================");
 	
 				int side = 0;
-				OpeningBookPlayer learner;
+				MetaPlayer learner;
 				NegamaxPlayer opponent;
 				String initialBoardRepresentation = generateRandomBoard();
 				//We want the player to play from both sides
@@ -101,10 +101,11 @@ public class PracticeArena{
 					//Start playing the game
 					int consecutivePasses = 0;
 					while(consecutivePasses < 2)
-					{		
+					{
 						if(!learnerTurn)
 						{
 							nextMove = opponent.chooseMove(board);
+
 							//apply the move
 							board.apply(nextMove, (side==0)?PlayerType.BLACK:PlayerType.WHITE, true);
 	
@@ -114,7 +115,7 @@ public class PracticeArena{
 							board.apply(nextMove, (side==0)?PlayerType.WHITE:PlayerType.BLACK, true);
 						}
 						learnerTurn = !learnerTurn;
-						
+
 						//For figuring out if the game is over
 						if(nextMove.equals(Move.NO_MOVE)){
 							consecutivePasses++;
@@ -142,6 +143,7 @@ public class PracticeArena{
 					feedback += thisGameFeedback;
 					System.out.println("Feedback: "+thisGameFeedback);
 				}
+				
 				//Learner
 				//Improve our feature weights
 				//whiteLearner.receiveFeedback(feedback);
@@ -176,7 +178,7 @@ public class PracticeArena{
 		System.out.println("Done");
 		
 	    // Output stream is closed automatically
-	    }catch (Exception e){//Catch exception if any
+	    }catch (IOException e){//Catch exception if any
 	    	  System.err.println("Error: " + e.getMessage());
 	    }
 	}

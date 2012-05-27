@@ -16,6 +16,7 @@ public class OpeningBookPlayer extends AbstractPlayer{
 	public Move chooseMove(Board board) {
 		Move otherPlayersMove = board.getMostRecentlyPlayedMove();
 		return openingBook.getNextOpeningMove(otherPlayersMove);
+		
 	}
 
 }

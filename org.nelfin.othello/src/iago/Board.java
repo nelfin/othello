@@ -61,7 +61,7 @@ public class Board {
     private Set<Move> whiteMoves;
     private Set<Move> blackMoves;
     private Map<BoardState, Integer> cellCount;
-    private Move mostRecentlyPlayedMove = Move.NO_MOVE;
+    private Move mostRecentlyPlayedMove = null; //There were funny problems when making this NO_MOVE: it'd loop around at the end of the game
     
     public Board() {
         this.board = new BoardState[BOARD_SIZE][BOARD_SIZE];
