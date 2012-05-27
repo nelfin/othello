@@ -37,7 +37,7 @@ for i in range(len(data)):
 #PLT.show()
 
 
-gridsize=15
+gridsize=50
 PLT.subplot(111)
 # if "bins=None", then color of each hexagon corresponds directly to its count
 # "C" is optional--it maps values to x, y coordinates; if C is None (default) then 
@@ -46,7 +46,7 @@ PLT.hexbin(x, y, C=z, gridsize=gridsize, cmap=CM.jet, bins=None)
 PLT.axis((-1, 1, -1, 1))
 ax = PLT.axes()
 
-PLT.text(up[0],up[1]+0.1, "Stone Count",
+PLT.text(up[0],up[1]+0.1, "Blocked Adjacent",
      horizontalalignment='center',
      verticalalignment='center') 
 PLT.text(botLeft[0],botLeft[1]-0.05, "Legal Moves",

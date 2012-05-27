@@ -25,7 +25,7 @@ import iago.players.Player.PlayerType;
 
 public class GraphingArena{
 	static final int BLOCKED_COUNT=4; //TODO: move this
-	static final int GRAPHING_ITERATIONS=5;
+	static final int GRAPHING_ITERATIONS=10;
 	static final String GRAPHING_DIRECTORY = "Graphs";
 	static final double WEIGHT_RESOLUTION = 0.01;
 	public static void main(String[] args)
@@ -45,7 +45,7 @@ public class GraphingArena{
 				LegalMoves lm = new LegalMoves(legalMovesWeight);
 				SidePieces sp = new SidePieces(sidePiecesWeight);
 				FeatureSet fs = new FeatureSet();
-				fs.add(sc);
+				fs.add(ba);
 				fs.add(lm);
 				fs.add(sp);
 				featuresToTry.add(fs);
