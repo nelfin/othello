@@ -1,4 +1,4 @@
-\documentclass[]{beamer}
+\documentclass[10pt]{beamer}
 % Class options include: notes, notesonly, handout, trans,
 %                        hidesubsections, shadesubsections,
 %                        inrow, blue, red, grey, brown
@@ -23,6 +23,9 @@
 \usetheme{PaloAlto}
 \usecolortheme{crane}
 
+\newcommand{\bcen}{\begin{center}}
+\newcommand{\ecen}{\end{center}}
+
 \begin{document}
 
 % Creates title page of slide show using above information
@@ -37,7 +40,13 @@
 % Creates table of contents slide incorporating
 % all \section and \subsection commands
 \begin{frame}
+  
+  \begin{columns}[c]
+  \column{2in}
   \tableofcontents
+  \column{2in}
+  \framebox{\includegraphics[height=4cm]{hipsterjafar}}
+  \end{columns}
 \end{frame}
 
 
@@ -56,5 +65,91 @@
   \framebox{\includegraphics[height=5cm]{initconfig}}
   \end{columns}
 \end{frame}
+
+\section{Solution Structure}
+
+\begin{frame}
+  \frametitle{Solution Structure}   % Insert frame title between curly braces
+  \begin{itemize}
+  \item<1-> The MetaPlayer class --- Utilises knowledge of the game state and 
+        creates instances of other players accordingly
+  \item<2-> NegamaxPlayer (varying depth argument)
+  \item<2-> OpeningPlayer
+  \item<2-> GreedyPlayer
+  \end{itemize}
+\end{frame}
+
+\section{Static Evaluation}
+
+\begin{frame}
+  \frametitle{Static Evaluation}   % Insert frame title between curly braces
+  \begin{itemize}
+  \item<1-> The FeatureSet class --- Maintains a list of \emph{features}; functions
+  which evaluate a game state based on some criteria of strength
+  \item<2-> LegalMoves
+  \item<2-> Visibility
+  \item<2-> StoneCount
+  \item<2-> BlockedAdjacent, CornerPieces, SidePieces
+  \end{itemize}
+\end{frame}
+
+\section{Learning Algorithms}
+
+\subsection{TD-$\lambda$}
+
+\begin{frame}
+  \frametitle{TD-$\lambda$}
+  \begin{columns}[c]
+  \column{2in}  % slides are 3in high by 5in wide
+  \begin{itemize}
+  \item<1-> Don't know what to say here
+  \end{itemize}
+  \column{2in}
+  %\framebox{\includegraphics[height=5cm]{movingAvgChart}}
+  \end{columns}
+\end{frame}
+
+\subsection{Feature Weight Graphs}
+
+\begin{frame}
+  \frametitle{Feature Weight Graphs}
+  %\framebox{\includegraphics[height=5cm]{thecharts}}
+\end{frame}
+
+\subsection{The EloArena}
+
+\begin{frame}
+  \frametitle{The Elo Rankings Arena}
+  \begin{itemize}
+  \item<1-> Custom made genetic algorithm
+  \item<1-> Pits a group of randomly generated agents against each other for Elo style ranking points
+  \item<1-> Creates new agents from those who perform best
+  \item<2-> Used more as a demonstration of the learning process
+  \item<2-> Interesting to see it come to the same conclusions as TD-$\lambda$
+  \end{itemize}
+\end{frame}
+
+\section{Future Improvements}
+
+\begin{frame}
+  \frametitle{The Elo Rankings Arena}
+  \begin{itemize}
+  \item<1-> More attention to blocked squares
+  \end{itemize}
+\end{frame}
+
+\section{Design Methodology}
+
+\begin{frame}
+\frametitle{Design Methodology}
+  \bcen
+  \includegraphics[height=1.3cm,width=7cm]{line1}\\
+  \includegraphics[height=1.3cm,width=7cm]{line2}\\
+  \includegraphics[height=1.3cm,width=7cm]{line3}\\
+  \includegraphics[height=1.3cm,width=7cm]{line4}\\
+  \includegraphics[height=1.3cm,width=7cm]{line5}
+  \ecen
+\end{frame}
+
 
 \end{document}
