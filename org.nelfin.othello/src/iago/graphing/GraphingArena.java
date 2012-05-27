@@ -12,6 +12,7 @@ import java.util.Random;
 import iago.Board;
 import iago.DebugFunctions;
 import iago.Move;
+import iago.features.BlockedAdjacent;
 import iago.features.FeatureSet;
 import iago.features.LegalMoves;
 import iago.features.SidePieces;
@@ -24,9 +25,9 @@ import iago.players.Player.PlayerType;
 
 public class GraphingArena{
 	static final int BLOCKED_COUNT=4; //TODO: move this
-	static final int GRAPHING_ITERATIONS=10;
+	static final int GRAPHING_ITERATIONS=5;
 	static final String GRAPHING_DIRECTORY = "Graphs";
-	static final double WEIGHT_RESOLUTION = 0.005;
+	static final double WEIGHT_RESOLUTION = 0.01;
 	public static void main(String[] args)
 	{
 		AlphaBetaPlayer blackOpponent = new AlphaBetaPlayer(PlayerType.BLACK,2);
@@ -39,6 +40,7 @@ public class GraphingArena{
 		for(double stoneCountWeight = 0; stoneCountWeight <= 1; stoneCountWeight += WEIGHT_RESOLUTION){
 			for(double legalMovesWeight = 0; legalMovesWeight <= (1-stoneCountWeight); legalMovesWeight += WEIGHT_RESOLUTION){
 				double sidePiecesWeight = 1 - (stoneCountWeight + legalMovesWeight);
+				BlockedAdjacent ba = new BlockedAdjacent(stoneCountWeight);
 				StoneCount sc = new StoneCount(stoneCountWeight);
 				LegalMoves lm = new LegalMoves(legalMovesWeight);
 				SidePieces sp = new SidePieces(sidePiecesWeight);

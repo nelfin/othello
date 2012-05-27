@@ -16,6 +16,7 @@ import iago.DebugFunctions;
 import iago.Move;
 import iago.players.AlphaBetaPlayer;
 import iago.players.GreedyPlayer;
+import iago.players.LearningPlayer;
 import iago.players.MetaPlayer;
 import iago.players.NegamaxPlayer;
 import iago.players.OpeningBookPlayer;
@@ -23,7 +24,7 @@ import iago.players.Player.PlayerType;
 
 public class PracticeArena{
 	static final int BLOCKED_COUNT=4; //TODO: move this
-	static final int LEARNING_ITERATIONS=100000;//ONE MILLION
+	static final int LEARNING_ITERATIONS=10000;//ONE MILLION
 	static final int RUNNING_WIN_LOSS_SIZE=1000; //We get the win loss over the past RUNNING_WIN_LOSS_SIZE games
 	// Flush log file if last save was more than LOG_SAVE_MILLIS ago
 	private static final long LOG_SAVE_MILLIS = 5*60*1000;
@@ -38,8 +39,8 @@ public class PracticeArena{
 		NegamaxPlayer blackOpponent = new NegamaxPlayer(PlayerType.BLACK,2);
 		NegamaxPlayer whiteOpponent = new NegamaxPlayer(PlayerType.WHITE,2);
 		//This is the learning player. They could both learn, but it's easy to reference them this way
-		MetaPlayer whiteLearner = new MetaPlayer(PlayerType.WHITE, 2); 
-		MetaPlayer blackLearner = new MetaPlayer(PlayerType.BLACK, 2); 
+		LearningPlayer whiteLearner = new LearningPlayer(PlayerType.WHITE, 2); 
+		LearningPlayer blackLearner = new LearningPlayer(PlayerType.BLACK, 2); 
 		
 		double cumAvg = 0.0;
 		double expMovAvg = 0.0;
@@ -76,7 +77,7 @@ public class PracticeArena{
 				System.out.println("=====================");
 	
 				int side = 0;
-				MetaPlayer learner;
+				LearningPlayer learner;
 				NegamaxPlayer opponent;
 				String initialBoardRepresentation = generateRandomBoard();
 				//We want the player to play from both sides
@@ -146,9 +147,9 @@ public class PracticeArena{
 				
 				//Learner
 				//Improve our feature weights
-				//whiteLearner.receiveFeedback(feedback);
+				whiteLearner.receiveFeedback(feedback);
 				//Both players can learn, and we can check out the weights for playing from both sides separately
-				//blackLearner.receiveFeedback(feedback);
+				blackLearner.receiveFeedback(feedback);
 				//Opponent learns too
 				//whiteOpponent.receiveFeedback(feedback);
 				//blackOpponent.receiveFeedback(feedback);

@@ -37,7 +37,7 @@ for i in range(len(data)):
 #PLT.show()
 
 
-gridsize=50
+gridsize=15
 PLT.subplot(111)
 # if "bins=None", then color of each hexagon corresponds directly to its count
 # "C" is optional--it maps values to x, y coordinates; if C is None (default) then 
