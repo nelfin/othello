@@ -3,6 +3,7 @@ package iago;
 import iago.players.AlphaBetaPlayer;
 import iago.players.GreedyPlayer;
 import iago.players.HumanPlayer;
+import iago.players.MetaPlayer;
 import iago.players.NegamaxPlayer;
 import iago.players.Player;
 import iago.players.SimplePlayer;
@@ -21,6 +22,7 @@ public class StrategyLookup {
         strategyTable.put("greedy", GreedyPlayer.class);
         strategyTable.put("alpha-beta", AlphaBetaPlayer.class);
         strategyTable.put("negamax", NegamaxPlayer.class);
+        strategyTable.put("meta", MetaPlayer.class);
     }
     private static final Class<?>[] constructorSignature = { PlayerType.class };
     
