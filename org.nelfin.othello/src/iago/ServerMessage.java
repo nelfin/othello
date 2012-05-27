@@ -28,7 +28,7 @@ public class ServerMessage {
     
     private Status status;
     private long timeRemaining;
-    private Point opponentMove;
+    private Move opponentMove;
     private int winner;
     private byte[] boardArray;
     
@@ -45,7 +45,7 @@ public class ServerMessage {
         
         int x = pipe.readInt();
         int y = pipe.readInt();
-        this.opponentMove = new Point(x, y);
+        this.opponentMove = new Move(x, y);
         
         this.winner = pipe.readInt();
         
@@ -83,4 +83,13 @@ public class ServerMessage {
     public byte[] getBoardArray() {
         return this.boardArray.clone();
     }
+    
+    public long getTimeRemaining() {
+        return timeRemaining;
+    }
+    
+    public Move getOpponentMove() {
+        return opponentMove;
+    }
+
 }
