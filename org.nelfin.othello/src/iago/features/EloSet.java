@@ -1,13 +1,8 @@
-package iago.players;
+package iago.features;
 
 import java.util.ArrayList;
 import java.util.Random;
 
-import iago.features.Feature;
-import iago.features.FeatureSet;
-import iago.features.LegalMoves;
-import iago.features.StoneCount;
-import iago.features.Visibility;
 
 public class EloSet extends FeatureSet{
 
