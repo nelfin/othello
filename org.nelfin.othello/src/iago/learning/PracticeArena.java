@@ -18,6 +18,7 @@ import iago.players.AlphaBetaPlayer;
 import iago.players.GreedyPlayer;
 import iago.players.MetaPlayer;
 import iago.players.NegamaxPlayer;
+import iago.players.OpeningBookPlayer;
 import iago.players.Player.PlayerType;
 
 public class PracticeArena{
@@ -34,11 +35,11 @@ public class PracticeArena{
 		
 	public static void main(String[] args)
 	{
-		MetaPlayer blackOpponent = new MetaPlayer(PlayerType.BLACK,2);
-		MetaPlayer whiteOpponent = new MetaPlayer(PlayerType.WHITE,2);
+		NegamaxPlayer blackOpponent = new NegamaxPlayer(PlayerType.BLACK,6);
+		NegamaxPlayer whiteOpponent = new NegamaxPlayer(PlayerType.WHITE,6);
 		//This is the learning player. They could both learn, but it's easy to reference them this way
-		MetaPlayer whiteLearner = new MetaPlayer(PlayerType.WHITE,2); 
-		MetaPlayer blackLearner = new MetaPlayer(PlayerType.BLACK,2); 
+		OpeningBookPlayer whiteLearner = new OpeningBookPlayer(PlayerType.WHITE); 
+		OpeningBookPlayer blackLearner = new OpeningBookPlayer(PlayerType.BLACK); 
 		
 		double cumAvg = 0.0;
 		double expMovAvg = 0.0;
@@ -75,8 +76,8 @@ public class PracticeArena{
 				System.out.println("=====================");
 	
 				int side = 0;
-				MetaPlayer learner;
-				MetaPlayer opponent;
+				OpeningBookPlayer learner;
+				NegamaxPlayer opponent;
 				String initialBoardRepresentation = generateRandomBoard();
 				//We want the player to play from both sides
 				for(side = 0; side <= 1; side++) //side==0 means Learner is playing white
@@ -143,15 +144,15 @@ public class PracticeArena{
 				}
 				//Learner
 				//Improve our feature weights
-				whiteLearner.receiveFeedback(feedback);
+				//whiteLearner.receiveFeedback(feedback);
 				//Both players can learn, and we can check out the weights for playing from both sides separately
-				blackLearner.receiveFeedback(feedback);
+				//blackLearner.receiveFeedback(feedback);
 				//Opponent learns too
-				whiteOpponent.receiveFeedback(feedback);
-				blackOpponent.receiveFeedback(feedback);
+				//whiteOpponent.receiveFeedback(feedback);
+				//blackOpponent.receiveFeedback(feedback);
 				
-				System.out.println("White: "+whiteLearner.getFeatureSet());
-				System.out.println("Black: "+blackLearner.getFeatureSet());
+				//System.out.println("White: "+whiteLearner.getFeatureSet());
+				//System.out.println("Black: "+blackLearner.getFeatureSet());
 				
 				
 				/**<META CODE>**/

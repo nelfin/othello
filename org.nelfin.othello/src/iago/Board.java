@@ -61,6 +61,7 @@ public class Board {
     private Set<Move> whiteMoves;
     private Set<Move> blackMoves;
     private Map<BoardState, Integer> cellCount;
+    private Move mostRecentlyPlayedMove = Move.NO_MOVE;
     
     public Board() {
         this.board = new BoardState[BOARD_SIZE][BOARD_SIZE];
@@ -393,6 +394,7 @@ public class Board {
     
     public Board apply(Move m, PlayerType player, boolean destructive) {
         if (destructive) {
+        	mostRecentlyPlayedMove = m;
             this.makeMove(m.x, m.y, player, true);
             return this;
         } else {
@@ -410,6 +412,10 @@ public class Board {
         return ((movesRemaining() == 0) ||
                 (getCellCount(BoardState.BLACK) == 0) ||
                 (getCellCount(BoardState.WHITE) == 0));
+    }
+    
+    public Move getMostRecentlyPlayedMove() {
+    	return mostRecentlyPlayedMove;
     }
     
 }
