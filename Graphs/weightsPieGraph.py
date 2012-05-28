@@ -3,14 +3,20 @@ from matplotlib import pyplot as PLT
 from matplotlib import cm as CM
 from matplotlib import mlab as ML
 import numpy as NP
-names = ('Legal Moves','Stone Count','Visibility','Side Pieces','Corner Pieces','Blocked Adjacent')
-ind = NP.arange(6)
-valuesW = (0.16624584609586937,0.05970565007068347,0.03477484713452541,0.2812365145154657,0.24368416503769144,0.21435297714576476)
-valuesB = (0.16233859309382384,0.007436043723223994,0.003858647010800425,0.328273658910231,0.2773790640278619,0.22071399323405883)
-PLT.ylabel('Value % Difference (White - Black)')
+width=0.2
+names = ('Legal Moves','Stone Count','Blocked Adjacent','Side Pieces','Corner Pieces')
+ind = NP.arange(5)
+valuesStart = (0.8733483528165487,0.003078822843581382,0.10011922656344638,0.014493983064398804,  0.008959614712024862)
+valuesMid = (0.33323454818417325,0.02401178293137336,0.20900258701675864,0.24816610013309515, 0.18558498173459956)
+valuesLate = ( 0.08990255340827673,0.05584277714794637,0.24475285222360674,0.34081897757794566, 0.2686828396422245)
+PLT.ylabel('Value %')
 ax = PLT.axes()
-PLT.bar(ind,[m - n for m,n in zip(valuesW,valuesB)])
-PLT.xticks(ind+0.5/2, names )
+b1=PLT.bar(ind,valuesStart,width,color="red")
+b2=PLT.bar(ind+width,valuesMid,width,color="green")
+b3=PLT.bar(ind+width*2,valuesLate,width,color="blue")
+PLT.xticks(ind+width/2, names )
+leg = ax.legend((b1[0],b2[0],b3[0]),('Early game', 'Mid game', 'Late game'),
+           'best', shadow=True)
 for tick in ax.xaxis.get_major_ticks():
     tick.label1.set_fontsize(14)
     tick.label1.set_rotation(12)
