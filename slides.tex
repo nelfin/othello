@@ -74,8 +74,17 @@
   \item<1-> The MetaPlayer class --- Utilises knowledge of the game state and 
         creates instances of other players accordingly
   \item<2-> NegamaxPlayer (varying depth argument)
-  \item<2-> OpeningPlayer
-  \item<2-> GreedyPlayer
+  \begin{itemize}
+    \item<2-> The 'main' AI player; performs a pruned Negamax search (simplification of Minimax)
+    \item<2-> Searches to a depth specified by the MetaPlayer; where it then
+    evaluates the quality of the leaf states
+  \end{itemize}
+  \item<3-> Other Player interfaces:
+  \begin{itemize}
+    \item<3-> OpeningPlayer
+    \item<3-> GreedyPlayer
+    \item<3-> HumanPlayer
+  \end{itemize}
   \end{itemize}
 \end{frame}
 
@@ -211,8 +220,8 @@
   \frametitle{Future Improvements}
   \begin{itemize}
   \item<1-> More attention to blocked squares
-  \item<2-> Negamax optimisations (better transposition tables, prob-cuts, etc.)
-  \item<3-> Better use of pre-computed data
+  \item<2-> Negamax optimisations (better transposition tables, prob-cuts)
+  \item<3-> Better use of pre-computed data (such as the Opening Book)
   \item<4-> More board features (locked squares, open squares, etc.)
   \item<5-> Generic features (features learnt by the agent)
   \item<6-> More exploration in learning - randomise the initial board and play from that to explore more options
