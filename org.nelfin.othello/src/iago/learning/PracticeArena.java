@@ -19,6 +19,7 @@ import iago.players.GreedyPlayer;
 import iago.players.MetaPlayer;
 import iago.players.NegamaxPlayer;
 import iago.players.OpeningBookPlayer;
+import iago.players.StageLearningPlayer;
 import iago.players.Player.PlayerType;
 import iago.players.StageLearningPlayer;
 
@@ -41,7 +42,7 @@ public class PracticeArena{
 		//This is the learning player. They could both learn, but it's easy to reference them this way
 		StageLearningPlayer whiteLearner = new StageLearningPlayer(PlayerType.WHITE, 2); 
 		StageLearningPlayer blackLearner = new StageLearningPlayer(PlayerType.BLACK, 2); 
-		
+
 		double cumAvg = 0.0;
 		double expMovAvg = 0.0;
 		long lastSaveTime = System.currentTimeMillis();
@@ -154,8 +155,11 @@ public class PracticeArena{
 				//whiteOpponent.receiveFeedback(feedback);
 				//blackOpponent.receiveFeedback(feedback);
 				
-				System.out.println("White: "+whiteLearner.getFeatureSetString());
-				System.out.println("Black: "+blackLearner.getFeatureSetString());
+
+				whiteLearner.showFeatures();
+				blackLearner.showFeatures();
+				//System.out.println("White: "+whiteLearner.getFeatureSet());
+				//System.out.println("Black: "+blackLearner.getFeatureSet());
 				
 				
 				/**<META CODE>**/
