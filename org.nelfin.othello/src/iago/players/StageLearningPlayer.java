@@ -108,8 +108,8 @@ public class StageLearningPlayer extends AbstractPlayer {
 		} else {
 		    Stage current = determineStage(board);
 		    if (current != gameStage) {
-		        gameStage = current;
 		        receiveFeedback(0.0);
+		        gameStage = current;
 		    }
 		    switch (gameStage) {
 		    case EARLY:
