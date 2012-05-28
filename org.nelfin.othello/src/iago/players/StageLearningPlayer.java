@@ -177,16 +177,24 @@ public class StageLearningPlayer extends AbstractPlayer {
 	 * @return The current feature set
 	 */
 	public FeatureSet getFeatureSet() {
-	    switch (gameStage) {
-	    case EARLY:
-	        return earlyGamePlayer.getFeatureSet();
-	    case MID:
-	        return midGamePlayer.getFeatureSet();
-	    default:
-	        return lateGamePlayer.getFeatureSet();
-	    }
+	    return getFeatureSet(gameStage);
 	}
-
+    
+	/**
+     * Return's the learning player's current feature set (and weightings, of course)
+     * @return The current feature set
+     */
+    private FeatureSet getFeatureSet(Stage s) {
+        switch (s) {
+        case EARLY:
+            return earlyGamePlayer.getFeatureSet();
+        case MID:
+            return midGamePlayer.getFeatureSet();
+        default:
+            return lateGamePlayer.getFeatureSet();
+        }
+    }
+    
 	/**
 	 * Sets the learning player's current feature set. The policy iteration should be done in the receiveFeedback function, this is just so we can clone a player
 	 * @param featureSet	The FeatureSet that the player plans to take on
@@ -216,6 +224,12 @@ public class StageLearningPlayer extends AbstractPlayer {
             return Stage.MID;
         } else {
             return Stage.LATE;
+        }
+    }
+
+    public void showFeatures() {
+        for (Stage f : Stage.values()) {
+            System.out.println(getColour() + ": " + f + " " + getFeatureSet(f).toString());
         }
     }
 }
