@@ -126,25 +126,42 @@
 
 \subsection{Results}
 
+
+
 \begin{frame}
-  \frametitle{The first 1000 learning iterations}
-  \framebox{\includegraphics[height=5cm]{Graphs/Learning_2ply_First1000.pdf}}
+  \frametitle{Initial J function}
+  \framesubtitle{Lost game}
+  \begin{center} \framebox{\includegraphics[height=5cm]{Graphs/J_1iteration_lost.pdf}} \end{center}
+\end{frame}
+
+\begin{frame}
+  \frametitle{J function after 6000 iterations}
+  \framesubtitle{Lost game}
+  \begin{center} \framebox{\includegraphics[height=5cm]{Graphs/J_6000iterations_lost.pdf}} \end{center}
+\end{frame}
+
+\begin{frame}
+  \frametitle{J function after 6000 iterations}
+  \framesubtitle{Won game}
+  \begin{center} \framebox{\includegraphics[height=5cm]{Graphs/J_6000iterations_win.pdf}} \end{center}
 \end{frame}
 
 \begin{frame}
   \frametitle{The first 5000 learning iterations}
-  \framebox{\includegraphics[height=5cm]{Graphs/Learning_2ply_First5000_exp.pdf}}
+  \begin{center} \framebox{\includegraphics[height=5cm]{Graphs/Learning_2ply_First5000_exp.pdf}} \end{center}
 \end{frame}
 
 \begin{frame}
   \frametitle{Feature weight space visualisation}
-  \framebox{\includegraphics[height=5cm]{Graphs/LegalMoves_Count_SidePieces_Triangle.pdf}}
+  \begin{center} \framebox{\includegraphics[height=5cm]{Graphs/LegalMoves_Count_SidePieces_Triangle.pdf}}  \end{center}
 \end{frame}
 
 \begin{frame}
   \frametitle{Feature weight space visualisation}
-  \framebox{\includegraphics[height=5cm]{Graphs/LegalMoves_BlockedAdjacent_SidePieces_Triangle.pdf}}
+  \begin{center} \framebox{\includegraphics[height=5cm]{Graphs/LegalMoves_BlockedAdjacent_SidePieces_Triangle.pdf}}  \end{center} 
 \end{frame}
+
+
 
 \section{The EloArena}
 
@@ -168,6 +185,7 @@
   \item<2-> Negamax optimisations (better transposition tables, ... etc.)
   \item<3-> Better use of pre-computed data
   \item<4-> More board features (locked squares, open squares, etc.)
+  \item<5-> More exploration in learning - randomise the initial board and play from that to explore more options
   \end{itemize}
 \end{frame}
 
