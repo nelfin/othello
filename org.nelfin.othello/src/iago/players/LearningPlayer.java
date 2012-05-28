@@ -6,6 +6,7 @@ import java.util.Set;
 
 import iago.Board;
 import iago.Move;
+import iago.features.BlockedAdjacent;
 import iago.features.CornerPieces;
 import iago.features.ErsatzFeature;
 import iago.features.Feature;
@@ -27,11 +28,12 @@ public class LearningPlayer extends AbstractPlayer {
 	
 	static FeatureSet initialWeights = new FeatureSet();
 	static {
-	    initialWeights.add(new LegalMoves(0));
-	    initialWeights.add(new StoneCount(1));
-	    initialWeights.add(new Visibility(0));
-	    initialWeights.add(new SidePieces(0));
-	    initialWeights.add(new CornerPieces(0));
+		initialWeights.add(new LegalMoves(0.13));
+	    initialWeights.add(new StoneCount(0.37));
+	    initialWeights.add(new Visibility(0.032));
+	    initialWeights.add(new SidePieces(0.3));
+	    initialWeights.add(new CornerPieces(0.16));
+	    initialWeights.add(new BlockedAdjacent(0.16));
 	    initialWeights.standardiseWeights();
 	}
 	FeatureSet currentWeights = new FeatureSet("MetaPlayerLearntWeights");
@@ -53,6 +55,11 @@ public class LearningPlayer extends AbstractPlayer {
 	 */
 	private double J(Board x, FeatureSet w){
 		PlayerType colour = negamaxPlayer.getColour();
+//		boolean gameOver = (x.validMoves(colour).size() == 0) && (x.validMoves(colour.getOpponent()).size() == 0);
+//		boolean weHaveMorePoints = x.scoreBoard(colour) > 0;
+//		
+//		if (gameOver && weHaveMorePoints) return 1;
+//		if (gameOver && !weHaveMorePoints) return 0;
 		return w.score(x, colour);
 	}
 	
@@ -135,8 +142,6 @@ public class LearningPlayer extends AbstractPlayer {
 				}
 				//if(t==gameHistory.size()-1)System.out.println(lambdaTD);
 				deltaWeight += LEARNING_RATE * (thisStepDelta * lambdaTD);
-
-
 			}
 			
 			Feature deltaFeature = new ErsatzFeature(f);
@@ -145,6 +150,12 @@ public class LearningPlayer extends AbstractPlayer {
 			
 
 		}
+		//Graph code
+//		for(int t = 0; t <= gameHistory.size()-1; t++){
+//			Board xt = gameHistory.get(t);
+//			System.out.println(t+","+J(xt,weightsUsed));
+//			
+//		}
 
 		//We're done with this game
 		gameHistory.clear();
