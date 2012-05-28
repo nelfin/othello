@@ -17,7 +17,7 @@ public class Client implements Runnable {
     
     private static final String DEFAULT_HOST = "localhost";
     private static final int DEFAULT_PORT = 3130;
-    private static final String DEFAULT_STRATEGY = "negamax";
+    private static final String DEFAULT_STRATEGY = "meta";
     private static final String NAME = "Jafar";
     
     private String host;
