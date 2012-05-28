@@ -7,6 +7,7 @@ import iago.players.MetaPlayer;
 import iago.players.NegamaxPlayer;
 import iago.players.Player;
 import iago.players.SimplePlayer;
+import iago.players.WatchdogNegamaxPlayer;
 import iago.players.Player.PlayerType;
 
 import java.lang.reflect.InvocationTargetException;
@@ -22,6 +23,7 @@ public class StrategyLookup {
         strategyTable.put("greedy", GreedyPlayer.class);
         strategyTable.put("alpha-beta", AlphaBetaPlayer.class);
         strategyTable.put("negamax", NegamaxPlayer.class);
+        strategyTable.put("id-negamax", WatchdogNegamaxPlayer.class);
         strategyTable.put("meta", MetaPlayer.class);
     }
     private static final Class<?>[] constructorSignature = { PlayerType.class };
