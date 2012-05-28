@@ -2,20 +2,22 @@ package iago.players;
 
 import iago.Board;
 import iago.Move;
+import iago.history.OpeningBook;
+import iago.history.UnexploredException;
 
 public class MetaPlayer extends AbstractPlayer{
     public static final int DEFAULT_DEPTH = NegamaxPlayer.DEFAULT_DEPTH;
-    private enum Stage { EARLY, MID, LATE };
+    private enum Stage { BOOK, EARLY, MID, LATE };
     
     Player earlyGamePlayer;
     Player midGamePlayer;
     Player lateGamePlayer;
-	OpeningBookPlayer openingBookPlayer;
+	OpeningBook openingBook;
 	
 	private Stage gameStage;
 	
-	private void instantiateOpeningBookPlayer(PlayerType colour){
-		openingBookPlayer = new OpeningBookPlayer(colour);
+	private void instantiateOpeningBook() {
+		openingBook = new OpeningBook();
 	}
 	public MetaPlayer(PlayerType colour) {
 	    this(colour, DEFAULT_DEPTH);
@@ -23,30 +25,40 @@ public class MetaPlayer extends AbstractPlayer{
     
     public MetaPlayer(PlayerType colour, int depth) {
     	super(colour);
-    	gameStage = Stage.EARLY;
+    	gameStage = Stage.BOOK;
         earlyGamePlayer = new NegamaxPlayer(colour, depth);
         midGamePlayer = new NegamaxPlayer(colour, depth);
         lateGamePlayer = new NegamaxPlayer(colour, depth);
-		instantiateOpeningBookPlayer(colour);
+		instantiateOpeningBook();
     }
 
 	@Override
 	public Move chooseMove(Board board) {
-	    determineStage(board);
+	    // Don't leave the book prematurely
+	    if (gameStage != Stage.BOOK) {
+	        determineStage(board);
+	    }
 	    System.out.println("MetaPlayer: game stage is " + gameStage);
-		Move openingMove = openingBookPlayer.chooseMove(board);
-		if (openingMove != Move.NO_MOVE) { //Also make sure that it's a legal move (blocked spaces)
-			return openingMove;
-		} else {
-		    switch (gameStage) {
-		    case EARLY:
-		        return earlyGamePlayer.chooseMove(board);
-		    case MID:
-		        return midGamePlayer.chooseMove(board);
-		    default:
-		        return lateGamePlayer.chooseMove(board);
-		    }
-		}
+        switch (gameStage) {
+        case BOOK:
+            Move openingMove;
+            board.visualise();
+            try {
+                openingMove = openingBook.getNextOpeningMove(board.getMostRecentlyPlayedMove());
+                return openingMove;
+            } catch (UnexploredException e) {
+                // Drop out at first instance and don't come back
+                System.out.println("MetaPlayer: we left the opening book");
+                determineStage(board);
+            }
+            // Note: pass through is deliberate
+        case EARLY:
+            return earlyGamePlayer.chooseMove(board);
+        case MID:
+            return midGamePlayer.chooseMove(board);
+        default:
+            return lateGamePlayer.chooseMove(board);
+        }
 	}
 	
     private void determineStage(Board board) {
