@@ -20,6 +20,7 @@ import iago.players.MetaPlayer;
 import iago.players.NegamaxPlayer;
 import iago.players.OpeningBookPlayer;
 import iago.players.Player.PlayerType;
+import iago.players.StageLearningPlayer;
 
 public class PracticeArena{
 	static final int BLOCKED_COUNT=4; //TODO: move this
@@ -38,8 +39,8 @@ public class PracticeArena{
 		NegamaxPlayer blackOpponent = new NegamaxPlayer(PlayerType.BLACK,2);
 		NegamaxPlayer whiteOpponent = new NegamaxPlayer(PlayerType.WHITE,2);
 		//This is the learning player. They could both learn, but it's easy to reference them this way
-		MetaPlayer whiteLearner = new MetaPlayer(PlayerType.WHITE, 2); 
-		MetaPlayer blackLearner = new MetaPlayer(PlayerType.BLACK, 2); 
+		StageLearningPlayer whiteLearner = new StageLearningPlayer(PlayerType.WHITE, 2); 
+		StageLearningPlayer blackLearner = new StageLearningPlayer(PlayerType.BLACK, 2); 
 		
 		double cumAvg = 0.0;
 		double expMovAvg = 0.0;
@@ -76,7 +77,7 @@ public class PracticeArena{
 				System.out.println("=====================");
 	
 				int side = 0;
-				MetaPlayer learner;
+				StageLearningPlayer learner;
 				NegamaxPlayer opponent;
 				String initialBoardRepresentation = generateRandomBoard();
 				//We want the player to play from both sides
@@ -146,15 +147,15 @@ public class PracticeArena{
 				
 				//Learner
 				//Improve our feature weights
-				//whiteLearner.receiveFeedback(feedback);
+				whiteLearner.receiveFeedback(feedback);
 				//Both players can learn, and we can check out the weights for playing from both sides separately
-				//blackLearner.receiveFeedback(feedback);
+				blackLearner.receiveFeedback(feedback);
 				//Opponent learns too
 				//whiteOpponent.receiveFeedback(feedback);
 				//blackOpponent.receiveFeedback(feedback);
 				
-				//System.out.println("White: "+whiteLearner.getFeatureSet());
-				//System.out.println("Black: "+blackLearner.getFeatureSet());
+				System.out.println("White: "+whiteLearner.getFeatureSetString());
+				System.out.println("Black: "+blackLearner.getFeatureSetString());
 				
 				
 				/**<META CODE>**/
