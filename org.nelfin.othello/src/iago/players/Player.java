@@ -62,5 +62,11 @@ public interface Player {
     }
     
     public abstract Move chooseMove(Board board);
+    /**
+     * @param board Current board
+     * @param deadline Time in millis
+     * @return Chosen move
+     */
+    public abstract Move chooseMove(Board board, long deadline);
 
 }
