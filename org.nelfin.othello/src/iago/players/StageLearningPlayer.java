@@ -1,20 +1,13 @@
 package iago.players;
 
-import java.util.ArrayList;
-import java.util.Random;
-import java.util.Set;
-
 import iago.Board;
 import iago.Move;
+import iago.features.BlockedAdjacent;
 import iago.features.CornerPieces;
-import iago.features.ErsatzFeature;
-import iago.features.Feature;
 import iago.features.FeatureSet;
 import iago.features.LegalMoves;
 import iago.features.SidePieces;
 import iago.features.StoneCount;
-import iago.features.Visibility;
-import iago.players.Player.PlayerType;
 
 public class StageLearningPlayer extends AbstractPlayer {
 	public StageLearningPlayer(PlayerType colour, int depth, FeatureSet features) {
@@ -38,7 +31,7 @@ public class StageLearningPlayer extends AbstractPlayer {
 	static {
 	    initialWeights.add(new LegalMoves(0));
 	    initialWeights.add(new StoneCount(1));
-	    initialWeights.add(new Visibility(0));
+	    initialWeights.add(new BlockedAdjacent(0));
 	    initialWeights.add(new SidePieces(0));
 	    initialWeights.add(new CornerPieces(0));
 	    initialWeights.standardiseWeights();
