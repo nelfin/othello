@@ -16,19 +16,23 @@ public class MetaPlayer extends AbstractPlayer{
     private static FeatureSet midFeatures = new FeatureSet();
     private static FeatureSet lateFeatures = new FeatureSet();
     static {
-        earlyFeatures.add(new StoneCount(1));
-        earlyFeatures.add(new LegalMoves(10));
-        earlyFeatures.add(new BlockedAdjacent(8));
+        earlyFeatures.add(new LegalMoves(0.87334));
+        earlyFeatures.add(new StoneCount(0.00308));
+        earlyFeatures.add(new SidePieces(0.01449));
+        earlyFeatures.add(new CornerPieces(0.00895)); // C-C-C-COMBO BREAKER
+        earlyFeatures.add(new BlockedAdjacent(0.10012));
         earlyFeatures.standardiseWeights();
-        midFeatures.add(new StoneCount(2));
-        midFeatures.add(new LegalMoves(15));
-        midFeatures.add(new BlockedAdjacent(10));
-        midFeatures.add(new SidePieces(7));
-        midFeatures.add(new CornerPieces(7));
+        midFeatures.add(new LegalMoves(0.33323));
+        midFeatures.add(new StoneCount(0.02401));
+        midFeatures.add(new SidePieces(0.24816));
+        midFeatures.add(new CornerPieces(0.18558));
+        midFeatures.add(new BlockedAdjacent(0.20900));
         midFeatures.standardiseWeights();
-        lateFeatures.add(new StoneCount(10));
-        lateFeatures.add(new LegalMoves(5));
-        lateFeatures.add(new BlockedAdjacent(5));
+        lateFeatures.add(new LegalMoves(0.08990));
+        lateFeatures.add(new StoneCount(0.05584));
+        lateFeatures.add(new SidePieces(0.34081));
+        lateFeatures.add(new CornerPieces(0.26868));
+        lateFeatures.add(new BlockedAdjacent(0.24475));
         lateFeatures.standardiseWeights();
     }
     NegamaxPlayer earlyGamePlayer;
