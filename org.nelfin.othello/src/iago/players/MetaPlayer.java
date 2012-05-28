@@ -9,6 +9,7 @@ import iago.history.UnexploredException;
 
 public class MetaPlayer extends AbstractPlayer{
     public static final int DEFAULT_DEPTH = NegamaxPlayer.DEFAULT_DEPTH;
+    private static final long RED_ALERT = 500;
     private enum Stage { BOOK, EARLY, MID, LATE };
     
     private static FeatureSet earlyFeatures = new FeatureSet();
@@ -33,6 +34,7 @@ public class MetaPlayer extends AbstractPlayer{
     NegamaxPlayer earlyGamePlayer;
     NegamaxPlayer midGamePlayer;
     NegamaxPlayer lateGamePlayer;
+    Player failsafe;
 	OpeningBook openingBook;
 	
 	private Stage gameStage;
@@ -53,9 +55,21 @@ public class MetaPlayer extends AbstractPlayer{
         earlyGamePlayer.setFeatureSet(earlyFeatures);
         midGamePlayer.setFeatureSet(midFeatures);
         lateGamePlayer.setFeatureSet(lateFeatures);
+        
+        failsafe = new GreedyPlayer(colour);
+        
 		instantiateOpeningBook();
     }
-
+    
+    @Override
+    public Move chooseMove(Board board, long timeRemaining) {
+        if (timeRemaining < RED_ALERT) {
+            return failsafe.chooseMove(board);
+        } else {
+            return this.chooseMove(board);
+        }
+    }
+    
 	@Override
 	public Move chooseMove(Board board) {
 	    // Don't leave the book prematurely
