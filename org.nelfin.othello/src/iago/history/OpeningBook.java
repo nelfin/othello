@@ -47,6 +47,9 @@ public class OpeningBook {
 	    } else {
 	        currentOpening = currentOpening.getNextPosition(m);
 	    }
+	    if (null == currentOpening) {
+	        throw new UnexploredException();
+	    }
 	    System.out.println("Current opening: " + currentOpening.name);
 	    boolean noReply = currentOpening.children.keySet().size() == 0;
 	    if (noReply) {
