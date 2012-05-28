@@ -13,4 +13,10 @@ with open('combine.csv') as f:
 
 plt.plot(data['iteration'], data['cumAvg'])
 plt.plot(data['iteration'], data['expMovAvg'])
+#plt.axis((0, 5000, 0.2, 0.9))
+ax = plt.axes()
+ax.set_xlabel("Learning iteration")
+ax.set_ylabel("Win / Loss")
+leg = ax.legend(('Running average', 'Exponential Moving average'),
+           'best', shadow=True)
 plt.show()
