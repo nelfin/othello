@@ -86,10 +86,25 @@
   \begin{itemize}
   \item<1-> The FeatureSet class --- Maintains a list of \emph{features}; functions
   which evaluate a game state based on some criteria of strength
-  \item<2-> LegalMoves
-  \item<2-> Visibility
-  \item<2-> StoneCount
-  \item<2-> BlockedAdjacent, CornerPieces, SidePieces
+  \item<2-> LegalMoves Feature
+  \begin{itemize}
+    \item<2-> Also known as 'mobility'; the number of moves available to the agent
+    \item<2-> Having only a few moves available is very limiting
+    \item<2-> Useful through all stages of the game
+  \end{itemize}
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+  \frametitle{More Features}   % Insert frame title between curly braces
+  \begin{itemize}
+  \item<1-> BlockedAdjacent, CornerPieces, SidePieces
+  \begin{itemize}
+    \item<2-> Count of how many pieces we have next to blocked squares, corners and edges
+    \item<2-> Useful as these pieces are harder to capture; easier to 'lock'
+  \end{itemize}
+  \item<3-> Visibility
+  \item<3-> StoneCount
   \end{itemize}
 \end{frame}
 
@@ -98,7 +113,7 @@
     \begin{frame}
       \frametitle{TD-$\lambda$}
       \begin{itemize}
-        \item<1-> Remaining challenge: decide how important each feature is (the feature 'weights')
+        \item<1-> Remaining challenge: decide how important each feature is\\ (the feature 'weights')
         \item<2-> Solution - use the TD $\lambda$ (Temporal Difference) formula to calculate the new weights
         \item<2-> $\displaystyle w := w + \alpha \sum_{T=1}^{N-1} \tilde{J}(x_t,w) *( \sum _{j=t} ^{N-1} \lambda ^{j-t} d_t )$ 
       \end{itemize}
