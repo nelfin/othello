@@ -154,8 +154,8 @@ public class PracticeArena{
 				//whiteOpponent.receiveFeedback(feedback);
 				//blackOpponent.receiveFeedback(feedback);
 				
-				//System.out.println("White: "+whiteLearner.getFeatureSet());
-				//System.out.println("Black: "+blackLearner.getFeatureSet());
+				System.out.println("White: "+whiteLearner.getFeatureSet());
+				System.out.println("Black: "+blackLearner.getFeatureSet());
 				
 				
 				/**<META CODE>**/
