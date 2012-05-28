@@ -99,7 +99,7 @@
       \frametitle{TD-$\lambda$}
       \begin{itemize}
         \item<1-> Remaining challenge: decide how important each feature is (the feature 'weights')
-        \item<2-> Solution - use the TD $\lambda$ formula to calculate the new weights
+        \item<2-> Solution - use the TD $\lambda$ (Temporal Difference) formula to calculate the new weights
         \item<2-> $\displaystyle w := w + \alpha \sum_{T=1}^{N-1} \tilde{J}(x_t,w) *( \sum _{j=t} ^{N-1} \lambda ^{j-t} d_t )$ 
       \end{itemize}
     \end{frame}
@@ -196,10 +196,11 @@
   \frametitle{Future Improvements}
   \begin{itemize}
   \item<1-> More attention to blocked squares
-  \item<2-> Negamax optimisations (better transposition tables, ... etc.)
+  \item<2-> Negamax optimisations (better transposition tables, prob-cuts, etc.)
   \item<3-> Better use of pre-computed data
   \item<4-> More board features (locked squares, open squares, etc.)
-  \item<5-> More exploration in learning - randomise the initial board and play from that to explore more options
+  \item<5-> Generic features (features learnt by the agent)
+  \item<6-> More exploration in learning - randomise the initial board and play from that to explore more options
   \end{itemize}
 \end{frame}
 
@@ -207,7 +208,6 @@
 
 \begin{frame}
 \frametitle{Design Methodology}
-  \bcen
   \begin{itemize}
   \item<1-> C with a python interface
       \begin{itemize}
@@ -218,7 +218,6 @@
         \item<2->  Sacrifice low level speed improvements for high level language features and built in data structures.
       \end{itemize}
   \end{itemize}
-  \ecen
 \end{frame}
 
 \begin{frame}
