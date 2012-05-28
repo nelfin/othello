@@ -3,6 +3,7 @@ package iago.players;
 import iago.Board;
 import iago.Move;
 import iago.features.*;
+import iago.history.NamedPosition;
 import iago.history.OpeningBook;
 import iago.history.UnexploredException;
 
@@ -64,15 +65,16 @@ public class MetaPlayer extends AbstractPlayer{
 	    System.out.println("MetaPlayer: game stage is " + gameStage);
         switch (gameStage) {
         case BOOK:
-            Move openingMove;
             board.visualise();
+            Move m = earlyGamePlayer.chooseMove(board);
             try {
-                openingMove = openingBook.getNextOpeningMove(board.getMostRecentlyPlayedMove());
-                return openingMove;
+                openingBook.getNextPosition(board.getMostRecentlyPlayedMove());
+                openingBook.getNextPosition(m);
             } catch (UnexploredException e) {
                 // Drop out at first instance and don't come back
                 System.out.println("MetaPlayer: we left the opening book");
                 determineStage(board);
+                return m;
             }
             // Note: pass through is deliberate
         case EARLY:

@@ -25,31 +25,37 @@ public class OpeningBook {
 	 */
 	public Move getNextOpeningMove(Move otherPlayersMove) throws UnexploredException {
 	    System.out.println("opponent move: " + otherPlayersMove);
-		if (firstMove) {
-		    reset();
-		    firstMove = false;
-		    if (!otherPlayersMove.equals(Move.NO_MOVE)) {
-		        // They've already played
-		        currentOpening = currentOpening.getNextPosition(otherPlayersMove);
-		    }
-		} else {
-		    currentOpening = currentOpening.getNextPosition(otherPlayersMove);
-		}
-		if (null == currentOpening) {
-		    throw new UnexploredException();
-		}
-		System.out.println("Current opening: " + currentOpening.name);
-		boolean noReply = currentOpening.children.keySet().size() == 0;
-		if (noReply) {
-			throw new UnexploredException();
-		}else{
-			Move moveToPlay =  (Move) currentOpening.children.keySet().toArray()[0];
-			currentOpening = currentOpening.getNextPosition(moveToPlay);
-			System.out.println("Playing the opening: "+ currentOpening.name);
-			return moveToPlay;
-		}
-		
-		
+	    adjustPosition(otherPlayersMove);
+	    
+	    Move moveToPlay =  (Move) currentOpening.children.keySet().toArray()[0];
+	    currentOpening = currentOpening.getNextPosition(moveToPlay);
+	    System.out.println("Playing the opening: "+ currentOpening.name);
+	    return moveToPlay;
 	}
     
+	private void adjustPosition(Move m) throws UnexploredException {
+	    if (null == currentOpening) {
+	        throw new UnexploredException();
+	    }
+	    if (firstMove) {
+	        reset();
+	        firstMove = false;
+	        if (!m.equals(Move.NO_MOVE)) {
+	            // They've already played
+	            currentOpening = currentOpening.getNextPosition(m);
+	        }
+	    } else {
+	        currentOpening = currentOpening.getNextPosition(m);
+	    }
+	    System.out.println("Current opening: " + currentOpening.name);
+	    boolean noReply = currentOpening.children.keySet().size() == 0;
+	    if (noReply) {
+	        throw new UnexploredException();
+	    }
+	}
+	
+	public NamedPosition getNextPosition(Move m) throws UnexploredException {
+	    adjustPosition(m);
+	    return currentOpening;
+	}
 }
