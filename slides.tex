@@ -93,31 +93,60 @@
   \end{itemize}
 \end{frame}
 
-\section{Learning Algorithms}
+\section{TD-$\lambda$}
+\subsection{Algorithm description}
+    \begin{frame}
+      \frametitle{TD-$\lambda$}
+      \begin{itemize}
+        \item<1-> Remaining challenge: decide how important each feature is (the feature 'weights')
+        \item<2-> Solution - use the TD $\lambda$ formula to calculate the new weights
+        \item<2-> $\displaystyle w := w + \alpha \sum_{T=1}^{N-1} \tilde{J}(x_t,w) *( \sum _{j=t} ^{N-1} \lambda ^{j-t} d_t )$ 
+      \end{itemize}
+    \end{frame}
+    
+    \begin{frame}
+      \frametitle{The J Function}
+      \begin{center} $\displaystyle w := w + \alpha \sum_{T=1}^{N-1} \Delta \tilde{J}(x_t,w)$  \textcolor{gray}{$ * ( \sum _{j=t} ^{N-1} \lambda ^{j-t} d_t )$} \end{center}
+      \begin{itemize}
+        \item<1-> The J function returns a probability of winning, given a set of weights and a board.
+        \item<1-> The perfect J function would always return 0 or 1 precisely.
+        \item<1-> We are trying to learn a good approximation to the J function
+      \end{itemize}
+    \end{frame}
+    
+    \begin{frame}
+      \frametitle{TD: Temporal difference}
+      \begin{center} \textcolor{gray}{$\displaystyle w := w + \alpha \sum_{T=1}^{N-1} \Delta \tilde{J}(x_t,w) *$}  $( \sum _{j=t} ^{N-1} \lambda ^{j-t} d_t )$ \end{center}
+      \begin{itemize}
+        \item<1-> $d_t$ is the \emph{Temporal Difference} between successive game states.
+        \item<1-> The key observation is that for an ideal J function this would always be zero.
+        \item<1-> $\Delta \tilde{J}(x_t,w)$ corrects each weight according to whether it was pointing us in the right direction.
+      \end{itemize}
+    \end{frame}
 
-\subsection{TD-$\lambda$}
+\subsection{Results}
 
 \begin{frame}
-  \frametitle{TD-$\lambda$}
-  \begin{columns}[c]
-  \column{2in}  % slides are 3in high by 5in wide
-  \begin{itemize}
-  \item<1-> Remaining challenge: decide how important each feature is (the feature 'weights')
-  \item<1-> Negative weights not considered (for simplicity)
-  \end{itemize}
-  \column{2in}
-  %\framebox{\includegraphics[height=5cm]{movingAvgChart}}
-  \end{columns}
+  \frametitle{The first 1000 learning iterations}
+  \framebox{\includegraphics[height=5cm]{Graphs/Learning_2ply_First1000.pdf}}
 \end{frame}
-
-\subsection{Feature Weight Graphs}
 
 \begin{frame}
-  \frametitle{Feature Weight Graphs}
-  %\framebox{\includegraphics[height=5cm]{thecharts}}
+  \frametitle{The first 5000 learning iterations}
+  \framebox{\includegraphics[height=5cm]{Graphs/Learning_2ply_First5000_exp.pdf}}
 \end{frame}
 
-\subsection{The EloArena}
+\begin{frame}
+  \frametitle{Feature weight space visualisation}
+  \framebox{\includegraphics[height=5cm]{Graphs/LegalMoves_Count_SidePieces_Triangle.pdf}}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Feature weight space visualisation}
+  \framebox{\includegraphics[height=5cm]{Graphs/LegalMoves_BlockedAdjacent_SidePieces_Triangle.pdf}}
+\end{frame}
+
+\section{The EloArena}
 
 \begin{frame}
   \frametitle{The Elo Rankings Arena}
