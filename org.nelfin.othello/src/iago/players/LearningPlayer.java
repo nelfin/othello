@@ -27,11 +27,11 @@ public class LearningPlayer extends AbstractPlayer {
 	
 	static FeatureSet initialWeights = new FeatureSet();
 	static {
-		initialWeights.add(new LegalMoves(0));
-	    initialWeights.add(new StoneCount(1));
-	    initialWeights.add(new Visibility(0));
-	    initialWeights.add(new SidePieces(0));
-	    initialWeights.add(new CornerPieces(0));
+		initialWeights.add(new LegalMoves(0.13));
+	    //initialWeights.add(new StoneCount(0.37));
+	    initialWeights.add(new Visibility(0.032));
+	    initialWeights.add(new SidePieces(0.3));
+	    initialWeights.add(new CornerPieces(0.16));
 	    initialWeights.standardiseWeights();
 	}
 	FeatureSet currentWeights = new FeatureSet("MetaPlayerLearntWeights");
@@ -53,11 +53,11 @@ public class LearningPlayer extends AbstractPlayer {
 	 */
 	private double J(Board x, FeatureSet w){
 		PlayerType colour = negamaxPlayer.getColour();
-		boolean gameOver = (x.validMoves(colour).size() == 0) && (x.validMoves(colour.getOpponent()).size() == 0);
-		boolean weHaveMorePoints = x.scoreBoard(colour) > 0;
-		
-		if (gameOver && weHaveMorePoints) return 1;
-		if (gameOver && !weHaveMorePoints) return 0;
+//		boolean gameOver = (x.validMoves(colour).size() == 0) && (x.validMoves(colour.getOpponent()).size() == 0);
+//		boolean weHaveMorePoints = x.scoreBoard(colour) > 0;
+//		
+//		if (gameOver && weHaveMorePoints) return 1;
+//		if (gameOver && !weHaveMorePoints) return 0;
 		return w.score(x, colour);
 	}
 	
