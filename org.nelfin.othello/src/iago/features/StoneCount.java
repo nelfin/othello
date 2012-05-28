@@ -21,6 +21,6 @@ public class StoneCount extends Feature{
 	 */
 	public Integer evaluate(Board state, Player.PlayerType player)
 	{
-		return state.scoreBoard(player);
+		return state.getPlayerStones(player);
 	}
 }

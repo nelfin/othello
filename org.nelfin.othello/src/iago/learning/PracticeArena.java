@@ -24,7 +24,7 @@ import iago.players.Player.PlayerType;
 
 public class PracticeArena{
 	static final int BLOCKED_COUNT=4; //TODO: move this
-	static final int LEARNING_ITERATIONS=10000;//ONE MILLION
+	static final int LEARNING_ITERATIONS=1;//ONE MILLION
 	static final int RUNNING_WIN_LOSS_SIZE=1000; //We get the win loss over the past RUNNING_WIN_LOSS_SIZE games
 	// Flush log file if last save was more than LOG_SAVE_MILLIS ago
 	private static final long LOG_SAVE_MILLIS = 5*60*1000;
@@ -149,7 +149,7 @@ public class PracticeArena{
 				//Improve our feature weights
 				whiteLearner.receiveFeedback(feedback);
 				//Both players can learn, and we can check out the weights for playing from both sides separately
-				blackLearner.receiveFeedback(feedback);
+				//blackLearner.receiveFeedback(feedback);
 				//Opponent learns too
 				//whiteOpponent.receiveFeedback(feedback);
 				//blackOpponent.receiveFeedback(feedback);
