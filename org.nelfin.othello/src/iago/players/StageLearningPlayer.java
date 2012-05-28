@@ -106,7 +106,11 @@ public class StageLearningPlayer extends AbstractPlayer {
 				nextMove = (Move) moveSet.toArray()[randomMoveGenerator.nextInt(moveSet.size())];
 			}
 		} else {
-		    determineStage(board);
+		    Stage current = determineStage(board);
+		    if (current != gameStage) {
+		        gameStage = current;
+		        receiveFeedback(0.0);
+		    }
 		    switch (gameStage) {
 		    case EARLY:
 		        return earlyGamePlayer.chooseMove(board);
@@ -126,7 +130,9 @@ public class StageLearningPlayer extends AbstractPlayer {
 	public void receiveFeedback(double feedback) {
 	    // TODO we don't really need the feedback because the J function will tell us if
 	    // we won/lost on the last step
-		FeatureSet weightsUsed = earlyGamePlayer.getFeatureSet();
+	    
+	    // this.getFeatureSet() should be the current player
+		FeatureSet weightsUsed = this.getFeatureSet();
 		FeatureSet deltaWeights = new FeatureSet();
 
 		//Calculate the change in weight for every feature f
@@ -160,18 +166,10 @@ public class StageLearningPlayer extends AbstractPlayer {
 		gameHistory.clear();
 		//Modify our feature set
 
-//		determineStage(xt);
 		weightsUsed = this.getFeatureSet();
 		weightsUsed.combine(deltaWeights);
 		weightsUsed.standardiseWeights();
 		this.setFeatureSet(weightsUsed);
-		
-//		currentWeights.combine(deltaWeights);
-//		currentWeights.standardiseWeights();
-//		
-//		negamaxPlayer.setFeatureSet(currentWeights);
-//		negamaxPlayer.getFeatureSet().saveToFile();
-		
 	}
 
 	/**
@@ -207,17 +205,17 @@ public class StageLearningPlayer extends AbstractPlayer {
 	    }
 	}
 	
-    private void determineStage(Board board) {
+    private Stage determineStage(Board board) {
         // TODO: make this less naive
         int movesLeft = board.movesRemaining();
         int maximumMoves = Board.BOARD_SIZE*Board.BOARD_SIZE - Board.BLOCKED_NUM - 4;
         float fracRemaining = ((float) movesLeft) / ((float) maximumMoves);
         if (fracRemaining > 0.667) {
-            gameStage = Stage.EARLY;
+            return Stage.EARLY;
         } else if (fracRemaining > 0.333) {
-            gameStage = Stage.MID;
+            return Stage.MID;
         } else {
-            gameStage = Stage.LATE;
+            return Stage.LATE;
         }
     }
 }
