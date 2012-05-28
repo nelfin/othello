@@ -3,6 +3,7 @@ package iago.players;
 import iago.Board;
 import iago.Move;
 import iago.history.OpeningBook;
+import iago.history.UnexploredException;
 
 public class OpeningBookPlayer extends AbstractPlayer{
 	OpeningBook openingBook;
@@ -15,8 +16,11 @@ public class OpeningBookPlayer extends AbstractPlayer{
 	@Override
 	public Move chooseMove(Board board) {
 		Move otherPlayersMove = board.getMostRecentlyPlayedMove();
-		return openingBook.getNextOpeningMove(otherPlayersMove);
-		
+		try {
+            return openingBook.getNextOpeningMove(otherPlayersMove);
+        } catch (UnexploredException e) {
+            return Move.NO_MOVE;
+        }
 	}
 
 }
