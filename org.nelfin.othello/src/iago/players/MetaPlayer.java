@@ -2,6 +2,7 @@ package iago.players;
 
 import iago.Board;
 import iago.Move;
+import iago.features.*;
 import iago.history.OpeningBook;
 import iago.history.UnexploredException;
 
@@ -9,9 +10,28 @@ public class MetaPlayer extends AbstractPlayer{
     public static final int DEFAULT_DEPTH = NegamaxPlayer.DEFAULT_DEPTH;
     private enum Stage { BOOK, EARLY, MID, LATE };
     
-    Player earlyGamePlayer;
-    Player midGamePlayer;
-    Player lateGamePlayer;
+    private static FeatureSet earlyFeatures = new FeatureSet();
+    private static FeatureSet midFeatures = new FeatureSet();
+    private static FeatureSet lateFeatures = new FeatureSet();
+    static {
+        earlyFeatures.add(new StoneCount(1));
+        earlyFeatures.add(new LegalMoves(10));
+        earlyFeatures.add(new BlockedAdjacent(8));
+        earlyFeatures.standardiseWeights();
+        midFeatures.add(new StoneCount(2));
+        midFeatures.add(new LegalMoves(15));
+        midFeatures.add(new BlockedAdjacent(10));
+        midFeatures.add(new SidePieces(7));
+        midFeatures.add(new CornerPieces(7));
+        midFeatures.standardiseWeights();
+        lateFeatures.add(new StoneCount(10));
+        lateFeatures.add(new LegalMoves(5));
+        lateFeatures.add(new BlockedAdjacent(5));
+        lateFeatures.standardiseWeights();
+    }
+    NegamaxPlayer earlyGamePlayer;
+    NegamaxPlayer midGamePlayer;
+    NegamaxPlayer lateGamePlayer;
 	OpeningBook openingBook;
 	
 	private Stage gameStage;
@@ -29,6 +49,9 @@ public class MetaPlayer extends AbstractPlayer{
         earlyGamePlayer = new NegamaxPlayer(colour, depth);
         midGamePlayer = new NegamaxPlayer(colour, depth);
         lateGamePlayer = new NegamaxPlayer(colour, depth);
+        earlyGamePlayer.setFeatureSet(earlyFeatures);
+        midGamePlayer.setFeatureSet(midFeatures);
+        lateGamePlayer.setFeatureSet(lateFeatures);
 		instantiateOpeningBook();
     }
 
