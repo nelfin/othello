@@ -18,6 +18,9 @@ import iago.features.Visibility;
 import iago.players.Player.PlayerType;
 
 public class LearningPlayer extends AbstractPlayer {
+    private static int NUM_MOVES = 92; //100 squares - 4 init - 4 blocked = 92 moves
+    private ArrayList<FeatureSet> anyFeatures = new ArrayList<FeatureSet>(NUM_MOVES); 
+
 	public LearningPlayer(PlayerType colour, int depth, FeatureSet features) {
 		super(colour);
 		negamaxPlayer = new NegamaxPlayer(colour, depth);
@@ -79,8 +82,6 @@ public class LearningPlayer extends AbstractPlayer {
 		double after  = J(x,wPlusStep);
 		
 		return (after-before)/step;
-		
-
 	}
 	
 	public LearningPlayer(PlayerType colour, int depth) {
@@ -100,6 +101,8 @@ public class LearningPlayer extends AbstractPlayer {
 	@Override
 	public Move chooseMove(Board board) {
 		gameHistory.add(new Board(board));
+	    setFeatureSet(anyFeatures.get(board.getMovesPlayed()));
+
 		Move nextMove = new Move(-1,-1);
 		if(randomMoveGenerator.nextDouble() <= RANDOM_MOVE_CHANCE){
 			Set<Move> moveSet = board.validMoves(getColour());
@@ -117,26 +120,27 @@ public class LearningPlayer extends AbstractPlayer {
 	 * @param feedback	A double between 0 and 1 with 0 representing the most negative feedback, and 1 representing the most positive feedback.
 	 */
 	public void receiveFeedback(double feedback) { //TODO we don't really need the feedback because the J function will tell us if we won/lost on the last step
-		FeatureSet weightsUsed = negamaxPlayer.getFeatureSet();
 		FeatureSet deltaWeights = new FeatureSet();
 
 		//Calculate the change in weight for every feature f
-		for(Feature f : weightsUsed)
-		{
+		
 
 			double deltaWeight = 0;
 			for(int t = 0; t <= gameHistory.size()-1; t++){
-				Board xt = gameHistory.get(t);
-				double thisStepDelta = deltaJ(xt,weightsUsed, f);
-				double lambdaTD = 0;
-				for(int j = t; j < gameHistory.size()-1; j++){
-					Board afterXT = gameHistory.get(t+1);
-					double dt = (J(afterXT,weightsUsed) - J(xt,weightsUsed)); //The temporal difference
-					lambdaTD += Math.pow(LAMBDA, j-t) * dt;
+				FeatureSet weightsUsed = anyFeatures.get(t);
+				for(Feature f : weightsUsed)
+				{
+					Board xt = gameHistory.get(t);
+					double thisStepDelta = deltaJ(xt,weightsUsed, f);
+					double lambdaTD = 0;
+					for(int j = t; j < gameHistory.size()-1; j++){
+						Board afterXT = gameHistory.get(t+1);
+						double dt = (J(afterXT,weightsUsed) - J(xt,weightsUsed)); //The temporal difference
+						lambdaTD += Math.pow(LAMBDA, j-t) * dt;
+					}
+					//if(t==gameHistory.size()-1)System.out.println(lambdaTD);
+					deltaWeight += LEARNING_RATE * (thisStepDelta * lambdaTD);
 				}
-				//if(t==gameHistory.size()-1)System.out.println(lambdaTD);
-				deltaWeight += LEARNING_RATE * (thisStepDelta * lambdaTD);
-
 
 			}
 			
@@ -145,7 +149,7 @@ public class LearningPlayer extends AbstractPlayer {
 			deltaWeights.add(deltaFeature);
 			
 
-		}
+		
 
 		//We're done with this game
 		gameHistory.clear();

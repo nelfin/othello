@@ -34,8 +34,7 @@ public class StageLearningPlayer extends AbstractPlayer {
 	
     private String playerID = "Jafar";
     
-    private static int NUM_MOVES = 92; //100 squares - 4 init - 4 blocked = 92 moves
-    private ArrayList<FeatureSet> anyFeatures = new ArrayList<FeatureSet>(NUM_MOVES); 
+
 
 	private LearningPlayer anyGamePlayer;	
 	
@@ -45,9 +44,7 @@ public class StageLearningPlayer extends AbstractPlayer {
 	
 	@Override
 	public Move chooseMove(Board board) {
-		if (board.getMovesPlayed() == NUM_MOVES) return Move.NO_MOVE;
 	    //anyGamePlayer.receiveFeedback(0.0);
-	    anyGamePlayer.setFeatureSet(anyFeatures.get(board.getMovesPlayed()));
 	    return anyGamePlayer.chooseMove(board);
 	}
 
