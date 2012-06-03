@@ -37,11 +37,11 @@ public class PracticeArena{
 		
 	public static void main(String[] args)
 	{
-		StageLearningPlayer blackOpponent = new StageLearningPlayer(PlayerType.BLACK, 4);
-		StageLearningPlayer whiteOpponent = new StageLearningPlayer(PlayerType.WHITE, 4);
+		StageLearningPlayer blackOpponent = new StageLearningPlayer(PlayerType.BLACK, 4, "opponentBLACK");
+		StageLearningPlayer whiteOpponent = new StageLearningPlayer(PlayerType.WHITE, 4, "opponentWHITE");
 		//This is the learning player. They could both learn, but it's easy to reference them this way
-		StageLearningPlayer whiteLearner = new StageLearningPlayer(PlayerType.WHITE, 4); 
-		StageLearningPlayer blackLearner = new StageLearningPlayer(PlayerType.BLACK, 4); 
+		StageLearningPlayer whiteLearner = new StageLearningPlayer(PlayerType.WHITE, 4, "JafarWHITE"); 
+		StageLearningPlayer blackLearner = new StageLearningPlayer(PlayerType.BLACK, 4, "JafarBLACK"); 
 
 		double cumAvg = 0.0;
 		double expMovAvg = 0.0;
@@ -158,8 +158,12 @@ public class PracticeArena{
 
 				whiteLearner.showFeatures();
 				blackLearner.showFeatures();
-				//System.out.println("White: "+whiteLearner.getFeatureSet());
-				//System.out.println("Black: "+blackLearner.getFeatureSet());
+				
+				
+				whiteLearner.saveFeatures();
+				blackLearner.saveFeatures();
+				whiteOpponent.saveFeatures();
+				blackOpponent.saveFeatures();
 				
 				
 				/**<META CODE>**/

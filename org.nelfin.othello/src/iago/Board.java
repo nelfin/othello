@@ -410,6 +410,10 @@ public class Board {
         return BOARD_SIZE*BOARD_SIZE - BLOCKED_NUM - this.movesPlayed;
     }
     
+    public int getMovesPlayed() {
+        return this.movesPlayed;
+    }
+    
     public boolean isVictory() {
         return ((movesRemaining() == 0) ||
                 (getCellCount(BoardState.BLACK) == 0) ||

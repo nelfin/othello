@@ -61,12 +61,13 @@ public class MetaPlayer extends AbstractPlayer{
     
 	@Override
 	public Move chooseMove(Board board) {
+		if (board.getMovesPlayed() == NUM_MOVES) return Move.NO_MOVE;
 	    // Don't leave the book prematurely
 	    if (gameStage != Stage.BOOK) {
 	        determineStage(board);
 	    }
 	    System.out.println("MetaPlayer: game stage is " + gameStage);
-	    anyGamePlayer.setFeatureSet(anyFeatures.get(board.movesRemaining()));
+	    anyGamePlayer.setFeatureSet(anyFeatures.get(board.getMovesPlayed()));
 	    if (gameStage == Stage.BOOK) {
 	    	board.visualise();
 	    	Move m = anyGamePlayer.chooseMove(board);
