@@ -120,47 +120,44 @@ public class LearningPlayer extends AbstractPlayer {
 	 * @param feedback	A double between 0 and 1 with 0 representing the most negative feedback, and 1 representing the most positive feedback.
 	 */
 	public void receiveFeedback(double feedback) { //TODO we don't really need the feedback because the J function will tell us if we won/lost on the last step
-		FeatureSet deltaWeights = new FeatureSet();
 
 		//Calculate the change in weight for every feature f
 		
 
-			double deltaWeight = 0;
-			for(int t = 0; t <= gameHistory.size()-1; t++){
-				FeatureSet weightsUsed = anyFeatures.get(t);
-				for(Feature f : weightsUsed)
+			for(int t = 0; t < gameHistory.size()-1; t++){
+				double deltaWeight = 0;
+				FeatureSet deltaWeights = new FeatureSet();
+				FeatureSet thisStageWeightsUsed = anyFeatures.get(t);
+				FeatureSet nextStageWeightsUsed = anyFeatures.get(t+1);
+				for(Feature f : thisStageWeightsUsed)
 				{
 					Board xt = gameHistory.get(t);
-					double thisStepDelta = deltaJ(xt,weightsUsed, f);
+					double thisStepDelta = deltaJ(xt,thisStageWeightsUsed, f);
 					double lambdaTD = 0;
 					for(int j = t; j < gameHistory.size()-1; j++){
 						Board afterXT = gameHistory.get(t+1);
-						double dt = (J(afterXT,weightsUsed) - J(xt,weightsUsed)); //The temporal difference
+						double dt = (J(afterXT,nextStageWeightsUsed) - J(xt,thisStageWeightsUsed)); //The temporal difference
 						lambdaTD += Math.pow(LAMBDA, j-t) * dt;
 					}
 					//if(t==gameHistory.size()-1)System.out.println(lambdaTD);
 					deltaWeight += LEARNING_RATE * (thisStepDelta * lambdaTD);
+					
+					Feature deltaFeature = new ErsatzFeature(f);
+					deltaFeature.setWeight(deltaWeight);
+					deltaWeights.add(deltaFeature);
 				}
+				anyFeatures.get(t).combine(deltaWeights);
+				anyFeatures.get(t).standardiseWeights();
 
 			}
 			
-			Feature deltaFeature = new ErsatzFeature(f);
-			deltaFeature.setWeight(deltaWeight);
-			deltaWeights.add(deltaFeature);
+			
 			
 
 		
 
 		//We're done with this game
 		gameHistory.clear();
-		//Modify our feature set
-
-
-		currentWeights.combine(deltaWeights);
-		currentWeights.standardiseWeights();
-		
-		negamaxPlayer.setFeatureSet(currentWeights);
-		negamaxPlayer.getFeatureSet().saveToFile();
 		
 	}
 
