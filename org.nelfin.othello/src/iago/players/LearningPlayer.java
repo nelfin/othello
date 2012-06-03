@@ -28,12 +28,12 @@ public class LearningPlayer extends AbstractPlayer {
 	
 	static FeatureSet initialWeights = new FeatureSet();
 	static {
-		initialWeights.add(new LegalMoves(0.13));
+		initialWeights.add(new LegalMoves(0.23));
 	    //initialWeights.add(new StoneCount(0.37));
 	    //initialWeights.add(new Visibility(0.032));
-	    initialWeights.add(new SidePieces(0.3));
-	    initialWeights.add(new CornerPieces(0.16));
-	    initialWeights.add(new BlockedAdjacent(0.16));
+	    initialWeights.add(new SidePieces(0.24));
+	    initialWeights.add(new CornerPieces(0.33));
+	    initialWeights.add(new BlockedAdjacent(0.19));
 	    initialWeights.standardiseWeights();
 	}
 	FeatureSet currentWeights = new FeatureSet("MetaPlayerLearntWeights");

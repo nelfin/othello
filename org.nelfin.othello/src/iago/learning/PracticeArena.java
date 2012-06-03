@@ -142,16 +142,21 @@ public class PracticeArena{
 						thisGameFeedback = 0.5 / 2;
 					}
 					feedback += thisGameFeedback;
-					//System.out.println("Feedback: "+thisGameFeedback);
-				}
-				if(a==1000){
-					whiteLearner.printJFunction();
-					if(feedback == 0.5){
-						System.out.println("Won");
-					}else{
-						System.out.println("Lost");
+					System.out.println("Feedback: "+thisGameFeedback);
+					
+					if(a==1 && side==0){
+						whiteLearner.printJFunction();
+						if(whiteWins){
+							System.out.println("Won");
+						}else{
+							System.out.println("Lost");
+						}
 					}
+					
 				}
+				
+				
+				
 				//Learner
 				//Improve our feature weights
 				whiteLearner.receiveFeedback(feedback);
@@ -161,8 +166,8 @@ public class PracticeArena{
 				//whiteOpponent.receiveFeedback(feedback);
 				//blackOpponent.receiveFeedback(feedback);
 				
-				//System.out.println("White: "+whiteLearner.getFeatureSet());
-				//System.out.println("Black: "+blackLearner.getFeatureSet());
+				System.out.println("White: "+whiteLearner.getFeatureSet());
+				System.out.println("Black: "+blackLearner.getFeatureSet());
 				
 				
 				
