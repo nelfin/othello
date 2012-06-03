@@ -23,12 +23,13 @@ public class PracticeArena{
 	static final String LOG_DIRECTORY = "LearningLogs";
 	// Higher values of ALPHA => greater discount on older values of feedback
     private static final double ALPHA = 0.05;
+    private static final int DEPTH = 4;
 
-    final static LearningPlayer blackOpponent = new LearningPlayer(PlayerType.BLACK, 2, "opponentBLACK");
-    final static LearningPlayer whiteOpponent = new LearningPlayer(PlayerType.WHITE, 2, "opponentWHITE");
+    final static LearningPlayer blackOpponent = new LearningPlayer(PlayerType.BLACK, DEPTH, "opponentBLACK");
+    final static LearningPlayer whiteOpponent = new LearningPlayer(PlayerType.WHITE, DEPTH, "opponentWHITE");
     //This is the learning player. They could both learn, but it's easy to reference them this way
-    final static LearningPlayer whiteLearner = new LearningPlayer(PlayerType.WHITE, 2, "JafarWHITE"); 
-    final static LearningPlayer blackLearner = new LearningPlayer(PlayerType.BLACK, 2, "JafarBLACK"); 
+    final static LearningPlayer whiteLearner = new LearningPlayer(PlayerType.WHITE, DEPTH, "JafarWHITE"); 
+    final static LearningPlayer blackLearner = new LearningPlayer(PlayerType.BLACK, DEPTH, "JafarBLACK"); 
 
 	private static Writer allWinLossLog;
 		
