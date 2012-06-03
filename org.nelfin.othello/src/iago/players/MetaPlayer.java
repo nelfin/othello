@@ -1,5 +1,13 @@
 package iago.players;
 
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.util.ArrayList;
+
 import iago.Board;
 import iago.Move;
 import iago.features.*;
@@ -12,32 +20,11 @@ public class MetaPlayer extends AbstractPlayer{
     private static final long RED_ALERT = 500;
     private enum Stage { BOOK, EARLY, MID, LATE };
     
-    private static FeatureSet earlyFeatures = new FeatureSet();
-    private static FeatureSet midFeatures = new FeatureSet();
-    private static FeatureSet lateFeatures = new FeatureSet();
-    static {
-        earlyFeatures.add(new LegalMoves(0.87334));
-        earlyFeatures.add(new StoneCount(0.00308));
-        earlyFeatures.add(new SidePieces(0.01449));
-        earlyFeatures.add(new CornerPieces(0.00895)); // C-C-C-COMBO BREAKER
-        earlyFeatures.add(new BlockedAdjacent(0.10012));
-        earlyFeatures.standardiseWeights();
-        midFeatures.add(new LegalMoves(0.33323));
-        midFeatures.add(new StoneCount(0.02401));
-        midFeatures.add(new SidePieces(0.24816));
-        midFeatures.add(new CornerPieces(0.18558));
-        midFeatures.add(new BlockedAdjacent(0.20900));
-        midFeatures.standardiseWeights();
-        lateFeatures.add(new LegalMoves(0.08990));
-        lateFeatures.add(new StoneCount(0.05584));
-        lateFeatures.add(new SidePieces(0.34081));
-        lateFeatures.add(new CornerPieces(0.26868));
-        lateFeatures.add(new BlockedAdjacent(0.24475));
-        lateFeatures.standardiseWeights();
-    }
-    NegamaxPlayer earlyGamePlayer;
-    NegamaxPlayer midGamePlayer;
-    NegamaxPlayer lateGamePlayer;
+    private static String playerID = "Jafar";
+    
+    private static int NUM_MOVES = 92; //100 squares - 4 init - 4 blocked = 92 moves
+    private ArrayList<FeatureSet> anyFeatures = new ArrayList<FeatureSet>(NUM_MOVES); 
+    NegamaxPlayer anyGamePlayer;
     Player failsafe;
 	OpeningBook openingBook;
 	
@@ -53,19 +40,17 @@ public class MetaPlayer extends AbstractPlayer{
     public MetaPlayer(PlayerType colour, int depth) {
     	super(colour);
     	gameStage = Stage.BOOK;
-        earlyGamePlayer = new NegamaxPlayer(colour, depth);
-        midGamePlayer = new NegamaxPlayer(colour, depth);
-        lateGamePlayer = new NegamaxPlayer(colour, depth);
-        earlyGamePlayer.setFeatureSet(earlyFeatures);
-        midGamePlayer.setFeatureSet(midFeatures);
-        lateGamePlayer.setFeatureSet(lateFeatures);
+        
+        anyGamePlayer = new NegamaxPlayer(colour, depth);
+        initFeatures();
+        anyGamePlayer.setFeatureSet(anyFeatures.get(0));
         
         failsafe = new GreedyPlayer(colour);
         
 		instantiateOpeningBook();
     }
     
-    @Override
+	@Override
     public Move chooseMove(Board board, long timeRemaining) {
         if (timeRemaining < RED_ALERT) {
             return failsafe.chooseMove(board);
@@ -81,31 +66,25 @@ public class MetaPlayer extends AbstractPlayer{
 	        determineStage(board);
 	    }
 	    System.out.println("MetaPlayer: game stage is " + gameStage);
-        switch (gameStage) {
-        case BOOK:
-            board.visualise();
-            Move m = earlyGamePlayer.chooseMove(board);
-            try {
-                openingBook.getNextPosition(board.getMostRecentlyPlayedMove());
-                openingBook.getNextPosition(m);
-            } catch (UnexploredException e) {
-                // Drop out at first instance and don't come back
-                System.out.println("MetaPlayer: we left the opening book");
-                determineStage(board);
-                return m;
-            }
-            // Note: pass through is deliberate
-        case EARLY:
-            return earlyGamePlayer.chooseMove(board);
-        case MID:
-            return midGamePlayer.chooseMove(board);
-        default:
-            return lateGamePlayer.chooseMove(board);
-        }
+	    anyGamePlayer.setFeatureSet(anyFeatures.get(board.movesRemaining()));
+	    if (gameStage == Stage.BOOK) {
+	    	board.visualise();
+	    	Move m = anyGamePlayer.chooseMove(board);
+	    	try {
+	    		openingBook.getNextPosition(board.getMostRecentlyPlayedMove());
+	    		openingBook.getNextPosition(m);
+	    	} catch (UnexploredException e) {
+	    		// Drop out at first instance and don't come back
+	    		System.out.println("MetaPlayer: we left the opening book");
+	    		determineStage(board);
+	    	}
+	    	return m;
+	    }
+	    else return anyGamePlayer.chooseMove(board);
 	}
-	
-    private void determineStage(Board board) {
-        // TODO: make this less naive
+
+	private void determineStage(Board board) {
+		// TODO: make this less naive
         int movesLeft = board.movesRemaining();
         int maximumMoves = Board.BOARD_SIZE*Board.BOARD_SIZE - Board.BLOCKED_NUM - 4;
         float fracRemaining = ((float) movesLeft) / ((float) maximumMoves);
@@ -118,6 +97,41 @@ public class MetaPlayer extends AbstractPlayer{
         }
     }
 	
-	
+    public void saveFeatures() {
+		try {
+			ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream(playerID + ".nspl"));
+			out.writeObject(anyFeatures);
+			out.close();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
 
+	@SuppressWarnings("unchecked")
+	private void initFeatures() {
+		try {
+			ObjectInputStream in = new ObjectInputStream(new FileInputStream(playerID + ".nspl"));
+			anyFeatures = (ArrayList<FeatureSet>) in.readObject();
+			in.close();
+		} catch (FileNotFoundException e) {
+			// TODO Create default player here
+			for (int i = 0; i < NUM_MOVES; i++) {
+				FeatureSet currentMove = new FeatureSet();
+				currentMove.add(new LegalMoves     (0.2));
+				currentMove.add(new StoneCount     (0.2));
+				currentMove.add(new SidePieces     (0.2));
+				currentMove.add(new CornerPieces   (0.2));
+				currentMove.add(new BlockedAdjacent(0.2));
+				currentMove.standardiseWeights();
+				anyFeatures.add(currentMove);
+			}
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (ClassNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
 }
