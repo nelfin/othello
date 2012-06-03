@@ -82,7 +82,14 @@ public class FeatureSet extends ArrayList<Feature>{
 
 		//Loop through features and evaluate each one
 		for (Feature f: Features)
-			boardscore += (f.evaluate(state, player) / (double)f.bestScore) * f.getWeight();
+			if(!((double)f.evaluate(state,player.getOpponent())==0 && f.evaluate(state, player)==0)) {
+				double ourScore = (double)f.evaluate(state, player);
+				double theirScore = (double)f.evaluate(state,player.getOpponent());
+				boardscore += (ourScore) / (ourScore + theirScore) * f.getWeight();
+				
+			}else{
+				boardscore += 0.5 * f.getWeight(); //we both score nothing means it's neutral
+			}
 		return boardscore;
 	}
 	

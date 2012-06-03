@@ -6,7 +6,7 @@ import os
 
 os.system("cat LearningHistory*.csv > combine.csv")
 
-with open('combine.csv') as f:
+with open('LearningHistory.csv') as f:
     data = np.loadtxt(f, dtype={
         'names': ('iteration', 'cumAvg', 'expMovAvg'),
         'formats': ('i', 'd', 'd')}, delimiter=',', skiprows=1)

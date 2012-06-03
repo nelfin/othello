@@ -29,8 +29,8 @@ public class LearningPlayer extends AbstractPlayer {
 	static FeatureSet initialWeights = new FeatureSet();
 	static {
 		initialWeights.add(new LegalMoves(0.13));
-	    initialWeights.add(new StoneCount(0.37));
-	    initialWeights.add(new Visibility(0.032));
+	    //initialWeights.add(new StoneCount(0.37));
+	    //initialWeights.add(new Visibility(0.032));
 	    initialWeights.add(new SidePieces(0.3));
 	    initialWeights.add(new CornerPieces(0.16));
 	    initialWeights.add(new BlockedAdjacent(0.16));
@@ -38,9 +38,9 @@ public class LearningPlayer extends AbstractPlayer {
 	}
 	FeatureSet currentWeights = new FeatureSet("MetaPlayerLearntWeights");
 	
-	private final double LEARNING_RATE = 0.1;
+	private final double LEARNING_RATE = 0.05;
 	private final double LAMBDA = 0.9;
-	private final double RANDOM_MOVE_CHANCE = 0.05;
+	private final double RANDOM_MOVE_CHANCE = 0.01;
 	private Random randomMoveGenerator = new Random();
 	
 	double previousFeedback = 0;

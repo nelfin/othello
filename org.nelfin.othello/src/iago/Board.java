@@ -418,4 +418,9 @@ public class Board {
     	return mostRecentlyPlayedMove;
     }
     
+    public int getStoneCount(PlayerType p)
+    {
+    	return getCellCount(BoardState.asBoardState(p));
+    }
+    
 }
