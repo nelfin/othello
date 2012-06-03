@@ -1,5 +1,11 @@
 package iago.players;
 
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import java.util.Random;
 import java.util.Set;
@@ -27,17 +33,23 @@ public class LearningPlayer extends AbstractPlayer {
 		negamaxPlayer.setFeatureSet(features);
 	}
 	
+	public LearningPlayer(PlayerType colour, int depth, String playerID) {
+		super(colour);
+		this.playerID = playerID;
+		negamaxPlayer = new NegamaxPlayer(colour, depth);
+		initFeatures();
+	}
+	
+	public LearningPlayer(PlayerType colour, int depth) {
+		super(colour);
+		negamaxPlayer = new NegamaxPlayer(colour, depth);
+		initFeatures();
+	}
+	
+    private String playerID = "JafarLPlates";
+	
 	private NegamaxPlayer negamaxPlayer;
 	
-	static FeatureSet initialWeights = new FeatureSet();
-	static {
-	    initialWeights.add(new LegalMoves(1));
-	    initialWeights.add(new StoneCount(1));
-	    initialWeights.add(new BlockedAdjacent(1));
-	    initialWeights.add(new SidePieces(0));
-	    initialWeights.add(new CornerPieces(0));
-	    initialWeights.standardiseWeights();
-	}
 	FeatureSet currentWeights = new FeatureSet("MetaPlayerLearntWeights");
 	
 	private final double LEARNING_RATE = 0.1;
@@ -83,15 +95,6 @@ public class LearningPlayer extends AbstractPlayer {
 		
 		return (after-before)/step;
 	}
-	
-	public LearningPlayer(PlayerType colour, int depth) {
-		super(colour);
-		negamaxPlayer = new NegamaxPlayer(colour, depth);
-		currentWeights = new FeatureSet(initialWeights);
-		negamaxPlayer.setFeatureSet(currentWeights); //this will overwrite the features that negamax has as default
-	}
-	
-	
 	
 	public LearningPlayer(PlayerType colour) {
 		this(colour, NegamaxPlayer.DEFAULT_DEPTH);
@@ -178,5 +181,57 @@ public class LearningPlayer extends AbstractPlayer {
 	 */
 	public void setFeatureSet(FeatureSet featureSet) {
 		negamaxPlayer.setFeatureSet(featureSet);
+	}
+	
+	/**
+	 * Return's the learning player's current feature set (and weightings, of course)
+	 * @return The current feature set
+	 */
+	public FeatureSet getFeatureSet(int i) {
+	    return anyFeatures.get(i);
+	}
+	
+    public void showFeatures() {
+    	for (int i = 0; i < NUM_MOVES; i++) {
+            System.out.println(getColour() + ": " + i + " " + getFeatureSet(i).toString());
+        }
+    }
+	
+	public void saveFeatures() {
+		try {
+			ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream(playerID + ".nspl"));
+			out.writeObject(anyFeatures);
+			out.close();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+
+	@SuppressWarnings("unchecked")
+	private void initFeatures() {
+		try {
+			ObjectInputStream in = new ObjectInputStream(new FileInputStream(playerID + ".nspl"));
+			anyFeatures = (ArrayList<FeatureSet>) in.readObject();
+			in.close();
+		} catch (FileNotFoundException e) {
+			// TODO Create default player here
+			for (int i = 0; i < NUM_MOVES; i++) {
+				FeatureSet currentMove = new FeatureSet();
+				currentMove.add(new LegalMoves     (0.2));
+				currentMove.add(new StoneCount     (0.2));
+				currentMove.add(new SidePieces     (0.2));
+				currentMove.add(new CornerPieces   (0.2));
+				currentMove.add(new BlockedAdjacent(0.2));
+				currentMove.standardiseWeights();
+				anyFeatures.add(currentMove);
+			}
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (ClassNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 }
