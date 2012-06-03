@@ -103,6 +103,8 @@ public class LearningPlayer extends AbstractPlayer {
 
 	@Override
 	public Move chooseMove(Board board) {
+		if (board.getMovesPlayed() == NUM_MOVES) return Move.NO_MOVE;
+		
 		gameHistory.add(new Board(board));
 	    setFeatureSet(anyFeatures.get(board.getMovesPlayed()));
 
@@ -115,6 +117,7 @@ public class LearningPlayer extends AbstractPlayer {
 		}else{
 			nextMove =  negamaxPlayer.chooseMove(board);
 		}
+		gameHistory.add(board.apply(nextMove, getColour(), false));
 		return nextMove;
 	}
 
@@ -125,43 +128,43 @@ public class LearningPlayer extends AbstractPlayer {
 	public void receiveFeedback(double feedback) { //TODO we don't really need the feedback because the J function will tell us if we won/lost on the last step
 
 		//Calculate the change in weight for every feature f
-		
 
-			for(int t = 0; t < gameHistory.size()-1; t++){
-				double deltaWeight = 0;
-				FeatureSet deltaWeights = new FeatureSet();
-				FeatureSet thisStageWeightsUsed = anyFeatures.get(t);
-				FeatureSet nextStageWeightsUsed = anyFeatures.get(t+1);
-				for(Feature f : thisStageWeightsUsed)
-				{
-					Board xt = gameHistory.get(t);
-					double thisStepDelta = deltaJ(xt,thisStageWeightsUsed, f);
-					double lambdaTD = 0;
-					for(int j = t; j < gameHistory.size()-1; j++){
-						Board afterXT = gameHistory.get(t+1);
-						double dt = (J(afterXT,nextStageWeightsUsed) - J(xt,thisStageWeightsUsed)); //The temporal difference
-						lambdaTD += Math.pow(LAMBDA, j-t) * dt;
-					}
-					//if(t==gameHistory.size()-1)System.out.println(lambdaTD);
-					deltaWeight += LEARNING_RATE * (thisStepDelta * lambdaTD);
-					
-					Feature deltaFeature = new ErsatzFeature(f);
-					deltaFeature.setWeight(deltaWeight);
-					deltaWeights.add(deltaFeature);
+		System.out.println(gameHistory.size());
+		for(int t = 0; t < gameHistory.size()-1 && t < NUM_MOVES-1; t++){
+			double deltaWeight = 0;
+			FeatureSet deltaWeights = new FeatureSet();
+			FeatureSet thisStageWeightsUsed = anyFeatures.get(t);
+			FeatureSet nextStageWeightsUsed = anyFeatures.get(t+1);
+			Board xt = gameHistory.get(t);
+			Board afterXT = gameHistory.get(t+1);
+			double dt = (J(afterXT,nextStageWeightsUsed) - J(xt,thisStageWeightsUsed)); //The temporal difference
+			for(Feature f : thisStageWeightsUsed)
+			{
+				double thisStepDelta = deltaJ(xt,thisStageWeightsUsed, f);
+				double lambdaTD = 0;
+				for(int j = t; j < gameHistory.size()-1  && j < NUM_MOVES; j++){
+					lambdaTD += Math.pow(LAMBDA, j-t) * dt;
 				}
-				anyFeatures.get(t).combine(deltaWeights);
-				anyFeatures.get(t).standardiseWeights();
+				//if(t==gameHistory.size()-1)System.out.println(lambdaTD);
+				deltaWeight = LEARNING_RATE * (thisStepDelta * lambdaTD);
 
+				Feature deltaFeature = new ErsatzFeature(f);
+				deltaFeature.setWeight(deltaWeight);
+				deltaWeights.add(deltaFeature);
 			}
-			
-			
-			
+			anyFeatures.get(t).combine(deltaWeights);
+			anyFeatures.get(t).standardiseWeights();
 
-		
+		}
+
+
+
+
+
 
 		//We're done with this game
 		gameHistory.clear();
-		
+
 	}
 
 	/**

@@ -5,44 +5,49 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.Writer;
-import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.LinkedList;
-import java.util.Queue;
 import java.util.Random;
 
 import iago.Board;
 import iago.DebugFunctions;
 import iago.Move;
-import iago.players.AlphaBetaPlayer;
-import iago.players.GreedyPlayer;
-import iago.players.MetaPlayer;
-import iago.players.NegamaxPlayer;
-import iago.players.OpeningBookPlayer;
-import iago.players.StageLearningPlayer;
+import iago.players.LearningPlayer;
 import iago.players.Player.PlayerType;
-import iago.players.StageLearningPlayer;
 
 public class PracticeArena{
 	static final int BLOCKED_COUNT=4; //TODO: move this
-	static final int LEARNING_ITERATIONS=100000;//ONE MILLION
+	static final int LEARNING_ITERATIONS=10000;//ONE MILLION
 	static final int RUNNING_WIN_LOSS_SIZE=1000; //We get the win loss over the past RUNNING_WIN_LOSS_SIZE games
 	// Flush log file if last save was more than LOG_SAVE_MILLIS ago
 	private static final long LOG_SAVE_MILLIS = 5*60*1000;
 	static final String LOG_DIRECTORY = "LearningLogs";
 	// Higher values of ALPHA => greater discount on older values of feedback
     private static final double ALPHA = 0.05;
-	
+
+    final static LearningPlayer blackOpponent = new LearningPlayer(PlayerType.BLACK, 2, "opponentBLACK");
+    final static LearningPlayer whiteOpponent = new LearningPlayer(PlayerType.WHITE, 2, "opponentWHITE");
+    //This is the learning player. They could both learn, but it's easy to reference them this way
+    final static LearningPlayer whiteLearner = new LearningPlayer(PlayerType.WHITE, 2, "JafarWHITE"); 
+    final static LearningPlayer blackLearner = new LearningPlayer(PlayerType.BLACK, 2, "JafarBLACK"); 
+
 	private static Writer allWinLossLog;
 		
 	public static void main(String[] args)
 	{
-		StageLearningPlayer blackOpponent = new StageLearningPlayer(PlayerType.BLACK, 4, "opponentBLACK");
-		StageLearningPlayer whiteOpponent = new StageLearningPlayer(PlayerType.WHITE, 4, "opponentWHITE");
-		//This is the learning player. They could both learn, but it's easy to reference them this way
-		StageLearningPlayer whiteLearner = new StageLearningPlayer(PlayerType.WHITE, 4, "JafarWHITE"); 
-		StageLearningPlayer blackLearner = new StageLearningPlayer(PlayerType.BLACK, 4, "JafarBLACK"); 
-
+		Runtime.getRuntime().addShutdownHook(new Thread() {
+			public void run() {
+				System.out.println("Closing arena log.");
+				try {
+					allWinLossLog.close();
+					whiteLearner.saveFeatures();
+					blackLearner.saveFeatures();
+					whiteOpponent.saveFeatures();
+					blackOpponent.saveFeatures();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
+		});
 		double cumAvg = 0.0;
 		double expMovAvg = 0.0;
 		long lastSaveTime = System.currentTimeMillis();
@@ -59,16 +64,7 @@ public class PracticeArena{
 		    FileWriter longStream = new FileWriter(LOG_DIRECTORY+"/LearningHistory.csv");
 		    allWinLossLog = new BufferedWriter(longStream);
 		    allWinLossLog.write("Iteration,Cumulative Average,Exponential Moving Average\n");
-		    Runtime.getRuntime().addShutdownHook(new Thread() {
-		        public void run() {
-		            System.out.println("Closing arena log.");
-		            try {
-                        allWinLossLog.close();
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-		        }
-		    });
+		    
 		    /**</META CODE>**/
 		    
 			for(int a = 0; a < LEARNING_ITERATIONS; a++){
@@ -78,8 +74,8 @@ public class PracticeArena{
 				System.out.println("=====================");
 	
 				int side = 0;
-				StageLearningPlayer learner;
-				StageLearningPlayer opponent;
+				LearningPlayer learner;
+				LearningPlayer opponent;
 				String initialBoardRepresentation = generateRandomBoard();
 				//We want the player to play from both sides
 				for(side = 0; side <= 1; side++) //side==0 means Learner is playing white
