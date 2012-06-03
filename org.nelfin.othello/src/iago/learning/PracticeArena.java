@@ -60,7 +60,7 @@ public class PracticeArena{
 		    allWinLossLog.write("Iteration,Cumulative Average,Exponential Moving Average\n");
 		    Runtime.getRuntime().addShutdownHook(new Thread() {
 		        public void run() {
-		            System.out.println("Closing arena log.");
+		            //System.out.println("Closing arena log.");
 		            try {
                         allWinLossLog.close();
                     } catch (IOException e) {
@@ -72,9 +72,9 @@ public class PracticeArena{
 		    
 			for(int a = 0; a < LEARNING_ITERATIONS; a++){
 				double feedback = 0;
-				System.out.println("=====================");
-				System.out.println("Learning iteration "+(a+1));
-				System.out.println("=====================");
+//				System.out.println("=====================");
+//				System.out.println("Learning iteration "+(a+1));
+//				System.out.println("=====================");
 	
 				int side = 0;
 				LearningPlayer learner;
@@ -83,7 +83,7 @@ public class PracticeArena{
 				//We want the player to play from both sides
 				for(side = 0; side <= 1; side++) //side==0 means Learner is playing white
 				{
-					System.out.println("Playing game "+(a+1)+"/"+LEARNING_ITERATIONS+((side==0)?"":" reversed"));
+					//System.out.println("Playing game "+(a+1)+"/"+LEARNING_ITERATIONS+((side==0)?"":" reversed"));
 					
 					//Set up a game
 					Board board = new Board(initialBoardRepresentation);
@@ -142,9 +142,16 @@ public class PracticeArena{
 						thisGameFeedback = 0.5 / 2;
 					}
 					feedback += thisGameFeedback;
-					System.out.println("Feedback: "+thisGameFeedback);
+					//System.out.println("Feedback: "+thisGameFeedback);
 				}
-				
+				if(a==1000){
+					whiteLearner.printJFunction();
+					if(feedback == 0.5){
+						System.out.println("Won");
+					}else{
+						System.out.println("Lost");
+					}
+				}
 				//Learner
 				//Improve our feature weights
 				whiteLearner.receiveFeedback(feedback);
@@ -154,8 +161,9 @@ public class PracticeArena{
 				//whiteOpponent.receiveFeedback(feedback);
 				//blackOpponent.receiveFeedback(feedback);
 				
-				System.out.println("White: "+whiteLearner.getFeatureSet());
-				System.out.println("Black: "+blackLearner.getFeatureSet());
+				//System.out.println("White: "+whiteLearner.getFeatureSet());
+				//System.out.println("Black: "+blackLearner.getFeatureSet());
+				
 				
 				
 				/**<META CODE>**/

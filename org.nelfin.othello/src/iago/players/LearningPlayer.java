@@ -177,6 +177,13 @@ public class LearningPlayer extends AbstractPlayer {
 	public FeatureSet getFeatureSet() {
 		return negamaxPlayer.getFeatureSet();
 	}
+	
+	public void printJFunction() {
+		for(int t = 0; t <= gameHistory.size()-1; t++){
+			Board xt = gameHistory.get(t);
+			System.out.println(t+","+J(xt,negamaxPlayer.getFeatureSet()));
+		}
+	}
 
 	/**
 	 * Sets the learning player's current feature set. The policy iteration should be done in the receiveFeedback function, this is just so we can clone a player
