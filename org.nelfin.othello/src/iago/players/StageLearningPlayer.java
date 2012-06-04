@@ -1,5 +1,7 @@
 package iago.players;
 
+import java.util.ArrayList;
+
 import iago.Board;
 import iago.Move;
 import iago.features.BlockedAdjacent;
@@ -12,21 +14,16 @@ import iago.features.StoneCount;
 public class StageLearningPlayer extends AbstractPlayer {
 	public StageLearningPlayer(PlayerType colour, int depth, FeatureSet features) {
 		super(colour);
-		gameStage = Stage.EARLY;
-		earlyGamePlayer = new LearningPlayer(colour, depth);
-		midGamePlayer = new LearningPlayer(colour, depth);
-		lateGamePlayer = new LearningPlayer(colour, depth);
-		earlyGamePlayer.setFeatureSet(features);
-		midGamePlayer.setFeatureSet(features);
-		lateGamePlayer.setFeatureSet(features);
+		gameStage = 0;
+		
+		for(int i = 0; i < STAGES; i++){
+			nPlayers.add(new LearningPlayer(colour, depth));
+		}
 	}
-	private enum Stage { EARLY, MID, LATE };
-	
-	private LearningPlayer earlyGamePlayer;
-	private LearningPlayer midGamePlayer;
-	private LearningPlayer lateGamePlayer;
-	private Stage gameStage;
-	
+	private ArrayList<LearningPlayer> nPlayers = new ArrayList<LearningPlayer>();
+	private int gameStage = 0;
+	private static int STAGES = 20;
+	private static int MOVES = 92;
 	static FeatureSet initialWeights = new FeatureSet();
 	static {
 	    initialWeights.add(new LegalMoves(0));
@@ -54,29 +51,21 @@ public class StageLearningPlayer extends AbstractPlayer {
 	
 	@Override
 	public Move chooseMove(Board board) {
+		
 		Move nextMove = Move.NO_MOVE;
-	    Stage current = determineStage(board);
 	    
-	    if (current != gameStage) {
-	    	switch (gameStage) {
-			    case EARLY:
-			        earlyGamePlayer.receiveFeedback(0.0);
-			    case MID:
-			        midGamePlayer.receiveFeedback(0.0);
-			    default:
-			        lateGamePlayer.receiveFeedback(0.0);
-	    	}
-	        gameStage = current;
-	    }
+	    int currentStage = determineStage(board);
 	    
-	    switch (gameStage) {
-	    case EARLY:
-	        return earlyGamePlayer.chooseMove(board);
-	    case MID:
-	        return midGamePlayer.chooseMove(board);
-	    default:
-	        return lateGamePlayer.chooseMove(board);
+	    if(gameStage >= STAGES){
+			return Move.NO_MOVE;
+		}
+	    
+	    if(gameStage != currentStage)
+	    {
+	    	nPlayers.get(gameStage).receiveFeedback(0.0);
+	    	gameStage = currentStage;
 	    }
+	    return nPlayers.get(gameStage).chooseMove(board);
 		
 	}
 
@@ -85,14 +74,8 @@ public class StageLearningPlayer extends AbstractPlayer {
 	 * @param feedback	A double between 0 and 1 with 0 representing the most negative feedback, and 1 representing the most positive feedback.
 	 */
 	public void receiveFeedback(double feedback) {
-    	switch (gameStage) {
-		    case EARLY:
-		        earlyGamePlayer.receiveFeedback(0.0);
-		    case MID:
-		        midGamePlayer.receiveFeedback(0.0);
-		    default:
-		        lateGamePlayer.receiveFeedback(0.0);
-    	}
+		nPlayers.get(gameStage).receiveFeedback(0.0);
+		gameStage = 0;
 	}
 
 	/**
@@ -107,51 +90,27 @@ public class StageLearningPlayer extends AbstractPlayer {
      * Return's the learning player's current feature set (and weightings, of course)
      * @return The current feature set
      */
-    private FeatureSet getFeatureSet(Stage s) {
-        switch (s) {
-        case EARLY:
-            return earlyGamePlayer.getFeatureSet();
-        case MID:
-            return midGamePlayer.getFeatureSet();
-        default:
-            return lateGamePlayer.getFeatureSet();
-        }
+    private FeatureSet getFeatureSet(int s) {
+        return nPlayers.get(s).getFeatureSet();
     }
     /**
 	 * Sets the learning player's current feature set. The policy iteration should be done in the receiveFeedback function, this is just so we can clone a player
 	 * @param featureSet	The FeatureSet that the player plans to take on
 	 */
 	public void setFeatureSet(FeatureSet featureSet) {
-	    switch (gameStage) {
-	    case EARLY:
-	        earlyGamePlayer.setFeatureSet(featureSet);
-	        break;
-	    case MID:
-	        midGamePlayer.setFeatureSet(featureSet);
-	        break;
-	    case LATE:
-	        lateGamePlayer.setFeatureSet(featureSet);
-	        break;
-	    }
+		nPlayers.get(gameStage).setFeatureSet(featureSet);
 	}
 	
-    private Stage determineStage(Board board) {
-        // TODO: make this less naive
-        int movesLeft = board.movesRemaining();
-        int maximumMoves = Board.BOARD_SIZE*Board.BOARD_SIZE - Board.BLOCKED_NUM - 4;
-        float fracRemaining = ((float) movesLeft) / ((float) maximumMoves);
-        if (fracRemaining > 0.667) {
-            return Stage.EARLY;
-        } else if (fracRemaining > 0.333) {
-            return Stage.MID;
-        } else {
-            return Stage.LATE;
-        }
+    private int determineStage(Board board) {
+        return (int) Math.round(((double)(MOVES-board.movesRemaining())/((double)MOVES) * (STAGES-1)));
     }
 
     public void showFeatures() {
-        for (Stage f : Stage.values()) {
-            System.out.println(getColour() + ": " + f + " " + getFeatureSet(f).toString());
+    	int i = 0;
+        for (LearningPlayer n : nPlayers) {
+            System.out.print(i);
+            System.out.println(n.getFeatureSet());
+            i++;
         }
     }
 }
