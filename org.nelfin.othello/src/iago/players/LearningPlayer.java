@@ -28,12 +28,19 @@ public class LearningPlayer extends AbstractPlayer {
 	
 	static FeatureSet initialWeights = new FeatureSet();
 	static {
-		initialWeights.add(new LegalMoves(0.16624584609586937));
-	    initialWeights.add(new StoneCount(0.05970565007068347));
-	    initialWeights.add(new Visibility(0.03477484713452541));
-	    initialWeights.add(new SidePieces(0.2812365145154657));
-	    initialWeights.add(new CornerPieces(0.24368416503769144));
-	    initialWeights.add(new BlockedAdjacent(0.21435297714576476));
+//		initialWeights.add(new LegalMoves(0.16624584609586937));
+//	    initialWeights.add(new StoneCount(0.05970565007068347));
+//	    initialWeights.add(new Visibility(0.03477484713452541));
+//	    initialWeights.add(new SidePieces(0.2812365145154657));
+//	    initialWeights.add(new CornerPieces(0.24368416503769144));
+//	    initialWeights.add(new BlockedAdjacent(0.21435297714576476));
+		initialWeights.add(new LegalMoves(0));
+	    initialWeights.add(new StoneCount(1));
+	    //initialWeights.add(new Visibility(0.1));
+	    initialWeights.add(new SidePieces(0));
+	    initialWeights.add(new CornerPieces(0));
+	    initialWeights.add(new BlockedAdjacent(0));
+
 	    initialWeights.standardiseWeights();
 	}
 	FeatureSet currentWeights = new FeatureSet("MetaPlayerLearntWeights");
@@ -179,10 +186,11 @@ public class LearningPlayer extends AbstractPlayer {
 	}
 	
 	public void printJFunction() {
-		
+		double lastProb = 0.5;
 		for(int t = 0; t <= gameHistory.size()-1; t++){
 			Board xt = gameHistory.get(t);
-			System.out.println(t+","+J(xt,getFeatureSet()));
+			System.out.println(t+","+(lastProb-J(xt,getFeatureSet())));
+			lastProb = J(xt,getFeatureSet());
 		}
 	}
 

@@ -10,6 +10,7 @@
 \usepackage{titlesec}
 \usepackage{float}
 \usepackage{natbib}
+\usepackage{subfigure}
 \usepackage[english]{babel}
 \usepackage[autolanguage]{numprint}
 %\restylefloat{table}
@@ -62,14 +63,31 @@ At the end of each game played, the agent adjusts it's weights according to the 
       $\Delta \tilde{J}$    & The derivative of the $\tilde{J}$ function    &               &\\
     \end{tabular}
 \end{center}
+
 In the above formula, the $\tilde{J}$ function estimates the probability of winning from a given state, given a set of weights for features and our board. It approximates the $J$ function, \\
 \begin{center}
 $
 J(x_t) = \begin{cases} 1, & \mbox{if } x_t\mbox{ is a winning state} \\ 0, & \mbox{if } x_t\mbox{ is a lost state} \end{cases}
 $
 \end{center}
-For each game state $x_t$, we adjust the weights according to a factor $d_t$, which is the temporal difference. $d_t = \tilde{J}(x_{t+1},w) - \tilde{J}(x_t,w)$, and the weight adjustment is scaled with this amount. The motivating observation is, for the true $J$ function, $J(x_{t+1}) - J(x_t) = 0$, so $d_t$ should be as close to zero as possible.
 
+For each game state $x_t$, we adjust the weights according to a factor $d_t$, which is the temporal difference. $d_t = \tilde{J}(x_{t+1},w) - \tilde{J}(x_t,w)$, and the weight adjustment is scaled with this amount. The key observation is, for the true $J$ function, $J(x_{t+1}) - J(x_t) = 0$, so we adjust our weights relative to this amount.
+
+From Figure \ref{JFunctionGraphs_1000iterations}, we can see that the $\tilde{J}$ function, while not accurate for the entirety of the game, is able to predict the results within the last 20 moves. In comparison, Figure \ref{JFunctionGraphs_1iteration} indicates that the $\tilde{J}$ function initially is a bad approximation, as even after losing a game, the estimated probability of winning is high.
+\begin{figure}[H]
+
+    \subfigure[Losing a game]{\includegraphics[width=0.47\textwidth]{../Graphs/J_improved_1000iteration_lost.pdf}}
+    \subfigure[Winning a game]{\includegraphics[width=0.47\textwidth]{../Graphs/J_improved_1000iteration_won.pdf}}
+    \caption{$\tilde{J}$ Function after 1000 learning iterations}
+    \label{JFunctionGraphs_1000iterations}
+\end{figure}
+\begin{figure}[H]
+
+    \subfigure[Losing a game]{\includegraphics[width=0.47\textwidth]{../Graphs/J_improved_1iteration_lost.pdf}}
+    \subfigure[Winning a game]{\includegraphics[width=0.47\textwidth]{../Graphs/J_improved_1iteration_won.pdf}}
+    \caption{$\tilde{J}$ Function initially}
+    \label{JFunctionGraphs_1iteration}
+\end{figure}
 \subsection{ELO arena}
 \subsection{Comparison of \tdl and ELO arena}
 %% TD lambda and ELO arena

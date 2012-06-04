@@ -174,8 +174,8 @@ public class PracticeArena{
 
 				//whiteLearner.showFeatures();
 				//blackLearner.showFeatures();
-				//System.out.println("White: "+whiteLearner.getFeatureSet());
-				//System.out.println("Black: "+blackLearner.getFeatureSet());
+				System.out.println("White: "+whiteLearner.getFeatureSet());
+				System.out.println("Black: "+blackLearner.getFeatureSet());
 				
 				
 				/**<META CODE>**/
