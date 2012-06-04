@@ -16,6 +16,7 @@
 \usepackage[tableposition=top]{caption}
 % Macros
 \newcommand{\np}{\numprint}
+\newcommand{\tdl}{TD-$\lambda$ }
 % Options
 \marginsize{2.5cm}{1.5cm}{1cm}{1cm}
 % Title spec
@@ -45,7 +46,23 @@ An agent to play the board game \emph{Othello} is created, with the ability to l
 %% Alpha beta pruning, negamax, etc.
 \section{Static evaluation function}
 %% Necessity of a static evaluation function, features used, etc
+\clearpage
 \section{Learning}
+\subsection{\tdl}
+The \tdl algorithm was used to learn the weighting of the static evaluation function's various features. The implementation of this algorithm is based on the one implemented by the Knightcap agent (http://citeseerx.ist.psu.edu/viewdoc/summary?doi=10.1.1.140.2003) %%TODO Reference this properly\\
+At the end of each game played, the agent adjusts it's weights according to the following formula
+\begin{center}
+    $\displaystyle w := w + \alpha \sum _{t=1} ^{N-1} \Delta \tilde{J}(x_t,w) \: \times \: \Big[ \sum ^ {N-1} _{j=t} \lambda^{j-t} d_t \Big] $\\
+    \begin{tabular}{  l l | l l }
+      $w$                   & The vector of weights                         &$x_t$  & The $t^{th}$ board in the game \\
+      $\alpha$              & The learning rate                             &$\lambda$      &The discount factor \\
+      $N$                   & The number of states in the game              &$d_t$          &$\tilde{J}(x_{t+1},w) - \tilde{J}(x_t,w)$\\
+      $\Delta \tilde{J}$    & The derivative of the $\tilde{J}$ function    &               &\\
+    \end{tabular}
+\end{center}
+In the above formula, the $\tilde{J}$ function estimates the probability of winning from a given state, given a set of weights for features and our board. 
+\subsection{ELO arena}
+\subsection{Comparison of \tdl and ELO arena}
 %% TD lambda and ELO arena
 \section{Performance evaluation}
 %% Tournament results, self play learning, fixed opponent results.
