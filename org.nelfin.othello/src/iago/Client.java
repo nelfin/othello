@@ -25,6 +25,7 @@ public class Client implements Runnable {
     private PlayerType player;
     private boolean canMove;
     private Board board;
+    private long timeRemaining;
     
     private Socket socket;
     private DataOutputStream out;
@@ -148,7 +149,7 @@ public class Client implements Runnable {
     }
 
     private void playNextMove() {
-        nextMove = computerPlayer.chooseMove(board);
+        nextMove = computerPlayer.chooseMove(board, timeRemaining);
     }
 
     private void sendMove() throws IOException {
@@ -191,6 +192,7 @@ public class Client implements Runnable {
         canMove = !serverMessage.cantMakeMove();
         
         board.processMessage(serverMessage);
+        timeRemaining = serverMessage.getTimeRemaining();
         
         return true;
     }

@@ -12,7 +12,7 @@ import java.util.TreeSet;
 public class Board {
     
     public static final int BOARD_SIZE = 10;
-    private static final int BLOCKED_NUM = 4;
+    public static final int BLOCKED_NUM = 4;
     
     public enum BoardState {
         EMPTY, WHITE, BLACK, BLOCKED;
@@ -150,6 +150,7 @@ public class Board {
         byte[] boardArray = m.getBoardArray();
         processBytes(boardArray);
         clearValidMoves();
+        mostRecentlyPlayedMove = m.getOpponentMove();
     }
     
     private void setCellCount(BoardState b, int count) {
@@ -400,6 +401,7 @@ public class Board {
         } else {
             Board result = new Board(this);
             result.makeMove(m.x, m.y, player, true);
+            result.mostRecentlyPlayedMove = m;
             return result;
         }
     }

@@ -1,5 +1,8 @@
 package iago.players;
 
+import iago.Board;
+import iago.Move;
+
 public abstract class AbstractPlayer implements Player {
     private PlayerType colour;
     
@@ -9,5 +12,9 @@ public abstract class AbstractPlayer implements Player {
     
     public PlayerType getColour() {
         return colour;
+    }
+    
+    public Move chooseMove(Board board, long deadline) {
+        return chooseMove(board);
     }
 }

@@ -14,12 +14,12 @@ public class Visibility extends Feature{
 	private boolean visibilityMapInitialised = false;
 	public Visibility(double weight)
 	{
-		super("Visibility", "The visibility of white's squares - the visibility of black's squares",weight, BEST_SCORE);
+		super("Visibility", "The visibility of white's squares",weight, BEST_SCORE);
 	}
 	
 	public Visibility()
 	{
-		super("Visibility", "The visibility of white's squares - the visibility of black's squares",DEFAULT_WEIGHT, BEST_SCORE);
+		super("Visibility", "The visibility of white's squares",DEFAULT_WEIGHT, BEST_SCORE);
 	}
 	
 	
@@ -93,15 +93,13 @@ public class Visibility extends Feature{
 		if(!thisBoardBlockedPoints.equals(blockedPoints) || !visibilityMapInitialised){
 			evaluateVisibilityMap(state); //This is pretty time consuming so we don't want to recalculate it every time
 		}
-		//Calculate every white square's visibility and every black square's visibility, find difference
+		//Calculate every white square's visibility
 		int whiteVisibilityAdvantage = 0;
 		for(int x=0;x<Board.BOARD_SIZE;x++){
 			for(int y=0;y<Board.BOARD_SIZE;y++){
 				
 				if(Board.BoardState.asBoardState(player) == state.get(x, y)){
 					whiteVisibilityAdvantage += visibilityMap[x][y];
-				}else if(Board.BoardState.asBoardState(player.getOpponent()) == state.get(x, y)){
-					whiteVisibilityAdvantage -= visibilityMap[x][y];
 				}
 			}
 		}

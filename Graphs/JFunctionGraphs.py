@@ -4,7 +4,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 import os
 
-with open('JFunction_Data/iteration1000_lost.csv') as f:
+with open('JFunction_Data/iteration1_won.csv') as f:
     data = np.loadtxt(f, dtype={
         'names': ('Move', 'J'),
         'formats': ('i', 'd')}, delimiter=',', skiprows=1)

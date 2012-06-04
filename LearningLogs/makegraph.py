@@ -4,8 +4,6 @@ import numpy as np
 import matplotlib.pyplot as plt
 import os
 
-os.system("cat LearningHistory*.csv > combine.csv")
-
 with open('LearningHistory.csv') as f:
     data = np.loadtxt(f, dtype={
         'names': ('iteration', 'cumAvg', 'expMovAvg'),

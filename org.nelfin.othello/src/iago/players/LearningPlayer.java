@@ -28,19 +28,19 @@ public class LearningPlayer extends AbstractPlayer {
 	
 	static FeatureSet initialWeights = new FeatureSet();
 	static {
-		initialWeights.add(new LegalMoves(0.23));
-	    //initialWeights.add(new StoneCount(0.37));
-	    //initialWeights.add(new Visibility(0.032));
-	    initialWeights.add(new SidePieces(0.24));
-	    initialWeights.add(new CornerPieces(0.33));
-	    initialWeights.add(new BlockedAdjacent(0.19));
+		initialWeights.add(new LegalMoves(0.16624584609586937));
+	    initialWeights.add(new StoneCount(0.05970565007068347));
+	    initialWeights.add(new Visibility(0.03477484713452541));
+	    initialWeights.add(new SidePieces(0.2812365145154657));
+	    initialWeights.add(new CornerPieces(0.24368416503769144));
+	    initialWeights.add(new BlockedAdjacent(0.21435297714576476));
 	    initialWeights.standardiseWeights();
 	}
 	FeatureSet currentWeights = new FeatureSet("MetaPlayerLearntWeights");
 	
 	private final double LEARNING_RATE = 0.05;
 	private final double LAMBDA = 0.9;
-	private final double RANDOM_MOVE_CHANCE = 0.01;
+	private final double RANDOM_MOVE_CHANCE = 0.05;
 	private Random randomMoveGenerator = new Random();
 	
 	double previousFeedback = 0;
@@ -53,7 +53,7 @@ public class LearningPlayer extends AbstractPlayer {
 	 * @param w		The weights
 	 * @return		The board value
 	 */
-	private double J(Board x, FeatureSet w){
+	public double J(Board x, FeatureSet w){
 		PlayerType colour = negamaxPlayer.getColour();
 //		boolean gameOver = (x.validMoves(colour).size() == 0) && (x.validMoves(colour.getOpponent()).size() == 0);
 //		boolean weHaveMorePoints = x.scoreBoard(colour) > 0;
@@ -179,9 +179,10 @@ public class LearningPlayer extends AbstractPlayer {
 	}
 	
 	public void printJFunction() {
+		
 		for(int t = 0; t <= gameHistory.size()-1; t++){
 			Board xt = gameHistory.get(t);
-			System.out.println(t+","+J(xt,negamaxPlayer.getFeatureSet()));
+			System.out.println(t+","+J(xt,getFeatureSet()));
 		}
 	}
 
