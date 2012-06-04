@@ -52,7 +52,9 @@ An agent to play the board game \emph{Othello} is created, with the ability to l
 The \tdl algorithm was used to learn the weighting of the static evaluation function's various features. The implementation of this algorithm is based on the one implemented by the Knightcap agent (http://citeseerx.ist.psu.edu/viewdoc/summary?doi=10.1.1.140.2003) %%TODO Reference this properly\\
 At the end of each game played, the agent adjusts it's weights according to the following formula
 \begin{center}
+
     $\displaystyle w := w + \alpha \sum _{t=1} ^{N-1} \Delta \tilde{J}(x_t,w) \: \times \: \Big[ \sum ^ {N-1} _{j=t} \lambda^{j-t} d_t \Big] $\\
+        
     \begin{tabular}{  l l | l l }
       $w$                   & The vector of weights                         &$x_t$  & The $t^{th}$ board in the game \\
       $\alpha$              & The learning rate                             &$\lambda$      &The discount factor \\
@@ -60,7 +62,14 @@ At the end of each game played, the agent adjusts it's weights according to the 
       $\Delta \tilde{J}$    & The derivative of the $\tilde{J}$ function    &               &\\
     \end{tabular}
 \end{center}
-In the above formula, the $\tilde{J}$ function estimates the probability of winning from a given state, given a set of weights for features and our board. 
+In the above formula, the $\tilde{J}$ function estimates the probability of winning from a given state, given a set of weights for features and our board. It approximates the $J$ function, \\
+\begin{center}
+$
+J(x_t) = \begin{cases} 1, & \mbox{if } x_t\mbox{ is a winning state} \\ 0, & \mbox{if } x_t\mbox{ is a lost state} \end{cases}
+$
+\end{center}
+For each game state $x_t$, we adjust the weights according to a factor $d_t$, which is the temporal difference. $d_t = \tilde{J}(x_{t+1},w) - \tilde{J}(x_t,w)$, and the weight adjustment is scaled with this amount. The motivating observation is, for the true $J$ function, $J(x_{t+1}) - J(x_t) = 0$, so $d_t$ should be as close to zero as possible.
+
 \subsection{ELO arena}
 \subsection{Comparison of \tdl and ELO arena}
 %% TD lambda and ELO arena
