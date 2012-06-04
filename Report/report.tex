@@ -88,18 +88,23 @@ From Figure \ref{JFunctionGraphs_1000iterations}, we can see that the $\tilde{J}
     \caption{$\tilde{J}$ Function initially}
     \label{JFunctionGraphs_1iteration}
 \end{figure}
+
 In Figure \ref{LearningProgress}, we can see the progress of the learning agent as it plays against a fixed opponent. After about 1000 games, the agent settles on a win/loss ratio of approximately $0.7$.
-\begin{figure}[H]
+The weights learnt were split into $20$ stages. Figure \ref{WeightsOverTime} shows the how highly the various features are weighted as a game progresses. We see that the `Legal Moves' feature is weighted highly early in the game, and later in the game, valued less. On the other hand, corner pieces and side pieces become more important as we approach the mid and end game. This makes sense, as the number of legal moves on the board is limited later in the game, and it is unlikely that a side or corner piece will be taken in the first quarter of the game.
+
+\begin{figure}[H] %%Currently the formatting of these graphs are terrible. I have no idea how it can be fixed though unfortunately.
     \subfigure{\includegraphics[width=1\textwidth]{../Graphs/Learning_2ply_First1000.pdf}}
     \caption{Learning Progress of a 4-ply Learning player vs. a 4-ply Minimax player}
     \label{LearningProgress}
 \end{figure}
 
-\begin{figure}[H]
-    \subfigure{\includegraphics[width=1\textwidth]{../Graphs/Weights_Over_Time_20.pdf}}
-    \caption{Learnt weights for a 20-stage player, after 1000 learning iterations}
-    \label{WeightsOverTime}
-\end{figure}W
+\begin{center}
+    \begin{figure}[H]
+        \subfigure{\includegraphics[width=0.75\textwidth]{../Graphs/WeightsOverTime.pdf}} %%If you can come up with a better graph than this feel free to put it here
+        \caption{Learnt weights for a 20-stage player, after 1000 learning iterations} 
+        \label{WeightsOverTime}
+    \end{figure}
+\end{center}
 \clearpage
 \subsection{ELO arena}
 \subsection{Comparison of \tdl and ELO arena}
