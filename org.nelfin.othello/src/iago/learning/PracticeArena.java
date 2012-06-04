@@ -38,12 +38,13 @@ public class PracticeArena{
 		
 	public static void main(String[] args)
 	{
-		LearningPlayer blackOpponent = new LearningPlayer (PlayerType.BLACK,2);
-		LearningPlayer  whiteOpponent = new LearningPlayer (PlayerType.WHITE,2);
+
+		NegamaxPlayer blackOpponent = new NegamaxPlayer(PlayerType.BLACK, 2);
+		NegamaxPlayer whiteOpponent = new NegamaxPlayer(PlayerType.WHITE, 2);
 		//This is the learning player. They could both learn, but it's easy to reference them this way
 
-		LearningPlayer  whiteLearner = new LearningPlayer (PlayerType.WHITE, 2); 
-		LearningPlayer  blackLearner = new LearningPlayer (PlayerType.BLACK, 2); 
+		StageLearningPlayer  whiteLearner = new StageLearningPlayer (PlayerType.WHITE, 2); 
+		StageLearningPlayer  blackLearner = new StageLearningPlayer (PlayerType.BLACK, 2); 
 
 		double cumAvg = 0.0;
 		double expMovAvg = 0.0;
@@ -81,8 +82,8 @@ public class PracticeArena{
 	
 				int side = 0;
 
-				LearningPlayer learner;
-				LearningPlayer opponent;
+				StageLearningPlayer learner;
+				NegamaxPlayer opponent;
 				String initialBoardRepresentation = generateRandomBoard();
 				//We want the player to play from both sides
 				for(side = 0; side <= 1; side++) //side==0 means Learner is playing white
@@ -149,7 +150,6 @@ public class PracticeArena{
 					System.out.println("Feedback: "+thisGameFeedback);
 					
 					if(a==1 && side==0){
-						whiteLearner.printJFunction();
 						if(whiteWins){
 							System.out.println("Won");
 						}else{
@@ -167,8 +167,8 @@ public class PracticeArena{
 				//Both players can learn, and we can check out the weights for playing from both sides separately
 				blackLearner.receiveFeedback(feedback);
 				//Opponent learns too
-				whiteOpponent.receiveFeedback(feedback);
-				blackOpponent.receiveFeedback(feedback);
+				//whiteOpponent.receiveFeedback(feedback);
+				//blackOpponent.receiveFeedback(feedback);
 				
 
 
