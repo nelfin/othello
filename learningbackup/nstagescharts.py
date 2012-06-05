@@ -8,7 +8,7 @@ import os
 plt.ion()
 
 data = open('nstagedata').read()
-weights = data.split("|||")[-1]
+weights = data.split("|||")[-2]
 LM, SC, SP, CP, BA = [], [], [], [], []
 meta, weights = weights.split("||")
 colour, i = meta.split("|")
