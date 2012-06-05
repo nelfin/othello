@@ -1,3 +1,4 @@
+||| WHITE | 10000 ||
 WHITE: 0 {(Name: LegalMoves, Weight: 0.6734104326642983), (Name: Stone Count, Weight: 0.06724585746079), (Name: SidePieces, Weight: 0.06724585746079), (Name: CornerPieces, Weight: 0.06724585746079), (Name: BlockedAdjacent, Weight: 0.12485199495333181), }
 WHITE: 1 {(Name: LegalMoves, Weight: 0.4595006839136242), (Name: Stone Count, Weight: 0.4554402898806673), (Name: SidePieces, Weight: 4.7429352972850193E-4), (Name: CornerPieces, Weight: 4.7429352972850193E-4), (Name: BlockedAdjacent, Weight: 0.08411043914625131), }
 WHITE: 2 {(Name: LegalMoves, Weight: 0.8251589139540431), (Name: Stone Count, Weight: 0.010764031141022125), (Name: SidePieces, Weight: 0.010764031141022125), (Name: CornerPieces, Weight: 0.010764031141022125), (Name: BlockedAdjacent, Weight: 0.1425489926228907), }
@@ -90,6 +91,7 @@ WHITE: 88 {(Name: LegalMoves, Weight: 0.03324071855009998), (Name: Stone Count, 
 WHITE: 89 {(Name: LegalMoves, Weight: 0.09193815994571385), (Name: Stone Count, Weight: 0.24603300348742646), (Name: SidePieces, Weight: 0.2428209916643283), (Name: CornerPieces, Weight: 0.2259550655465942), (Name: BlockedAdjacent, Weight: 0.19325277935593727), }
 WHITE: 90 {(Name: LegalMoves, Weight: 0.07466855903533381), (Name: Stone Count, Weight: 0.2317170042732429), (Name: SidePieces, Weight: 0.269634143097824), (Name: CornerPieces, Weight: 0.21371090883132357), (Name: BlockedAdjacent, Weight: 0.21026938476227575), }
 WHITE: 91 {(Name: LegalMoves, Weight: 0.2), (Name: Stone Count, Weight: 0.2), (Name: SidePieces, Weight: 0.2), (Name: CornerPieces, Weight: 0.2), (Name: BlockedAdjacent, Weight: 0.2), }
+||| BLACK | 10000 ||
 BLACK: 0 {(Name: LegalMoves, Weight: 0.8730248582357445), (Name: Stone Count, Weight: 0.032469115627889795), (Name: SidePieces, Weight: 0.02461077785481584), (Name: CornerPieces, Weight: 0.02461077785481584), (Name: BlockedAdjacent, Weight: 0.04528447042673414), }
 BLACK: 1 {(Name: LegalMoves, Weight: 0.7968525350933263), (Name: Stone Count, Weight: 0.033475791287087275), (Name: SidePieces, Weight: 0.033475791287087275), (Name: CornerPieces, Weight: 0.033475791287087275), (Name: BlockedAdjacent, Weight: 0.10272009104541185), }
 BLACK: 2 {(Name: LegalMoves, Weight: 0.9034664095317007), (Name: Stone Count, Weight: 0.06692358881413984), (Name: SidePieces, Weight: 0.002268013828586938), (Name: CornerPieces, Weight: 0.002268013828586938), (Name: BlockedAdjacent, Weight: 0.025073973996985657), }

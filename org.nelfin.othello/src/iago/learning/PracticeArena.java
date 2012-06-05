@@ -10,20 +10,22 @@ import java.util.Random;
 
 import iago.Board;
 import iago.DebugFunctions;
+import iago.GameScreen;
 import iago.Move;
+import iago.features.Feature;
 import iago.players.LearningPlayer;
 import iago.players.Player.PlayerType;
 
 public class PracticeArena{
 	static final int BLOCKED_COUNT=4; //TODO: move this
-	static final int LEARNING_ITERATIONS=10000;//ONE MILLION
+	static final int LEARNING_ITERATIONS=1000;//ONE MILLION
 	static final int RUNNING_WIN_LOSS_SIZE=1000; //We get the win loss over the past RUNNING_WIN_LOSS_SIZE games
 	// Flush log file if last save was more than LOG_SAVE_MILLIS ago
 	private static final long LOG_SAVE_MILLIS = 5*60*1000;
 	static final String LOG_DIRECTORY = "LearningLogs";
 	// Higher values of ALPHA => greater discount on older values of feedback
     private static final double ALPHA = 0.05;
-    private static final int DEPTH = 4;
+    private static final int DEPTH = 2;
 
     final static LearningPlayer blackOpponent = new LearningPlayer(PlayerType.BLACK, DEPTH, "opponentBLACK");
     final static LearningPlayer whiteOpponent = new LearningPlayer(PlayerType.WHITE, DEPTH, "opponentWHITE");
@@ -32,6 +34,8 @@ public class PracticeArena{
     final static LearningPlayer blackLearner = new LearningPlayer(PlayerType.BLACK, DEPTH, "JafarBLACK"); 
 
 	private static Writer allWinLossLog;
+	
+	private static String gamestring = "";
 		
 	public static void main(String[] args)
 	{
@@ -153,8 +157,15 @@ public class PracticeArena{
 				blackOpponent.receiveFeedback(feedback);
 				
 
-				whiteLearner.showFeatures();
-				blackLearner.showFeatures();
+				//whiteLearner.showFeatures();
+				//blackLearner.showFeatures();
+				
+				if (a == 0 || a == 9 || a % 100 == 99) {
+					System.out.println("Saving a=" + a);
+					gamestring += "||| WHITE | " + (a+1) + " ||\n" + whiteLearner;
+					gamestring += "||| BLACK | " + (a+1) + " ||\n" + blackLearner;
+					saveToFile();
+				}
 				
 				
 				whiteLearner.saveFeatures();
@@ -229,6 +240,17 @@ public class PracticeArena{
 		
 		
 		return (DebugFunctions.charArrayToBoardString(randomBoardRepresentation));
+	}
+	
+	private static void saveToFile() {
+		try {
+			BufferedWriter bw = new BufferedWriter(new FileWriter("nstagedata"));
+			bw.write(gamestring);
+			bw.close();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 }

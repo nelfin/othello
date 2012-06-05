@@ -128,8 +128,6 @@ public class LearningPlayer extends AbstractPlayer {
 	public void receiveFeedback(double feedback) { //TODO we don't really need the feedback because the J function will tell us if we won/lost on the last step
 
 		//Calculate the change in weight for every feature f
-
-		System.out.println(gameHistory.size());
 		for(int t = 0; t < gameHistory.size()-1 && t < NUM_MOVES-1; t++){
 			double deltaWeight = 0;
 			FeatureSet deltaWeights = new FeatureSet();
@@ -195,6 +193,14 @@ public class LearningPlayer extends AbstractPlayer {
     	for (int i = 0; i < NUM_MOVES; i++) {
             System.out.println(getColour() + ": " + i + " " + getFeatureSet(i).toString());
         }
+    }
+    
+    @Override
+    public String toString() {
+    	String result = "";
+    	for (int i = 0; i < NUM_MOVES; i++)
+            result += getColour() + ": " + i + " " + getFeatureSet(i).toString() + "\n";
+        return result;
     }
 	
 	public void saveFeatures() {
