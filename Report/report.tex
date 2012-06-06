@@ -24,7 +24,7 @@
 % Options
 \pgfplotsset{%
   cycle list name=exotic,
-  every axis legend/.append style={nodes={right}}
+  every axis legend/.append style={nodes={right}, font=\footnotesize}
 }
 \marginsize{1cm}{1.5cm}{1cm}{1.5cm}
 
@@ -276,7 +276,8 @@ parity moves.
 \begin{figure}[htbp]
   \centering
   \begin{tikzpicture}
-    \begin{axis}[width=0.75\textwidth, xlabel=Stage, ylabel=Weight,
+    \begin{axis}[width=1\textwidth, height=0.75\textwidth,
+      xlabel=Stage, ylabel=Weight, legend columns=2,
       ytick={0, 0.1, 0.2, 0.3, 0.4, 0.5},
       no markers, enlargelimits=false, ymin=0, ymax=0.5]
       \addplot table[x=stage, y=LM] {../Graphs/Weights_Over_Time_20.txt};
