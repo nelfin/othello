@@ -248,16 +248,17 @@ settles on a win/loss ratio of approximately 0.7.
 Jafar performs \tdl\ learning in \emph{stages}. Each stage defines a separate
 set of feature weights for a certain number of moves in the game. This allows
 the agent to play with alternate strategies at different points throughout the
-game; for example playing conservatively and leaving options open early game
+game, for example playing conservatively and leaving options open early game
 and changing to a greedier nature near the end. In the most extreme case we
-can split the agent into 92 game stages; maintaining a different set of
-feature weights for every move of the game.  Note however that each stage we
-add to the agent corresponds to a linear increase in the number of parameters
-\tdl\ must learn; possibly leading to an exponential increase in convergence
-time for the algorithm.  In Figure~\ref{WeightsOverTime} and
-Figure~\ref{WeightsOverTime92} below we see show the feature weights
-throughout the game for a 20-stage and 92-stage version of Jafar; with \tdl\
-run over 1000 and 30000 games respectively.
+can split the agent into 92 game stages, maintaining a different set of
+feature weights for every move of the game.
+
+However, each stage we add to the agent corresponds to a linear increase in
+the number of parameters \tdl\ must learn. This possibly leads to an
+exponential increase in convergence time for the algorithm.  In
+Figure~\ref{WeightsOverTime} and Figure~\ref{WeightsOverTime92} below we see
+show the feature weights throughout the game for a 20-stage and 92-stage
+version of Jafar; with \tdl\ run over 1000 and 30000 games respectively.
 
 Notice that the two graphs are for the most part very similar; we see all the
 same trends in both (though the 92-stage agent shows these trends in greater
