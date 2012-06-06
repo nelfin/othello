@@ -3,6 +3,7 @@
 \usepackage{times}
 \usepackage[fleqn]{amsmath}
 \usepackage{amssymb}
+\usepackage{anysize}
 \usepackage{graphicx}
 \usepackage{booktabs}
 \usepackage{titlesec}
@@ -21,7 +22,7 @@
 \newcommand{\uid}[1]{\texttt{#1}}
 
 % Options
-%\marginsize{2.5cm}{1.5cm}{1cm}{1cm}
+\marginsize{1cm}{1.5cm}{1cm}{1.5cm}
 
 % Title spec
 \title{%
@@ -240,7 +241,24 @@ that a side or corner piece will be taken in the first quarter of the game.
     iterations}
   \label{WeightsOverTime}
 \end{figure}
-%\clearpage
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[trim=0cm 0cm 1.5cm 1cm, clip, width=0.75\textwidth]
+    {../Graphs/finalweights.pdf}
+  \caption{Learnt weights for a 92-stage player, after 30000 learning iterations}
+  \label{WeightsOverTime92}
+\end{figure}
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[trim=0cm 0cm 1.5cm 1cm, clip, width=0.75\textwidth]
+    {../Graphs/legalmovesprogression.pdf}
+  \caption{The LegalMoves feature weights converging over time}
+  \label{LegalMovesConvergence}
+\end{figure}
+
+\clearpage
 
 \subsection{ELO arena}
 \label{sub:elo_arena}
