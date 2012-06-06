@@ -61,18 +61,18 @@ public class MetaPlayer extends AbstractPlayer{
     
 	@Override
 	public Move chooseMove(Board board) {
-		if (board.getMovesPlayed() == NUM_MOVES) return Move.NO_MOVE;
+		if (board.getMovesPlayed() + anyGamePlayer.getSearchDepth() >= NUM_MOVES) return anyGamePlayer.chooseMove(board);
 	    // Don't leave the book prematurely
 	    if (gameStage != Stage.BOOK) {
 	        determineStage(board);
 	    }
-	    System.out.println("MetaPlayer: game stage is " + gameStage);
-	    anyGamePlayer.setFeatureSet(anyFeatures.get(board.getMovesPlayed()));
+	    //System.out.println("MetaPlayer: game stage is " + gameStage);
+	    anyGamePlayer.setFeatureSet(anyFeatures.get(board.getMovesPlayed() + anyGamePlayer.getSearchDepth()));
 	    if (gameStage == Stage.BOOK) {
 	    	board.visualise();
 	    	Move m = anyGamePlayer.chooseMove(board);
 	    	try {
-	    		openingBook.getNextPosition(board.getMostRecentlyPlayedMove());
+	    		//openingBook.getNextPosition(board.getMostRecentlyPlayedMove());
 	    		openingBook.getNextPosition(m);
 	    	} catch (UnexploredException e) {
 	    		// Drop out at first instance and don't come back
@@ -116,7 +116,7 @@ public class MetaPlayer extends AbstractPlayer{
 			anyFeatures = (ArrayList<FeatureSet>) in.readObject();
 			in.close();
 		} catch (FileNotFoundException e) {
-			// TODO Create default player here
+			System.out.println("WARNING: No weight data found!");
 			for (int i = 0; i < NUM_MOVES; i++) {
 				FeatureSet currentMove = new FeatureSet();
 				currentMove.add(new LegalMoves     (0.2));

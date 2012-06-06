@@ -14,24 +14,26 @@ import iago.GameScreen;
 import iago.Move;
 import iago.features.Feature;
 import iago.players.LearningPlayer;
+import iago.players.MetaPlayer;
+import iago.players.NegamaxPlayer;
 import iago.players.Player.PlayerType;
 
 public class PracticeArena{
 	static final int BLOCKED_COUNT=4; //TODO: move this
-	static final int LEARNING_ITERATIONS=1000;//ONE MILLION
+	static final int LEARNING_ITERATIONS=50;//ONE MILLION
 	static final int RUNNING_WIN_LOSS_SIZE=1000; //We get the win loss over the past RUNNING_WIN_LOSS_SIZE games
 	// Flush log file if last save was more than LOG_SAVE_MILLIS ago
 	private static final long LOG_SAVE_MILLIS = 5*60*1000;
 	static final String LOG_DIRECTORY = "LearningLogs";
 	// Higher values of ALPHA => greater discount on older values of feedback
     private static final double ALPHA = 0.05;
-    private static final int DEPTH = 2;
+    private static final int DEPTH = 6;
 
-    final static LearningPlayer blackOpponent = new LearningPlayer(PlayerType.BLACK, DEPTH, "opponentBLACK");
-    final static LearningPlayer whiteOpponent = new LearningPlayer(PlayerType.WHITE, DEPTH, "opponentWHITE");
+    final static NegamaxPlayer blackOpponent = new NegamaxPlayer(PlayerType.BLACK, DEPTH);
+    final static NegamaxPlayer whiteOpponent = new NegamaxPlayer(PlayerType.WHITE, DEPTH);
     //This is the learning player. They could both learn, but it's easy to reference them this way
-    final static LearningPlayer whiteLearner = new LearningPlayer(PlayerType.WHITE, DEPTH, "JafarWHITE"); 
-    final static LearningPlayer blackLearner = new LearningPlayer(PlayerType.BLACK, DEPTH, "JafarBLACK"); 
+    final static MetaPlayer whiteLearner = new MetaPlayer(PlayerType.WHITE, DEPTH); 
+    final static MetaPlayer blackLearner = new MetaPlayer(PlayerType.BLACK, DEPTH); 
 
 	private static Writer allWinLossLog;
 	
@@ -44,10 +46,10 @@ public class PracticeArena{
 				System.out.println("Closing arena log.");
 				try {
 					allWinLossLog.close();
-					whiteLearner.saveFeatures();
+					/*whiteLearner.saveFeatures();
 					blackLearner.saveFeatures();
 					whiteOpponent.saveFeatures();
-					blackOpponent.saveFeatures();
+					blackOpponent.saveFeatures();*/
 				} catch (IOException e) {
 					e.printStackTrace();
 				}
@@ -79,8 +81,8 @@ public class PracticeArena{
 				System.out.println("=====================");
 	
 				int side = 0;
-				LearningPlayer learner;
-				LearningPlayer opponent;
+				MetaPlayer learner;
+				NegamaxPlayer opponent;
 				String initialBoardRepresentation = generateRandomBoard();
 				//We want the player to play from both sides
 				for(side = 0; side <= 1; side++) //side==0 means Learner is playing white
@@ -149,12 +151,12 @@ public class PracticeArena{
 				
 				//Learner
 				//Improve our feature weights
-				whiteLearner.receiveFeedback(feedback);
+				/*whiteLearner.receiveFeedback(feedback);
 				//Both players can learn, and we can check out the weights for playing from both sides separately
 				blackLearner.receiveFeedback(feedback);
 				//Opponent learns too
 				whiteOpponent.receiveFeedback(feedback);
-				blackOpponent.receiveFeedback(feedback);
+				blackOpponent.receiveFeedback(feedback);*/
 				
 
 				//whiteLearner.showFeatures();
@@ -168,10 +170,10 @@ public class PracticeArena{
 				}
 				
 				
-				whiteLearner.saveFeatures();
+				/*whiteLearner.saveFeatures();
 				blackLearner.saveFeatures();
 				whiteOpponent.saveFeatures();
-				blackOpponent.saveFeatures();
+				blackOpponent.saveFeatures();*/
 				
 				
 				/**<META CODE>**/
