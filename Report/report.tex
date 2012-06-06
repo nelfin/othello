@@ -30,7 +30,7 @@
   10$\times$10 Othello Learning Agent}
 \date{June 8, 2012}
 \author{%
-  Andrew Haigh\thanks{\uid{u4667010}} \and
+  Andrew Haigh\thanks{\uid{u4667010}} \and %Neato.
   Timothy Cosgrove\thanks{\uid{u4843619}} \and
   Joshua Nelson\thanks{\uid{u4850020}}}
 
@@ -81,12 +81,13 @@ then communicate to the server.
 \label{sec:solution_overview}
 %%A minimax agent with a static evaluation function.
 
-\section{Optimisations}
-\label{sec:optimisations}
+%%I feel as though these should be sub-headings. feel free to change back if disagree
+\subsection{Optimisations}
+\label{sub:optimisations}
 %% Alpha beta pruning, negamax, etc.
 
-\section{Static evaluation function}
-\label{sec:eval_func}
+\subsection{Static evaluation function}
+\label{sub:eval_func}
 %% Necessity of a static evaluation function, features used, etc
 
 \section{Learning}
@@ -215,27 +216,50 @@ probability of winning is high.
 
 In Figure \ref{LearningProgress}, we can see the progress of the learning
 agent as it plays against a fixed opponent. After about 1000 games, the agent
-settles on a win/loss ratio of approximately 0.7.  The weights learnt were
-split into 20 stages. Figure \ref{WeightsOverTime} shows the how highly the
-various features are weighted as a game progresses. We see that the `Legal
-Moves' feature is weighted highly early in the game, and later in the game,
-valued less. On the other hand, corner pieces and side pieces become more
-important as we approach the mid and end game. This makes sense, as the number
-of legal moves on the board is limited later in the game, and it is unlikely
-that a side or corner piece will be taken in the first quarter of the game.
+settles on a win/loss ratio of approximately 0.7. 
+%The weights learnt were
+%split into 20 stages. Figure \ref{WeightsOverTime} shows the how highly the
+%various features are weighted as a game progresses. We see that the `Legal
+%Moves' feature is weighted highly early in the game, and later in the game,
+%valued less. On the other hand, corner pieces and side pieces become more
+%important as we approach the mid and end game. This makes sense, as the number
+%of legal moves on the board is limited later in the game, and it is unlikely
+%that a side or corner piece will be taken in the first quarter of the game.
+
+
 
 \begin{figure}[htbp]
   % Currently the formatting of these graphs are terrible. I have no idea how
-  % it can be fixed though unfortunately.
-  \includegraphics[width=1\textwidth]{../Graphs/Learning_2ply_First1000.pdf}
+  % it can be fixed though unfortunately. Little better... J functions show it up now though
+  \includegraphics[trim= 6cm 2cm 5.5cm 3cm, clip,width=1\textwidth]{../Graphs/Learning_2ply_First1000.pdf}
   \caption{Learning Progress of a 4-ply Learning player vs. a 4-ply Minimax
     player}
   \label{LearningProgress}
 \end{figure}
 
+\subsection{Staged Learning}
+\label{sec:staging}
+
+Jafar performs \tdl learning in \emph{stages}. Each stage defines a separate set of feature weights for a certain number of
+moves in the game. This allows the agent to play with alternate strategies at different points throughout the game; for example
+playing conservatively and leaving options open early game and changing to a greedier nature near the end. In the most extreme case
+we can split the agent into 92 game stages; maintaining a different set of feature weights for every move of the game.
+Note however that each stage we add to the agent corresponds to a linear increase in the number of parameters \tdl must learn; possibly
+leading to an exponential increase in convergence time for the algorithm.
+In \ref{WeightsOverTime} and  \ref{WeightsOverTime92} below we see show the feature weights throughout the game
+for a 20-stage and 92-stage version of Jafar; with \tdl run over 1000 and 30000 games respectively.\\
+
+Notice that the two graphs are for the most part very similar; we see all the same trends in both (though the 92-stage agent
+shows these trends in greater detail). Note that the 20-stage agent has been running for a thirtieth the amount of time
+that the 92-stage agent has; and the fact that the results are similar reflects our above intuition regarding the increase in
+learning time required.\\
+Notice the excessive 'zig-zagging' present in both graphs (more notably in the 92-stage agent). This effect occurs due to the
+\emph{parity} of the board; that is, optimal play style differs slightly depending on whether or not the agent will take the last
+move of the game. This effect is still observable in the 20-stage agent since the stages have a differing amount of odd and even parity moves.
+
 \begin{figure}[htbp]
   \centering
-  \includegraphics[width=0.75\textwidth]{../Graphs/WeightsOverTime.pdf}
+  \includegraphics[trim= 0cm 0cm 1.5cm 1cm, clip, width=0.75\textwidth]{../Graphs/WeightsOverTime.pdf}
   %%If you can come up with a better graph than this feel free to put it here
   \caption{Learned weights for a 20-stage player after 1000 learning
     iterations}
