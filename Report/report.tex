@@ -3,7 +3,6 @@
 \usepackage{times}
 \usepackage[fleqn]{amsmath}
 \usepackage{amssymb}
-%\usepackage{anysize}
 \usepackage{graphicx}
 \usepackage{booktabs}
 \usepackage{titlesec}
@@ -14,6 +13,7 @@
 \usepackage[tableposition=top]{caption}
 \usepackage{subcaption}
 \usepackage[colorlinks=true]{hyperref}
+\usepackage{pgfplots}
 
 % Macros
 \newcommand{\np}{\numprint}
@@ -64,7 +64,17 @@ agent to play a variant of the game Othello. Othello is a two-player zero-sum
 game traditionally played on an 8$\times$8 board with players alternately
 placing stones so as to capture lines laid down by their opponent, reversing
 the colour of the intermediate discs in the process.
+In this variant the game will be played on a 10$\times$10 board with four
+squares chosen to be blocked. These four squares are randomly determined at
+the beginning of each match, and are not allowed to be one of the
+locations of the four initial stones.
 
+To this end, we were provided with a sample implementation of an Othello
+server and simple client code in C++. Our subsequent task was to implement an
+agent to generate the game tree for Othello from an arbitrary state to a
+certain depth, evaluate these states using a static evaluation function, then
+use minimax back-propagation to chose the most appropriate move which it would
+then communicate to the server.
 
 \section{Solution overview}
 \label{sec:solution_overview}
@@ -93,7 +103,7 @@ using Elo scores as a fitness metric.
 The \tdl\ algorithm was used to learn the weighting of the static evaluation
 function's various features. \tdl\ was first described by \citet{Sutton1988}
 in his seminal paper on the topic. The implementation of this algorithm is
-based on the one implemented by the Knightcap agent as described by
+based on the one implemented by the KnightCap agent as described by
 \citet{Baxter1997}.  At the end of each game played, the agent adjusts its
 weights according to the following formula:
 
@@ -135,41 +145,71 @@ probability of winning is high.
 \begin{figure}[htbp]
   \begin{subfigure}{0.45\textwidth}
     \centering
-    % TODO
-    \includegraphics[width=\linewidth]{../Graphs/J_improved_1iteration_lost.pdf}
+    \begin{tikzpicture}
+      \begin{axis}[width=\linewidth,
+          xlabel=Move,
+          ylabel=$\tilde{J}$,
+          enlargelimits=false,
+          ymin=0, ymax=1]
+        \addplot+[mark=none] table[x=move, y=J]
+          {../Graphs/JFunction_Data/iteration1_lost.txt};
+      \end{axis}
+    \end{tikzpicture}
     \caption{Losing a game}
-    \label{fig:initial_j_lost}
   \end{subfigure}
   \hspace{1em}
   \begin{subfigure}{0.45\textwidth}
     \centering
-    \includegraphics[width=\linewidth]{../Graphs/J_improved_1iteration_won.pdf}
+    \begin{tikzpicture}
+      \begin{axis}[width=\linewidth,
+          xlabel=Move,
+          ylabel=$\tilde{J}$,
+          enlargelimits=false,
+          ymin=0, ymax=1]
+        \addplot+[mark=none] table[x=move, y=J]
+          {../Graphs/JFunction_Data/iteration1_won.txt};
+      \end{axis}
+    \end{tikzpicture}
     \caption{Winning a game}
-    \label{fig:initial_j_win}
   \end{subfigure}
   \caption{$\tilde{J}$ Function initially}
   \label{fig:initial_j}
-  %\label{JFunctionGraphs_1000iterations}
 \end{figure}
 
 \begin{figure}[htbp]
   \begin{subfigure}{0.45\textwidth}
     \centering
-    % TODO
-    \includegraphics[width=\linewidth]{../Graphs/J_improved_1000iteration_lost.pdf}
+    \begin{tikzpicture}
+      \begin{axis}[width=\linewidth,
+          xlabel=Move,
+          ylabel=$\tilde{J}$,
+          enlargelimits=false,
+          ymin=0, ymax=1]
+        \addplot+[mark=none] table[x=move, y=J]
+          {../Graphs/JFunction_Data/iteration1000_lost.txt};
+      \end{axis}
+    \end{tikzpicture}
     \caption{Losing a game}
     \label{fig:learned_j_lost}
   \end{subfigure}
   \hspace{1em}
   \begin{subfigure}{0.45\textwidth}
     \centering
-    \includegraphics[width=\linewidth]{../Graphs/J_improved_1000iteration_won.pdf}
+    \begin{tikzpicture}
+      \begin{axis}[width=\linewidth,
+          xlabel=Move,
+          ylabel=$\tilde{J}$,
+          enlargelimits=false,
+          ymin=0, ymax=1]
+        \addplot+[mark=none] table[x=move, y=J]
+          {../Graphs/JFunction_Data/iteration1000_won.txt};
+      \end{axis}
+    \end{tikzpicture}
     \caption{Winning a game}
     \label{fig:learned_j_win}
   \end{subfigure}
   \caption{$\tilde{J}$ Function after 1000 learning iterations}
   \label{fig:learned_j}
-  %\label{JFunctionGraphs_1000iterations}
 \end{figure}
 
 In Figure \ref{LearningProgress}, we can see the progress of the learning
