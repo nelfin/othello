@@ -13,10 +13,12 @@
 \usepackage[autolanguage]{numprint}
 \usepackage[tableposition=top]{caption}
 \usepackage{subcaption}
+\usepackage[colorlinks=true]{hyperref}
 
 % Macros
 \newcommand{\np}{\numprint}
 \newcommand{\tdl}{TD($\lambda$)}
+\newcommand{\uid}[1]{\texttt{#1}}
 
 % Options
 %\marginsize{2.5cm}{1.5cm}{1cm}{1cm}
@@ -27,9 +29,9 @@
   10$\times$10 Othello Learning Agent}
 \date{June 8, 2012}
 \author{%
-  Andrew Haigh -- u4667010 \and
-  Timothy Cosgrove -- u4843619 \and
-  Joshua Nelson -- u4850020}
+  Andrew Haigh\thanks{\uid{u4667010}} \and
+  Timothy Cosgrove\thanks{\uid{u4843619}} \and
+  Joshua Nelson\thanks{\uid{u4850020}}}
 
 % Section styling
 \titleformat{\section}%
@@ -44,36 +46,56 @@
 \begin{document}
 \maketitle
 \begin{abstract}
-An agent to play the board game \emph{Othello} is created, with the ability to
-learn through reinforcement. The minimax algorithm is used for game playing,
-and a static evaluation function for the leaf nodes is learnt by self play.
-The agent learns the insignificance of the number of stones, and the
-significance of stone positioning. This agent is played against itself, and
-against other developed agents, and its performance is analysed.
+  \label{abstract}
+  An agent to play the board game Othello is created, with the ability
+  to learn through reinforcement. The minimax algorithm is used for game
+  playing, and a static evaluation function for the leaf nodes is learnt by
+  self play.  The agent learns the insignificance of the number of stones, and
+  the significance of stone positioning. This agent is played against itself,
+  and against other developed agents, and its performance is analysed.
 \end{abstract}
 \clearpage
 
 \section{Problem overview}
+\label{sec:problem_overview}
 %%Describe the game and the nature of the task
+In this project we were tasked with the challenge of developing a learning
+agent to play a variant of the game Othello. Othello is a two-player zero-sum
+game traditionally played on an 8$\times$8 board with players alternately
+placing stones so as to capture lines laid down by their opponent, reversing
+the colour of the intermediate discs in the process.
+
 
 \section{Solution overview}
+\label{sec:solution_overview}
 %%A minimax agent with a static evaluation function.
 
 \section{Optimisations}
+\label{sec:optimisations}
 %% Alpha beta pruning, negamax, etc.
 
 \section{Static evaluation function}
+\label{sec:eval_func}
 %% Necessity of a static evaluation function, features used, etc
 
 \section{Learning}
+\label{sec:learning}
+
+After developing a static evaluation function, the next task became that of
+learning the optimal weights for each feature that would provide us the with
+the strongest play. We considered and implemented two strategies for learning
+these weights: Temporal Difference learning as \tdl, and a genetic algorithm
+using Elo scores as a fitness metric.
 
 \subsection{\tdl}
+\label{sub:tdlambda}
 
 The \tdl\ algorithm was used to learn the weighting of the static evaluation
-function's various features. The implementation of this algorithm is based on
-the one implemented by the Knightcap agent as described by \citet{Baxter1997}.
-At the end of each game played, the agent adjusts its weights according to
-the following formula
+function's various features. \tdl\ was first described by \citet{Sutton1988}
+in his seminal paper on the topic. The implementation of this algorithm is
+based on the one implemented by the Knightcap agent as described by
+\citet{Baxter1997}.  At the end of each game played, the agent adjusts its
+weights according to the following formula:
 
 \begin{center}
 
@@ -181,15 +203,22 @@ that a side or corner piece will be taken in the first quarter of the game.
 %\clearpage
 
 \subsection{ELO arena}
+\label{sub:elo_arena}
 
 \subsection{Comparison of \tdl\ and ELO arena}
+\label{sub:comparing_learning}
 %% TD lambda and ELO arena
 
 \section{Performance evaluation}
+\label{sec:performance}
 %% Tournament results, self play learning, fixed opponent results.
 
 \section{Improvements}
+\label{sec:improvements}
 %% Look at the performance and say what we could have improved.
+
+\section{Final Comments}
+\label{sec:final_comments}
 
 
 \bibliographystyle{chicago}
