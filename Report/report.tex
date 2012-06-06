@@ -44,19 +44,26 @@
 \begin{document}
 \maketitle
 \begin{abstract}
-An agent to play the board game \emph{Othello} is created, with the ability to learn through reinforcement. The minimax algorithm is used for game playing, and a static evaluation function for the leaf nodes is learnt by self play. The agent learns the insignificance of the number of stones, and the significance of stone positioning. This agent is played against itself, and against other developed agents, and it's performance is analysed.
+An agent to play the board game \emph{Othello} is created, with the ability to
+learn through reinforcement. The minimax algorithm is used for game playing,
+and a static evaluation function for the leaf nodes is learnt by self play.
+The agent learns the insignificance of the number of stones, and the
+significance of stone positioning. This agent is played against itself, and
+against other developed agents, and its performance is analysed.
 \end{abstract}
 \clearpage
 
 \section{Problem overview}
 %%Describe the game and the nature of the task
+
 \section{Solution overview}
 %%A minimax agent with a static evaluation function.
+
 \section{Optimisations}
 %% Alpha beta pruning, negamax, etc.
+
 \section{Static evaluation function}
 %% Necessity of a static evaluation function, features used, etc
-%\clearpage
 
 \section{Learning}
 
@@ -65,7 +72,7 @@ An agent to play the board game \emph{Othello} is created, with the ability to l
 The \tdl\ algorithm was used to learn the weighting of the static evaluation
 function's various features. The implementation of this algorithm is based on
 the one implemented by the Knightcap agent as described by \citet{Baxter1997}.
-At the end of each game played, the agent adjusts it's weights according to
+At the end of each game played, the agent adjusts its weights according to
 the following formula
 
 \begin{center}
