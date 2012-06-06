@@ -22,6 +22,10 @@
 \newcommand{\uid}[1]{\texttt{#1}}
 
 % Options
+\pgfplotsset{%
+  cycle list name=exotic,
+  every axis legend/.append style={nodes={right}}
+}
 \marginsize{1cm}{1.5cm}{1cm}{1.5cm}
 
 % Title spec
@@ -227,6 +231,7 @@ that a side or corner piece will be taken in the first quarter of the game.
 \begin{figure}[htbp]
   % Currently the formatting of these graphs are terrible. I have no idea how
   % it can be fixed though unfortunately.
+  \centering
   \includegraphics[width=1\textwidth]{../Graphs/Learning_2ply_First1000.pdf}
   \caption{Learning Progress of a 4-ply Learning player vs. a 4-ply Minimax
     player}
@@ -235,8 +240,22 @@ that a side or corner piece will be taken in the first quarter of the game.
 
 \begin{figure}[htbp]
   \centering
-  \includegraphics[width=0.75\textwidth]{../Graphs/WeightsOverTime.pdf}
-  %%If you can come up with a better graph than this feel free to put it here
+  \begin{tikzpicture}
+    \begin{axis}[width=0.75\textwidth, xlabel=Stage, ylabel=Weight,
+      ytick={0, 0.1, 0.2, 0.3, 0.4, 0.5},
+      no markers, enlargelimits=false, ymin=0, ymax=0.5]
+      \addplot table[x=stage, y=LM] {../Graphs/Weights_Over_Time_20.txt};
+      \addlegendentry{Legal Moves}
+      \addplot table[x=stage, y=SC] {../Graphs/Weights_Over_Time_20.txt};
+      \addlegendentry{Stone Count}
+      \addplot table[x=stage, y=BA] {../Graphs/Weights_Over_Time_20.txt};
+      \addlegendentry{Blocked Adjacent}
+      \addplot table[x=stage, y=SP] {../Graphs/Weights_Over_Time_20.txt};
+      \addlegendentry{Side Pieces}
+      \addplot table[x=stage, y=CP] {../Graphs/Weights_Over_Time_20.txt};
+      \addlegendentry{Corner Pieces}
+    \end{axis}
+  \end{tikzpicture}
   \caption{Learned weights for a 20-stage player after 1000 learning
     iterations}
   \label{WeightsOverTime}
