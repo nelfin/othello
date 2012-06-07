@@ -25,6 +25,8 @@ public class EloArena {
 	static final String LOG_DIRECTORY = "EloLogs";
 	static final int DEPTH = 2;
 	static final int MAX_CHAMPS = 20;
+	static final int TRIM_AT = 20;
+	static final int TRIM_TO = 15;
 	static final int MIN_CHAMPS = 5;
 	static final int DEFAULT_ELO = 1200;
 	static final int GAMES_PER_PAIRING = 5;
@@ -52,7 +54,7 @@ public class EloArena {
 					}
 			sortChamps();
 			addScaledChamp();
-			if (champs.size() > MAX_CHAMPS) trimChamps();
+			if (champs.size() > TRIM_AT) trimChamps();
 			saveArena();
 		}
 	}
@@ -85,7 +87,7 @@ public class EloArena {
 	}
 	
 	private static void trimChamps() {
-		while (champs.size() > MAX_CHAMPS) champs.remove(champs.size()-1);
+		while (champs.size() > TRIM_TO) champs.remove(champs.size()-1);
 	}
 	
 	private static void playGame(int c1, int c2) {

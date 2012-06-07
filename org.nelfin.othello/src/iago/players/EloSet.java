@@ -40,7 +40,7 @@ public class EloSet extends FeatureSet implements Comparable<EloSet>{
 	public void makeRandomWeights() {
 		Features = new ArrayList<Feature>();
 		Features.add(new StoneCount(r.nextDouble()));
-		Features.add(new Visibility(r.nextDouble()));
+		Features.add(new BlockedAdjacent(r.nextDouble()));
 		Features.add(new LegalMoves(r.nextDouble()));
 		Features.add(new SidePieces(r.nextDouble()));
 		Features.add(new CornerPieces(r.nextDouble()));
@@ -51,7 +51,7 @@ public class EloSet extends FeatureSet implements Comparable<EloSet>{
 	public void makeScaledWeights(ArrayList<EloSet> champs) {
 		Features = new ArrayList<Feature>();
 		Features.add(new StoneCount());
-		Features.add(new Visibility());
+		Features.add(new BlockedAdjacent(r.nextDouble()));
 		Features.add(new LegalMoves());
 		Features.add(new SidePieces(r.nextDouble()));
 		Features.add(new CornerPieces(r.nextDouble()));
