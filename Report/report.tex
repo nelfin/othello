@@ -93,7 +93,7 @@ then communicate to the server.
 \subsection{Static evaluation function}
 \label{sub:eval_func}
 %% Necessity of a static evaluation function, features used, etc
-
+About to do this section after my shower (2:36)
 \section{Learning}
 \label{sec:learning}
 
@@ -267,18 +267,20 @@ amount of time that the 92-stage agent has; and the fact that the results are
 similar reflects our above intuition regarding the increase in learning time
 required.
 
-Notice the excessive `zig-zagging' present in both graphs (more notably in the
+Both agents below exhibit excessive `zig-zagging' (more notably in the
 92-stage agent). This effect occurs due to the \emph{parity} of the board:
 optimal play style differs slightly depending on whether or not the
 agent will take the last move of the game. This effect is still observable in
 the 20-stage agent since the stages have a differing amount of odd and even
 parity moves.
 
+%Hrmmmm looks good but really needs to be consistent with 92-stager. So need to
+%rollback or tikzify both (or could fix colours here and axes below?)
 \begin{figure}[htbp]
   \centering
   \begin{tikzpicture}
-    \begin{axis}[width=1\textwidth, height=0.75\textwidth,
-      xlabel=Stage, ylabel=Weight, legend columns=2,
+    \begin{axis}[width=0.75\textwidth, height=0.5\textwidth,
+      xlabel=Stage, ylabel=Feature Weight, legend columns=2,
       ytick={0, 0.1, 0.2, 0.3, 0.4, 0.5},
       no markers, enlargelimits=false, ymin=0, ymax=0.5]
       \addplot table[x=stage, y=LM] {../Graphs/Weights_Over_Time_20.txt};
@@ -306,7 +308,8 @@ parity moves.
   \label{WeightsOverTime92}
 \end{figure}
 
-\begin{figure}[htbp]
+
+\begin{figure}[H]
   \centering
   \includegraphics[trim=0cm 0cm 1.5cm 1cm, clip, width=0.75\textwidth]
     {../Graphs/legalmovesprogression.pdf}
@@ -314,10 +317,39 @@ parity moves.
   \label{LegalMovesConvergence}
 \end{figure}
 
-\clearpage
+Figure~\ref{LegalMovesConvergence} shows us the convergence of the 92-stage agent
+over time (for a single feature weight). Notice that there is very little
+change after about 10000 games; implying that the agent has converged. Compare this
+with the 20-stage agent above, who achieves a similar level of convergence after 1000
+games.
 
-\subsection{ELO arena}
+
+\subsection{ELO Arena}
 \label{sub:elo_arena}
+
+While \tdl\ provides a exceedingly \emph{efficient} method of learning feature weights,
+it is by no means \emph{intuitive}; in the sense that the learning process occurs
+entirely within a mathematical formula. Thus we developed the \emph{ELO Arena};
+a genetic algorithm entirely of our own design which serves to cross-validate
+\tdl\ and more intuitively demonstrate learning.
+
+The ELO Arena starts by generating a set of agents with random feature weights.
+These agents then compete against each other for ELO rating points. The ELO rating
+system was designed by Arpad Elo as a method of ranking international Chess players.
+In the ELO Arena these rating points keep track of the relative skill levels of the competing
+agents.
+
+After each of the random agents have played a fixed number of games (and had their
+ratings updated accordingly) a new agent is introduced. This new agent bases its feature
+weights off of the current top 5 rated players in the following manner:
+\begin{enumerate}
+\item Take a weighted average of the feature weights from the top 5 players
+\item \emph{Mutate} these weights by adding a random low-variance Gaussian variable
+\end{enumerate}
+
+Over time we should observe that agents with good mutations float to the top of the rating system.
+This should lead to our new agents performing better and better until eventually
+converging to weights similar to those learnt by \tdl.
 
 \subsection{Comparison of \tdl\ and ELO arena}
 \label{sub:comparing_learning}
