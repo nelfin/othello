@@ -345,8 +345,12 @@ Jafar performs \tdl\ learning in \emph{stages}. Each stage defines a separate
 set of feature weights for a certain number of moves in the game. This allows
 the agent to play with alternate strategies at different points throughout the
 game, for example playing conservatively and leaving options open early game
-and changing to a greedier nature near the end. In the most extreme case we
-can split the agent into 92 game stages, maintaining a different set of
+and changing to a greedier nature near the end.
+
+At the time of the competition our staged learning code was still highly 
+experimental; as such the competition version of Jafar only contains weights learnt
+over 3 stages. Below we see another agent with learning performed to 20 stages; 
+and in the most extreme case we can split the agent into 92 game stages, maintaining a different set of
 feature weights for every move of the game.
 
 However, each stage we add to the agent corresponds to a linear increase in
@@ -495,14 +499,49 @@ converging to weights similar to those learnt by \tdl.
   \label{fig:elo_arena_comp}
 \end{figure}
 
-\section{Performance evaluation}
+\\section{Performance evaluation}
 \label{sec:performance}
 %% Tournament results, self play learning, fixed opponent results.
-
+\begin{tabular}{c c c}
+      & NegamaxPlayer at depth 2  & NegamaxPlayer at depth 4  \\
+1-Stage Jafar at depth 2  & 0.61 & 0.43 \\ 
+3-Stage Jafar at depth 2    & 0.70 & 0.44\\ 
+92-Stage Jafar at depth 2   & 0.74 & 0.47\\
+\end{tabular}
 \section{Improvements}
 \label{sec:improvements}
 %% Look at the performance and say what we could have improved.
+Many experimental features of Jafar were cut due to time constraints.
 
+\subsection{Iterative Deepening}
+\label{sub:i_deepening}
+
+Iterative Deepening is a feature that was implemented at the time of the competition;
+but was deemed too unstable and untested to be used in the agent.
+It refers to the process of gradually increasing the depth at which Negamax searches to;
+subject to some time constraint. This allows the agent to search deeper if
+time is available or play conservative quick moves if we are running out of time.
+
+In hindsight more time should have been spent on this feature. We see in the above results
+(section ~\ref{sec:performance}) that a slight increase in depth corresponds to
+a drastic increase in agent performance even where the static evaluation is poor.
+
+\subsection{Generic Features}
+\label{sub:generic_features}
+
+A Generic Feature is a configuration of a small subset of the board which is
+determined to be good for our overall position. The agent would have learnt these configurations
+on its own over time; now being able to learn features uninfluenced from our human
+perceptions of what is good.
+Generic Features were our primary attempt at making use of pre-computed data despite
+the inherit randomness in our modified game. Since it deals with small subsets of the
+board we may still encounter configurations we know despite a different board as a whole.
+
+This features proved difficult to implement; and would have taken an
+extraodinary amount of time to learn and evaluate. Furthermore it is unlikely
+that they would achieve a performance increase any more significant than a slight increase
+in depth. Thus they were cut from Jafar
+early in the development process.
 \section{Final Comments}
 \label{sec:final_comments}
 
