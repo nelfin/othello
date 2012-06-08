@@ -472,6 +472,29 @@ converging to weights similar to those learnt by \tdl.
 \label{sub:comparing_learning}
 %% TD lambda and ELO arena
 
+\begin{figure}[htbp]
+  \centering
+  \begin{tikzpicture}
+    \begin{axis}[width=0.75\textwidth, ybar, xlabel=Stage, ylabel=Weight,
+      enlarge y limits=false, enlarge x limits=0.12,
+      ymax=1, ytick={0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9},
+      xtick=data, legend columns=-1]
+      \legend{%
+        Stone Count,
+        Blocked Adjacent,
+        Legal Moves,
+        Side Pieces,
+        Corner Pieces}
+      \foreach \abbr in {SC, BA, LM, SP, CP}{
+        \addplot table [y=\abbr] {../Graphs/ELOComparison.txt};
+      }
+    \end{axis}
+  \end{tikzpicture}
+  \caption{Comparison of ELO Arena winner vs.\ \tdl\ stage
+    learner (ELO winner is stage 0)}
+  \label{fig:elo_arena_comp}
+\end{figure}
+
 \section{Performance evaluation}
 \label{sec:performance}
 %% Tournament results, self play learning, fixed opponent results.
