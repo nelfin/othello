@@ -25,7 +25,17 @@
 % Options
 \pgfplotsset{%
   cycle list name=exotic,
-  every axis legend/.append style={nodes={right}, font=\footnotesize}
+  every axis legend/.append style={nodes={right}, font=\footnotesize},
+  bar cycle list/.style={/pgfplots/cycle list={%
+      {fill=teal},%
+      {fill=orange},%
+      {fill=cyan!60!black},%
+      {fill=red!70!white},%
+      {fill=lime!80!black},%
+      {fill=red},%
+      {fill=yellow!60!black},%
+    }
+  },
 }
 \marginsize{1cm}{1.5cm}{1cm}{1.5cm}
 
@@ -436,6 +446,27 @@ weights off of the current top 5 rated players in the following manner:
 Over time we should observe that agents with good mutations float to the top of the rating system.
 This should lead to our new agents performing better and better until eventually
 converging to weights similar to those learnt by \tdl.
+
+\begin{figure}[htbp]
+  \centering
+  \begin{tikzpicture}
+    \begin{axis}[width=0.75\textwidth, ybar, xlabel=Place, ylabel=Weight,
+      enlarge y limits=false, enlarge x limits=0.12,
+      ymax=0.55, ytick={0, 0.1, 0.2, 0.3, 0.4, 0.5}, xtick={1, 2, 3, 4, 5}]
+      \legend{%
+        Stone Count,
+        Blocked Adjacent,
+        Legal Moves,
+        Side Pieces,
+        Corner Pieces}
+      \foreach \abbr in {SC, BA, LM, SP, CP}{
+        \addplot table [y=\abbr] {../Graphs/ELOWinners.txt};
+      }
+    \end{axis}
+  \end{tikzpicture}
+  \caption{Feature weights for top 5 place getters in ELO Arena}
+  \label{fig:elo_arena_weights}
+\end{figure}
 
 \subsection{Comparison of \tdl\ and ELO arena}
 \label{sub:comparing_learning}
