@@ -20,6 +20,7 @@
 \newcommand{\np}{\numprint}
 \newcommand{\tdl}{TD($\lambda$)}
 \newcommand{\uid}[1]{\texttt{#1}}
+\newcommand{\ab}{$\alpha$-$\beta$}
 
 % Options
 \pgfplotsset{%
@@ -87,13 +88,30 @@ then communicate to the server.
 \section{Solution overview}
 \label{sec:solution_overview}
 %%A minimax agent with a static evaluation function.
+Our agent went through numerous incremental improvements towards our final
+competition submission. After implementing basic communications code a basic
+implementation was created for generating subsequent board states and then
+simple greedy and minimax players were written into the client. Following
+this \ab\ pruning was implemented, providing a performance increase over
+naive minimax by eliminating some subtrees of the game-tree which do not
+affect the overall minimax values.
+% Include a description of how alpha-beta pruning works here
+Finally, the \ab\ implementation was
+changed to a Negamax implementation, taking advantage of the adversarial
+nature of the game. This rests on the fact that for real numbers
+\[
+  \max(\alpha, \beta) = -\min(-\beta, -\alpha).
+\]
+Though this provided negligble performance increase, it
+reduced corner cases and made understanding player code easier.
 
-%Wrote this for Static eval but realised it should go here in the explanation of
-% minimax
-The state space for our modified othello game is exceedingly large (approximately
-$3^{92}$ or $7 \times 10^{43}$ possible states) and while some of these states are
-unreachable or duplicates it is obviously impossible to search the entire space every turn.
-So at some point we must cut off the search and apply a static evaluation function.
+%Wrote this for Static eval but realised it should go here in the explanation
+%of minimax
+The state space for our modified othello game is exceedingly large
+(approximately $3^{92}$ or $7 \times 10^{43}$ possible states) and while some
+of these states are unreachable or duplicates it is obviously impossible to
+search the entire space every turn. So at some point we must cut off the
+search and apply a static evaluation function.
 
 %%I feel as though these should be sub-headings. feel free to change back if disagree
 \subsection{Optimisations}
