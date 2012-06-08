@@ -98,6 +98,23 @@ then communicate to the server.
 \section{Solution overview}
 \label{sec:solution_overview}
 %%A minimax agent with a static evaluation function.
+Our client is broken into various logical interfaces: a client which handles
+communications, board methods which handle state space calculations, a player
+which chooses its next best move given the current state of the game, and
+features which evaluate the strength of arbitrary game states.
+
+%Wrote this for Static eval but realised it should go here in the explanation
+%of minimax
+The state space for our modified othello game is exceedingly large
+(approximately $3^{92}$ or $7 \times 10^{43}$ possible states) and while some
+of these states are unreachable or duplicates it is obviously impossible to
+search the entire space every turn. So at some point we must cut off the
+search and apply a static evaluation function.
+
+%%I feel as though these should be sub-headings. feel free to change back if disagree
+\subsection{Optimisations}
+\label{sub:optimisations}
+%% Alpha beta pruning, negamax, etc.
 Our agent went through numerous incremental improvements towards our final
 competition submission. After implementing basic communications code a basic
 implementation was created for generating subsequent board states and then
@@ -115,18 +132,11 @@ nature of the game. This rests on the fact that for real numbers
 Though this provided negligble performance increase, it
 reduced corner cases and made understanding player code easier.
 
-%Wrote this for Static eval but realised it should go here in the explanation
-%of minimax
-The state space for our modified othello game is exceedingly large
-(approximately $3^{92}$ or $7 \times 10^{43}$ possible states) and while some
-of these states are unreachable or duplicates it is obviously impossible to
-search the entire space every turn. So at some point we must cut off the
-search and apply a static evaluation function.
-
-%%I feel as though these should be sub-headings. feel free to change back if disagree
-\subsection{Optimisations}
-\label{sub:optimisations}
-%% Alpha beta pruning, negamax, etc.
+After doing this, a simple heuristic was added in an attempt to increase
+cutoffs. In essence, by guessing moves closest to the principal variation
+(perfect play) more \ab\ cutoffs would be likely, increasing search speed.
+Simple aggressive move ordering was added, ordering the first $n$ plies by the
+number of pieces captured.
 
 \subsection{Static evaluation function}
 \label{sub:eval_func}
@@ -499,7 +509,7 @@ converging to weights similar to those learnt by \tdl.
   \label{fig:elo_arena_comp}
 \end{figure}
 
-\\section{Performance evaluation}
+\section{Performance evaluation}
 \label{sec:performance}
 %% Tournament results, self play learning, fixed opponent results.
 \begin{tabular}{c c c}
