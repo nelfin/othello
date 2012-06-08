@@ -107,11 +107,7 @@ features which evaluate the strength of arbitrary game states.
 
 %Wrote this for Static eval but realised it should go here in the explanation
 %of minimax
-The state space for our modified othello game is exceedingly large
-(approximately $3^{92}$ or $7 \times 10^{43}$ possible states) and while some
-of these states are unreachable or duplicates it is obviously impossible to
-search the entire space every turn. So at some point we must cut off the
-search and apply a static evaluation function.
+
 
 %%I feel as though these should be sub-headings. feel free to change back if disagree
 \subsection{Optimisations}
@@ -140,11 +136,16 @@ cutoffs. In essence, by guessing moves closest to the principal variation
 Simple aggressive move ordering was added, ordering the first $n$ plies by the
 number of pieces captured.
 
+The state space for our modified othello game is exceedingly large
+(approximately $3^{92}$ or $7 \times 10^{43}$ possible states) and while some
+of these states are unreachable or duplicates it is obviously impossible to
+search the entire space every turn. So at some point we must cut off the
+search and apply a static evaluation function.
+
 \subsection{Static evaluation function}
 \label{sub:eval_func}
 %% Necessity of a static evaluation function, features used, etc
-As mentioned above, we have needs of a \emph{static evaluation function} which
-evaluates the quality of state once we have searched to our depth cut-off.
+The \emph{static evaluation function} evaluates the quality of state once we have searched to our depth cut-off.
 This is implemented in Jafar by way of the FeatureSet class. This class keeps
 track of a set of Feature objects; each with the ability to read in a board and
 return some measure state quality.
@@ -194,7 +195,7 @@ to visualise the feature space, providing a preliminary view of what our learnin
 Each point on the charts above represent an agent with feature weights corresponding to
 how close the data point is to each corner of the triangle. The colour intensity of the data
 point describes the agent's win rate against a generic Negamax player; using only StoneCount
-to evaluate states. These win rates range from 100\% (deep red point) to about 40\%(deep blue point).
+to evaluate states. These win rates range from 100\% (deep red point) to about 40\%\ (deep blue point).
 
 In the first graph we see very clearly defined boundaries; showing that ideal weightings
 put priority on LegalMoves and SidePieces before StoneCount. The second graph is less
@@ -339,6 +340,7 @@ settles on a win/loss ratio of approximately 0.7.
 %that a side or corner piece will be taken in the first quarter of the game.
 
 
+\clearpage
 
 \begin{figure}[htbp]
   % Currently the formatting of these graphs are terrible. I have no idea how
@@ -349,6 +351,7 @@ settles on a win/loss ratio of approximately 0.7.
     player}
   \label{LearningProgress}
 \end{figure}
+
 
 \subsection{Staged Learning}
 \label{sec:staging}
@@ -384,7 +387,11 @@ Both agents below exhibit excessive `zig-zagging' (more notably in the
 optimal play style differs slightly depending on whether or not the
 agent will take the last move of the game. This effect is still observable in
 the 20-stage agent since the stages have a differing amount of odd and even
-parity moves.
+parity moves.\\\\
+
+Note that since learning more than 3 stages was experimental at the time of the
+competition the code for it is not included with the master submission. This
+code is available on the exp/nstage branch of the repository.
 
 %Hrmmmm looks good but really needs to be consistent with 92-stager. So need to
 %rollback or tikzify both (or could fix colours here and axes below?)
@@ -461,12 +468,16 @@ weights off of the current top 5 rated players in the following manner:
 
 Over time we should observe that agents with good mutations float to the top of the rating system.
 This should lead to our new agents performing better and better until eventually
-converging to weights similar to those learnt by \tdl.
+converging to weights similar to those learnt by \tdl.\\\\
+
+Note that as it was only developed as a curiosity rather than a major component of
+Jafar the code for Elo Arena is not included with the master submission. The code
+for it can be found on the EloArenaMk2 branch of the repository.
 
 \begin{figure}[htbp]
   \centering
   \begin{tikzpicture}
-    \begin{axis}[width=0.75\textwidth, ybar, xlabel=Place, ylabel=Weight,
+    \begin{axis}[width=0.72\textwidth, ybar, xlabel=Place, ylabel=Weight,
       enlarge y limits=false, enlarge x limits=0.12,
       ymax=0.55, ytick={0, 0.1, 0.2, 0.3, 0.4, 0.5}, xtick={1, 2, 3, 4, 5}]
       \legend{%
@@ -484,14 +495,11 @@ converging to weights similar to those learnt by \tdl.
   \label{fig:elo_arena_weights}
 \end{figure}
 
-\subsection{Comparison of \tdl\ and ELO arena}
-\label{sub:comparing_learning}
-%% TD lambda and ELO arena
 
 \begin{figure}[htbp]
   \centering
   \begin{tikzpicture}
-    \begin{axis}[width=0.75\textwidth, ybar, xlabel=Stage, ylabel=Weight,
+    \begin{axis}[width=0.72\textwidth, ybar, xlabel=Stage, ylabel=Weight,
       enlarge y limits=false, enlarge x limits=0.12,
       ymax=1, ytick={0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9},
       xtick=data, legend columns=-1]
@@ -510,6 +518,27 @@ converging to weights similar to those learnt by \tdl.
     learner (ELO winner is stage 0)}
   \label{fig:elo_arena_comp}
 \end{figure}
+
+\clearpage
+
+\subsection{Comparison of \tdl\ and ELO arena}
+\label{sub:comparing_learning}
+%% TD lambda and ELO arena
+
+Figure ~\ref{fig:elo_arena_weights} shows the weights for the top 5 Elo rated agents
+after the Arena had run for over 500000 games (creating over 900 new agents).
+
+The figure below it (\ref{fig:elo_arena_comp}) compares the first place Elo agent
+to the weights of our 3-Stage agent used for the competition. Notice that the 
+Elo Arena results are very similar the second stage weights used in mid-game.
+
+So as expected we do see the Elo Arena arriving at weights similar to \tdl, but
+it took about 500 times longer! Furthermore the Elo Arena was only learning
+a single set of weights rather than 3, or 20, or 92.
+The Arena serves its purpose as an interesting and intuitive demonstration
+of a learning process; but fails to provide any real practical application
+given that efficient algorithms like \tdl\ exist.
+
 
 \section{Performance evaluation}
 \label{sec:performance}
@@ -557,6 +586,7 @@ extraodinary amount of time to learn and evaluate. Furthermore it is unlikely
 that they would achieve a performance increase any more significant than a slight increase
 in depth. Thus they were cut from Jafar
 early in the development process.
+
 \section{Final Comments}
 \label{sec:final_comments}
 
