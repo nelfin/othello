@@ -70,9 +70,12 @@ game traditionally played on an 8$\times$8 board with players alternately
 placing stones so as to capture lines laid down by their opponent, reversing
 the colour of the intermediate discs in the process.
 In this variant the game will be played on a 10$\times$10 board with four
-squares chosen to be blocked. These four squares are randomly determined at
+squares chosen to be blocked. Blocked squares cannot be played on or captured,
+and they interrupt capture lines. These four squares are randomly determined at
 the beginning of each match, and are not allowed to be one of the
-locations of the four initial stones.
+locations of the four initial stones. These squares introduce a significant challenge
+for the AI agent by since the board configuration will be different each match.
+(making the use of pre-computed data difficult)
 
 To this end, we were provided with a sample implementation of an Othello
 server and simple client code in C++. Our subsequent task was to implement an
@@ -85,6 +88,13 @@ then communicate to the server.
 \label{sec:solution_overview}
 %%A minimax agent with a static evaluation function.
 
+%Wrote this for Static eval but realised it should go here in the explanation of
+% minimax
+The state space for our modified othello game is exceedingly large (approximately
+$3^{92}$ or $7 \times 10^{43}$ possible states) and while some of these states are
+unreachable or duplicates it is obviously impossible to search the entire space every turn.
+So at some point we must cut off the search and apply a static evaluation function.
+
 %%I feel as though these should be sub-headings. feel free to change back if disagree
 \subsection{Optimisations}
 \label{sub:optimisations}
@@ -93,12 +103,70 @@ then communicate to the server.
 \subsection{Static evaluation function}
 \label{sub:eval_func}
 %% Necessity of a static evaluation function, features used, etc
-About to do this section after my shower (2:36)
+As mentioned above, we have needs of a \emph{static evaluation function} which
+evaluates the quality of state once we have searched to our depth cut-off.
+This is implemented in Jafar by way of the FeatureSet class. This class keeps
+track of a set of Feature objects; each with the ability to read in a board and
+return some measure state quality.
+
+The board features implemented by Jafar are:
+\begin{center}\begin{tabular}{l l}
+\textbf{Stone Count} & Number of stones on the board owned by the player\\
+\textbf{Legal Moves} & Number of playable positions available; a measure of \emph{mobility}\\
+\textbf{Blocked Adjacent} & Number of player owned squares adjacent to a blocked square\\
+\textbf{Corner Pieces} & Number of corner squares owned by the player\\
+\textbf{Side Pieces} & Number of edge squares owned by the player\\
+\end{tabular}\end{center}
+The last 3 features in this list all relate to \emph{stability}; encouraging the
+agent to capture squares which are more easily protected.
+
+Early in the development of Jafar we had one extra board feature:
+\begin{center}\begin{tabular}{l l}
+\textbf{Visibility} & Amount of empty space in a line from each of the player's stones\\
+\end{tabular}\end{center}
+but this feature proved to be a very poor performance measure as squares with a high
+visibility were easy to capture. Furthermore the feature was costly compute
+so was fully cut (rather than included at low or negative weight).
+
+To obtain the final score of a state the FeatureSet normalises and weights the
+above features and calculates a weighted sum. With normalisation this sum will lie
+between 0 and 1 and corresponds to an approximation of the probability of winning from this state.
+
+A challenge remains in determining the feature weights; i.e. how important each
+feature is. To learn these weights in a formal sense we must build a learning algorithm.
+Before this however we created some charts (Figure~\ref{fig:triangle1} and ~\ref{fig:triangle2})
+to visualise the feature space, providing a preliminary view of what our learning algorithm will find as the optimal weights.
+
+\begin{figure}[H]
+  \centering
+   \includegraphics[trim= 12cm 4.45cm 23cm 8cm, clip, height=8cm]{../Graphs/LegalMoves_Count_SidePieces_Triangle.pdf} 
+  \caption{Weight Space for LegalMoves (left), SidePieces (right) and StoneCount (top)}
+  \label{fig:triangle1}
+\end{figure}
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[trim= 12cm 4.45cm 23cm 8cm, clip, height=8cm]{../Graphs/LegalMoves_BlockedAdjacent_SidePieces_Triangle.pdf} 
+  \caption{Weight Space for LegalMoves (left), SidePieces (right) and BlockedAdjacent (top)}
+  \label{fig:triangle2}
+\end{figure}
+
+Each point on the charts above represent an agent with feature weights corresponding to
+how close the data point is to each corner of the triangle. The colour intensity of the data
+point describes the agent's win rate against a generic Negamax player; using only StoneCount
+to evaluate states. These win rates range from 100\% (deep red point) to about 40\%(deep blue point).
+
+In the first graph we see very clearly defined boundaries; showing that ideal weightings
+put priority on LegalMoves and SidePieces before StoneCount. The second graph is less
+clearly defined but we still see an overall trend that LegalMoves and BlockedAdjacent
+take precedence over SidePieces.
+
 \section{Learning}
 \label{sec:learning}
 
-After developing a static evaluation function, the next task became that of
-learning the optimal weights for each feature that would provide us the with
+We have provided a visual overview of what features will be weighted higher
+than others, and now our next task becomes that of implementing a learning algorithm
+to formally learn the optimal feature weights; providing us the with
 the strongest play. We considered and implemented two strategies for learning
 these weights: Temporal Difference learning as \tdl, and a genetic algorithm
 using Elo scores as a fitness metric.
