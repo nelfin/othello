@@ -5,7 +5,11 @@ import java.io.Serializable;
 import iago.Board;
 import iago.players.Player;
 
-
+/**
+ * Abstract feature implementation. True features should override evaluate()
+ * at a minimum
+ *
+ */
 public abstract class Feature implements Serializable, Cloneable{
 	private static final long serialVersionUID = 1L;
 

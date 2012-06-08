@@ -3,7 +3,11 @@ package iago.features;
 import java.util.ArrayList;
 import java.util.Random;
 
-
+/**
+ * A combination of features along with Elo ranking functions.
+ * Used as a helper class inside of EloArena
+ *
+ */
 public class EloSet extends FeatureSet{
 
 	private static final long serialVersionUID = -1039441396732532388L;

@@ -29,6 +29,10 @@ import iago.players.MetaPlayer;
 import iago.players.NegamaxPlayer;
 import iago.players.Player.PlayerType;
 
+/**
+ * Elo ranking arena for genetic algorithm
+ *
+ */
 public class EloArena {
 	static final int BLOCKED_COUNT=4; //TODO: move this
 	static final int LEARNING_ITERATIONS=1000000;//ONE MILLION

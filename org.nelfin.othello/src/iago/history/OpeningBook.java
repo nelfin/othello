@@ -2,6 +2,11 @@ package iago.history;
 
 import iago.Move;
 
+/**
+ * Wrapper class around NamedPosition. Builds the game-tree from an
+ * opening book file.
+ *
+ */
 public class OpeningBook {
 	private NamedPosition initialPosition;
 	private NamedPosition currentOpening;

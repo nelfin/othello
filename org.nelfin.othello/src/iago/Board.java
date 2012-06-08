@@ -9,6 +9,13 @@ import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
+/**
+ * A collection of board state utilities.
+ * 
+ * Generates new game states and legal moves, as well as naive
+ * board scoring.
+ *
+ */
 public class Board {
     
     public static final int BOARD_SIZE = 10;
@@ -393,6 +400,13 @@ public class Board {
         }
     }
     
+    /**
+     * Applies a move to this current Board
+     * @param m The move
+     * @param player Who placed the stone
+     * @param destructive Whether we should create a new Board object
+     * @return Resulting board
+     */
     public Board apply(Move m, PlayerType player, boolean destructive) {
         if (destructive) {
         	mostRecentlyPlayedMove = m;

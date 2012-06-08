@@ -4,6 +4,12 @@ import iago.Board;
 import iago.players.Player;
 import iago.players.Player.PlayerType;
 
+/**
+ * The number of side pieces occupied by the player.
+ * This is a weaker indicator of stability. Side pieces are more
+ * likely to be stable than fringe or interior pieces.
+ *
+ */
 public class SidePieces extends Feature{
 	
 	public SidePieces(double weight) {

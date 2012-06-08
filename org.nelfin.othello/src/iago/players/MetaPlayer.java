@@ -7,6 +7,11 @@ import iago.history.NamedPosition;
 import iago.history.OpeningBook;
 import iago.history.UnexploredException;
 
+/**
+ * A "meta" player utilising multiple simple players for
+ * staged learning and time management 
+ *
+ */
 public class MetaPlayer extends AbstractPlayer{
     public static final int DEFAULT_DEPTH = NegamaxPlayer.DEFAULT_DEPTH;
     private static final long RED_ALERT = 500;

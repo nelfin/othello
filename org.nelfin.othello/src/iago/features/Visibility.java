@@ -5,6 +5,10 @@ import java.util.HashSet;
 import iago.Board;
 import iago.players.Player;
 
+/**
+ * How far a piece can see along each edge and diagonal.
+ *
+ */
 public class Visibility extends Feature{
 	private static final double DEFAULT_WEIGHT = 1;
 	private static final Integer BEST_SCORE = Board.BOARD_SIZE * Board.BOARD_SIZE * (Board.BOARD_SIZE / 2 * 8); //This is an upper bound.

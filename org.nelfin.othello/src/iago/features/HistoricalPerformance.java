@@ -3,6 +3,14 @@ package iago.features;
 import iago.Board;
 import iago.players.Player.PlayerType;
 
+/**
+ * Gives scores based on expected win/loss/draw from a standard opening book
+ * Past performance may indicate potential for future performance, or
+ * principal variations.
+ * 
+ * XXX: Not implemented
+ *
+ */
 public class HistoricalPerformance extends Feature {
     
     public HistoricalPerformance(double weight) {

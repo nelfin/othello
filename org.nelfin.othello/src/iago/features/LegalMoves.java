@@ -3,6 +3,12 @@ package iago.features;
 import iago.Board;
 import iago.players.Player;
 
+/**
+ * The number of legal moves a player has
+ * This is the essential indicator of mobility, a valuable early- and
+ * mid-game property
+ *
+ */
 public class LegalMoves extends Feature{
 	
 	private static final double DEFAULT_WEIGHT = 1;

@@ -19,6 +19,11 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Iterator;
 
+/**
+ * A combination of features. Used as a helper class inside classes
+ * implementing Player
+ *
+ */
 public class FeatureSet extends ArrayList<Feature>{
 
 	private static final long serialVersionUID = -5179576268344247586L;

@@ -21,6 +21,10 @@ import iago.players.NegamaxPlayer;
 import iago.players.OpeningBookPlayer;
 import iago.players.Player.PlayerType;
 
+/**
+ * Self play arena for TD-lambda learning.
+ *
+ */
 public class PracticeArena{
 	static final int BLOCKED_COUNT=4; //TODO: move this
 	static final int LEARNING_ITERATIONS=100000;//ONE MILLION

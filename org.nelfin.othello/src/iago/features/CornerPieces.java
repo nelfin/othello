@@ -4,6 +4,12 @@ import iago.Board;
 import iago.players.Player;
 import iago.players.Player.PlayerType;
 
+/**
+ * The number of corner pieces occupied by the player.
+ * All corner pieces are automatically stable. They cannot be captured by an
+ * opponent and thus are inherently valuable.
+ *
+ */
 public class CornerPieces extends Feature{
 	
 	public CornerPieces(double weight) {

@@ -2,6 +2,10 @@ package iago.history;
 
 import iago.Move;
 
+/**
+ * Test class for OpeningBook
+ *
+ */
 public class OpeningBookLoader {
     
     public static void main(String[] args) {

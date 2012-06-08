@@ -16,6 +16,13 @@ import iago.features.StoneCount;
 import iago.features.Visibility;
 import iago.players.Player.PlayerType;
 
+/**
+ * The base TD-lambda class, plays games and receives feedback at the
+ * conclusion of a match. Utilises Temporal Difference learning as
+ * TD-lambda (see Sutton (1988)) to approximate optimal static evaluation
+ * functions
+ *
+ */
 public class LearningPlayer extends AbstractPlayer {
 	public LearningPlayer(PlayerType colour, int depth, FeatureSet features) {
 		super(colour);
@@ -37,12 +44,15 @@ public class LearningPlayer extends AbstractPlayer {
 	FeatureSet currentWeights = new FeatureSet("MetaPlayerLearntWeights");
 	
 	private final double LEARNING_RATE = 0.1;
+	// Discount rate for non-current boards
 	private final double LAMBDA = 0.9;
+	// Epsilon in epsilon-greedy exploration/exploitation strategy
 	private final double RANDOM_MOVE_CHANCE = 0.05;
 	private Random randomMoveGenerator = new Random();
 	
 	double previousFeedback = 0;
 	
+	// All the game states we have seen
 	ArrayList<Board> gameHistory = new ArrayList<Board>();
 	
 	/**

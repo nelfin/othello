@@ -5,10 +5,15 @@ import iago.Board.BoardState;
 import iago.players.Player;
 import iago.players.Player.PlayerType;
 
+/**
+ * The number of pieces occupied by the player which are adjacent to blocked squares.
+ * This is a strong heuristic for stable pieces.
+ *
+ */
 public class BlockedAdjacent extends Feature{
 	
 	public BlockedAdjacent(double weight) {
-		super("BlockedAdjacent", "The number of pieces occupied by the player which are adjacent to blocked sqaures", weight, 8*4 + 3*40);
+		super("BlockedAdjacent", "The number of pieces occupied by the player which are adjacent to blocked squares", weight, 8*4 + 3*40);
 	}
 
 	

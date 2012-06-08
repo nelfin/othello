@@ -14,6 +14,11 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * Helper class to load strategies from command line arguments
+ * (somewhat) safely
+ *
+ */
 public class StrategyLookup {
     private static final Map<String, Class<? extends Player>> strategyTable =
         new HashMap<String, Class<? extends Player>>();

@@ -12,7 +12,10 @@ import java.io.PrintStream;
 import java.net.Socket;
 import java.net.UnknownHostException;
 
-
+/**
+ * Main client class. Handles command line arguments network communications
+ *
+ */
 public class Client implements Runnable {
     
     private static final String DEFAULT_HOST = "localhost";

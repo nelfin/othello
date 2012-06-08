@@ -3,6 +3,12 @@ package iago.features;
 import iago.*;
 import iago.players.Player;
 
+/**
+ * Difference in player stone counts.
+ * A poor indicator mid-game, but this determines whether or not a player
+ * wins once the game is completed.
+ *
+ */
 public class StoneCount extends Feature{
 	
 	private static final double DEFAULT_WEIGHT = 1;

@@ -3,6 +3,11 @@ package iago.features;
 import iago.Board;
 import iago.players.Player.PlayerType;
 
+/**
+ * "Fake" feature storing only a weight and name. Utilised by TD-lamda
+ * learning in LearningPlayer to construct weight deltas.
+ *
+ */
 public class ErsatzFeature extends Feature {
     
     @Override

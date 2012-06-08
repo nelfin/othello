@@ -7,6 +7,10 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Scanner;
 
+/**
+ * A node in the opening book game-tree
+ *
+ */
 public class NamedPosition {
     
     private static final String SENTINEL = "$";
